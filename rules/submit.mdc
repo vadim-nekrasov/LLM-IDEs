@@ -1,170 +1,141 @@
 ---
-description: Complex task analysis and implementation with detailed reasoning and multiple solution exploration
-globs:
+description: Complex task analysis, solution architecture, and implementation pipeline (Analysis -> Docs -> Plan -> Code -> Verify)
+globs: 
 alwaysApply: false
 ---
 
-## Анализ задания
+# Task Implementation Pipeline
 
-Оцени свою уверенность в понимании заданного задания от 0 до 100%. Если твоя уверенность по какому то из существенных
-пунктов задачи не больше 70% то Прежде чем выполнять задачу, задай мне уточняющие вопросы.
+Follow this pipeline strictly for every complex task or when `submit` rule is active.
 
-## Работа с документацией (папки `docs`)
+## Phase 1: Analysis & Confidence Check
 
-Под фразой «требуется изучение документации» подразумевается ситуация, когда без чтения docs нельзя достаточно надёжно
-понять, каким должно быть корректное поведение/контракт.
+1.  **Structured Analysis**:
+    - Before writing any code, analyze the user request to identify:
+        - Core problem vs. symptoms.
+        - Implicit vs. explicit requirements.
+        - Success criteria.
 
-Считай, что **изучение документации ТРЕБУЕТСЯ**, и автоматически переходи к работе с docs, если выполняется хоть одно из
-условий:
+2.  **Confidence Threshold (80%)**:
+    - Assess your confidence in understanding the task.
+    - If confidence < 80% on **critical** business logic or safety requirements, **ASK Clarifying Questions**.
+    - For non-critical ambiguities: Make **Reasonable Assumptions**, explicitly state them in your plan, and proceed. Do not block progress for minor details.
 
-- задача явно затрагивает спецификацию, поведение фичи, публичные API или контракты между слоями/модулями;
-- причина бага или корректное поведение **не полностью очевидны** из одного редактируемого файла, и нужно понять «как
-  должно быть»;
-- изменение затрагивает код, который используется в нескольких модулях/слоях, или может повлиять на другие части
-  системы;
-- я прямо прошу свериться с документацией, спецификацией или контрактами (упоминания вида: `docs`, «спека», «контракт»,
-  «описано в документации» и т.п.).
-- выполняются изменения структуры/архитектуры/публичных интерфейсов (переносы/переименования файлов/папок, изменение
-  точек входа/entry points и реэкспортов, пути импортов, публичные имена/ключи slice/reducer/context/hook/prop,
-  API endpoints/URLs/CLI, конфиги/env, дерево директорий) — необходимо актуализировать все соответствующие упоминания
-  в `docs` (пути, схемы директорий, import specifiers, примеры кода и команд).
+3.  **Constraints & Questions Detection**:
+    - **Constraint Identification**:
+        - If the prompt contains a block with "Ограничения" in the title (e.g., "Заданные ограничения"), treat its content as strict `заданные_ограничения`.
+    - **Question Identification**:
+        - If the prompt contains a block with "Вопрос" or "Вопросы" in the title (e.g., "Критически важные вопросы"), treat its content as `заданные_вопросы`.
+        - You MUST answer these questions during the investigation phase.
 
-Считай, что **изучение документации НЕ требуется**, и **НЕ лезь в `docs`**, если:
+## Phase 2: Documentation & Context (The Docs-First Checklist)
 
-- я явно написал, что документацию смотреть не нужно (например: «docs не смотреть», «документацию не трогать»);
-- задача явно про **локальные/атомарные правки внутри одного файла**, которые:
-    - не меняют внешнее поведение и контракты,
-    - не меняют бизнес-логику,
-    - не затрагивают публичные API,
-      например:
-    - форматирование, правки стиля, мелкие линтер-фиксы;
-    - переименование локальной переменной/функции, не торчащей наружу;
-    - явное исправление опечатки;
-    - тривиальный фикс типов/импортов без изменения логики;
-    - рефакторинг в пределах файла, при котором сохраняется поведение и контракты (перенос кода, выделение внутренней
-      функции и т.п.).
+### When to SKIP Documentation
+You may skip the "Internal Documentation" step ONLY if:
+- The task is a local/atomic fix within one file (typo, local variable rename, formatting).
+- The user explicitly said "don't check docs".
+- The change definitely does not affect contracts, external behavior, or business logic.
 
-### Изучение документации при необходимости.
+### Internal Documentation (Docs-First)
+**If checking documentation is required (default), perform this checklist:**
 
-Если по критериям выше **изучение документации требуется**, то при изучении документации следуй следующей логике:
+1.  **Discovery**:
+    - [ ] Locate all `docs` folders on the path from the edited files to the project root.
+    - [ ] Read relevant `.md` / `.mdc` files (specs, architecture, contracts).
+2.  **Compliance**:
+    - [ ] Extract 3-5 key invariants/contracts from docs.
+    - [ ] **Crucial**: Explicitly list these invariants in your reasoning/analysis block to ensure alignment.
+    - [ ] If your plan contradicts docs:
+        - **Option A**: Update docs (if code is right and docs are stale).
+        - **Option B**: Adjust plan (if docs are the source of truth).
+3.  **Updates**:
+    - [ ] If you change architecture, API, file structure, or configuration — **UPDATE DOCS**.
+    - Keep docs in English.
 
-- В проекте могут существовать несколько уровней папок `docs`. Каждая папка docs документирует код своей родительской
-  директории и всего её содержимого на всех уровнях вложенности.
-- При работе с файлом изучай все docs-папки, расположенные на пути от директории файла до корня проекта. Документация из
-  более глубоких уровней имеет приоритет над документацией из верхних уровней.
+### External Documentation (Context7)
+1.  **Zero Hallucination Policy**:
+    - Do not guess API signatures for third-party libraries.
+    - If you need to use a library (React, Next.js, etc.) and are not 100% sure of the *current* version's API:
+        - Use `mcp_context7_resolve-library-id` to find the library.
+        - Use `mcp_context7_get-library-docs` to fetch actual docs/examples.
+    - **Always** use Context7 for setup, configuration, or complex API usages.
 
-### Правки документации при необходимости.
+## Phase 3: Solution Architecture (Brainstorming Strategy)
 
-Если по критериям выше **изучение документации требуется**, то выполняй следующую логику.
+For new features, complex refactoring, or non-trivial bug fixes:
 
-- Если, изучая код и соответствующие docs, ты обнаруживаешь несоответствия между кодом и документацией, обновляй
-  соответствующие `docs`-файлы так, чтобы документация отражала текущее корректное состояние кода.
-- Если ты вносишь в код изменения, которые требуют отражения в изученных `docs`-папках, обновляй соответствующие файлы
-  документации:
-    - сохраняй существующую структуру, формат и стиль документации;
-    - добавляй информацию в соответствующие секции; если подходящей секции нет — создай новую в этой же docs-папке;
-    - при необходимости обновляй и документацию более высоких уровней, если изменение затрагивает описанное там общее
-      поведение или контракт.
-- При обновлении документации:
-    - используй только английский язык;
-    - не добавляй лишних или малозначительных пояснений;
-    - не изменяй части, не связанные с вносимыми изменениями.
+1.  **Divergent Phase (Wide Search)**:
+    - Generate a list of **~20 potential approaches/hypotheses** (or `заданное_число_вариантов_для_рассмотрения` if specified).
+    - Format: Concise bullet points (1 sentence each).
+    - Goal: Maximize variety (explore different architectural patterns, libraries, algorithms).
+    - *Note: If the task is simple, you may reduce this number, but default to broad exploration.*
 
-### Checklist по работе с документацией.
+2.  **Convergent Phase (Selection & Filtering)**:
+    - **Filter**: Discard any options that:
+        - Violate strict `заданные_ограничения`.
+        - Cannot logically answer `заданные_вопросы`.
+    - **Select**: Choose the **Top 3-5 options** from the remaining list.
+    - **Late Breaking Heuristic**: If your best option appeared only at the very end of the list (e.g., #19 or #20), consider generating 5-10 more variants to ensure you haven't missed a better adjacent idea.
 
-Если по критериям выше **изучение документации требуется**, то перед ЛЮБЫМИ правками кода **в рамках такой задачи**
-выполни Docs-first чек-лист:
+3.  **Detailed Analysis & Reasoning**:
+    - For the selected Top 3-5 options:
+        - Pros/Cons analysis.
+        - Pseudo-code or rough architecture sketch.
+        - Complexity estimation.
+    - **Reasoning Guidelines**:
+        - Value good arguments over authority.
+        - You may speculate, but clearly flag it ("I suspect that...", "Hypothetically...").
+    - Recommendation: Explicitly state which option you recommend and why.
 
-- [ ] Найди все `docs` на пути от редактируемого файла до корня проекта и перечисли их в статус-обновлении.
-- [ ] Прочитай профильные файлы (например, спецификации поведения) и выпиши 3–7 ключевых инвариантов.
-- [ ] Сверь свои планируемые правки с этими инвариантами; если есть расхождения — сначала обнови docs или скорректируй
-  план.
-- [ ] В финальном ответе явно укажи: требовалось ли по этим правилам изучение документации, какие `docs` прочитаны, и
-  изменения в `docs` требуются/не требуются (и почему).
-- [ ] Если были изменения, влияющие на документацию (пути/импорты, entry points/экспорты, структура каталогов, публичные
-  идентификаторы, API/CLI/URLs, конфиги/env) — пройтись по `docs` и обновить все упоминания (файлопути, import
-  specifiers, публичные имена, примеры кода и команд), чтобы они соответствовали текущему состоянию кода.
+4.  **Final Plan Formalization**:
+    - **Strict Rule**: Before writing any code files, fix the detailed step-by-step plan and/or pseudocode.
+    - Do not proceed to Phase 4 until the plan is clear and robust.
 
-## Число вариантов для рассмотрения
+## Phase 4: Implementation Standards
 
-`заданное_число_вариантов_для_рассмотрения` - это указанное мною выше число вариантов реализации или версий причин
-бага, которые нужно рассмотреть. А если я не указал выше данного числа, то это число ≥20.
+### Code Style
+- **Reference**: Follow rules in `.cursor/rules/ecmascript-code-style.mdc`.
+- **Principles**: Apply SOLID, DRY, KISS, High Cohesion & Low Coupling.
+- **Readability**: Prioritize readability and maintainability over premature optimization. Write code that is easy to understand for other developers.
 
-## Необходимые ответы на вопросы
+### Comments Hygiene
+- **Sync**: When changing logic, update or delete related comments immediately.
+- **No Zombies**: Do not leave commented-out old code. Delete it.
+- **Clarity**: Keep comments concise and relevant to the *current* state of code.
 
-Если в моем описании задачи есть блок с названием, содержащим слово "Вопрос" или "Вопросы" (типа "Критически важные
-вопросы при поиске решения" или "Вопросы для анализа" и т.п.), и если этот блок состоит из вопросов, на которые должны
-быть даны ответы при поиске причин бага, то этот набор вопросов мы далее будем именовать как `заданные_вопросы`.
+### Logging & Debugging
+- If the cause of a bug is unclear, do not patch logic blindly. Add logs.
+- **Object Logging**: Remember that browsers/terminals often collapse objects (`{...}`).
+    - Use `JSON.stringify(obj, null, 2)` or log specific fields for clarity.
+    - Or use explicit labels: `console.log('Var Name:', value)`.
 
-## Заданные ограничения
+### Refactoring & Legacy Code
+- **New Code**:
+    - MUST adhere strictly to `ecmascript-code-style.mdc` and Best Practices.
+    - Zero tolerance for bad patterns in new lines of code.
+- **Existing (Legacy) Code**:
+    - **Conservative Approach**: Do not refactor legacy code just for style unless it blocks the task or is explicitly requested.
+    - **Refactoring Opportunity**: If legacy code violates SOLID/DRY/KISS to the point where it makes the task dangerous or impossible to do cleanly — **Plan a refactor** and ask the user (or include it in the solution if authorized).
 
-Если в моем описании задачи есть блок с названием, содержащим слово "Ограничения" (типа "Заданные ограничения" и т.п.),
-то этот набор ограничений мы далее будем именовать как `заданные_ограничения`.
+## Phase 5: Verification (Zero Tolerance)
 
-## Если задача заключается в фиксе бага
+Before submitting the final response:
 
-Если проблема ясна, то пофикси её, при этом рассмотрев как минимум `заданное_число_вариантов_для_рассмотрения`
-вариантов реализации.
-А если проблема не ясна, то не вноси правок в логику, а лишь пропиши ещё консольные логи, рассмотрев еще как минимум
-`заданное_число_вариантов_для_рассмотрения` версий.
+1.  **Linting Check**:
+    - Run linter/type-checker.
+    - **Goal**: 0 Errors, **0 Warnings**.
+    - Fix all issues introduced by your changes.
 
-ВАЖНО!!! К рассмотрению принимай только те версии причин бага, в которых ты можешь дать хоть какие-то логические ответы
-на `заданные_вопросы`.
-Если ты не обнаружил что не можешь придумать заданное число версий, то ок, можешь рассмотреть меньше.
+2.  **Docs Consistency**:
+    - Did you update `docs` if you changed the API?
+    - Did you answer all `заданные_вопросы`?
 
-## Если задача заключается в создании новой функциональности
+3.  **Self-Correction**:
+    - Review your changes against the `заданные_ограничения`.
+    - If you deviated, fix it before replying.
 
-Если еще нет одобренного решения или плана реализации, и задача касается создания новой функциональности, то перед
-реализацией опиши какие варианты решения данной задачи ты видишь. Желательно рассмотреть КАК МИНИМУМ 
-`заданное_число_вариантов_для_рассмотрения`, из которых ты будешь делать выбор наиболее корректного, краткого,
-элегантного и идеоматичного данному проекту с учетом испольуемых в нем технологий, подходов и библиотек (и их версий).
-ВАЖНО!!! К рассмотрению принимай только те варианты реализации, которые учитывают `заданные_ограничения`.
-Если лучшим окажется последнее решение, то предложи еще 10 решений, и в итоге выбери лучшее из всех рассмотренных.
-Если в итоге ты выбрал последний или предпоследний вариант из рассматриваемых, то добавь еще к рассмотрению 10
-вариантов. Примеры:
-
-- Если ты рассматривал 20 вариантов и лучшим оказался, на твой взгляд, 19-й вариант, то добавь к рассмотрению еще 10
-  вариантов.
-- Если ты рассматривал 20 вариантов и лучшим оказался, на твой взгляд, 20-й вариант, то добавь к рассмотрению еще 10
-  вариантов.
-
-Если задача касается просто анализа, а не фикса бага или создания новой функциональности, то игнорируй этот раздел.
-
-## Проектирование или написание кода
-
-- При размшлении над каждым из вариантов, начни рассуждение с большой неуверенностью, и по мере размышлений постепенно
-  набирай уверенность, анализируя плюсы и минусы конкретного варианта. Не делай поспешных выводов. Делай описание этих
-  вариантов кратким.
-- Если это баг, и его причины для тебя не ясны, то добавь в коде консоль логов, которые позволят тебе наиболее точно
-  вычислить причину. Которые возможно вычленят из всех возможных вариантов лишь 1 правильный, или хотя бы позволят
-  максимально сузить число возможных и вариантов. При написании логов помни что объекты из консоли копируются в
-  сокращенном виде, типа {...}. Так что либо для вывода данных в виде объектов используй какой-нибудь JSON-сериализатор,
-  либо выводи данные в виде строк.
-- Follow the user’s requirements carefully & to the letter.
-- Fully implement all requested functionality.
-- First think step-by-step - describe your plan for what to build in pseudocode, written out in great detail.
-- Value good arguments over authorities, the source is irrelevant
-- You may use high levels of speculation or prediction, just flag it for me
-- Focus on easy and readability code, over being performant. Write maintainable and scalable code
-- Если добавляешь функциональность, аналогичную уже существующей (например, редьюсер или компонент), следуй стилю и
-  структуре текущего кода.
-- Старайся следовать наилучшим практикам Clean Code.
-- При проектировании старайся следовать принципам SOLID, DRY, а так же "High Cohesion & Low Coupling".
-- При редактировании ecmascript-файлов соблюдай правила, прописанные в файле .cursor/rules/ecmascript-code-style.mdc
-- Be concise Minimize any other prose.
-- Ensure code is complete! Verify thoroughly finalised.
-- If you do not know the answer, say so, instead of guessing. Я тогда постараюсь предоставить тебе больше нужного
-  контекста. Не надо делать что-то наугад.
-- Implement proper error handling
-
-### Комментарии к коду
-
-- При изменении логики обязательно синхронизируй комментарии (при их наличии): обновляй формулировки или удаляй
-  устаревшие/вводящие в заблуждение.
-- Поддерживай комментарии краткими и по делу; не оставляй «мертвые»/несоответствующие текущему коду пояснения.
-
-Отвечай мне только по-русски!
-
-use context7
-
-
+## Communication
+- **Conciseness**: Be concise. Minimize conversational filler. Focus on technical content.
+- **Language**:
+    - Final Response to User: **Russian**.
+    - Internal Reasoning / Thinking Blocks (**if** generated): **English** (for better logic quality and token efficiency).

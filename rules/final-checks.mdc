@@ -3,53 +3,73 @@ description: Ensures all recent edits are verified for quality, stability, and b
 alwaysApply: false
 ---
 
-## Если ты выполнил написание кода, то:
+## When to Apply
 
-Проведи проверки из нижеописанного блока под названием "Блок финальных проверок". И если после прохождения проверок при
-помощи "Блока финальных проверок" тебе придется сделать правки, то в конце снова проведи "Блок финальных проверок". И
-так повторяй итеративно "Блок финальных проверок" до тех пор пока ты поймешь что правки больше не нужны.
+### 1. After Writing Code
+Run the "Final Checks Block" below. If issues are found:
+1.  Fix them.
+2.  Re-run the "Final Checks Block".
+3.  Repeat the cycle (Check -> Fix -> Re-Check) until all checks pass successfully.
 
-## Если ты выполнял только планировку дальнейших действий
+### 2. After Planning
+Ensure your plan *potentially* satisfies the points in the "Final Checks Block" (especially architectural and product aspects).
 
-Убедись, что твой план удовлетворяет пунктам, описанным в нижеследующем блоке "Блок финальных проверок".
+---
 
-## Блок финальных проверок
+## Final Checks Block
 
-Действуй как 10x senior developer в той сфере, которой касается данная задача. Например, если задача в правке фронтенда,
-то действуй как 10x сеньор фронтендер. Если тут есть задачи, касающиеся верстки, то действуй в том числе как 10x senior
-верстальщик. Если задача касается в том числе каких-то девопс-решений, то действуй как 10x сеньор devops. И так далее.
-Проверь все правки по отношению к изначальному коду (коду который был на момент постановки задачи) на предмет:
+**Meta-Instruction**: Act as a **10x Senior Expert** in the specific domain of the task (e.g., if Frontend -> 10x Senior Frontend + UI/UX expert; if DevOps -> 10x Senior DevOps). Apply deep domain knowledge to these checks.
 
-- [ ] Действительно ли они решают поставленные задачи?
-- [ ] Действительно ли был выбран самый изящный и подходящий для данной задачи вариант решения?
-- [ ] Нет ли правок, противоречащих принципам SOLID, DRY, а так же "High Cohesion & Low Coupling"?
-- [ ] Не допущено в ходе них ошибок и не создано ли этими правками потенциальных проблем.
-- [ ] Нет ли в этих правках оверинженеринга?
-- [ ] Не поломал ли ты, с точки зрения пользователя, функционал, который не должен меняться данной задачей?
-- [ ] Если это была задача на багфикс или задача по рефакторингу (кроме тех случаев когда меняется логики работы
-  программы с точки зрения пользователя), и при этом не указано явно что не нужно сохранять обратную совместимость, то
-  убедись что сохраняется ПОЛНАЯ обратная совместимость.
-- [ ] Использовал ли ты самые современные возможности языка и используемых в проекте версий фреймворков чтоб сделать код
-  максимально кратким и удобочитаемым?
-- [ ] Не замедлило ли это быстродействие приложения?
-- [ ] Не появилось ли потенциальных утечек памяти?
-- [ ] Комментарии приведены в соответствие изменённому коду: устаревшие/вводящие в заблуждение комментарии обновлены или
-  удалены.
-- [ ] Добавленные комментарии краткие и на английском языке (project rule); рядом с изменёнными участками нет
-  противоречий между кодом и комментариями.
-- [ ] Действительно ли твои правки были применены к реальным файлам и сохранены на диске? Для этого прочитай данные
-  файлы с диска. Зачастую запись на диск не происходит из-за каких-либо проблем с IDE или параллельными процессами.
-- [ ] Если правки касались ecmascript-файлов, то все ли они соответствуют правилам, прописанным в файле
-  .cursor/rules/ecmascript-code-style.mdc?
-- [ ] Если по правилам из раздела "Работа с документацией (папки `docs`)" для данной задачи **требуется изучение
-  документации**, то:
-    - [ ] документация на всех уровнях, относящихся к изменяемым файлам, действительно была изучена;
-    - [ ] при необходимости подготовлены или внесены правки в docs так, чтобы они отражали текущее корректное состояние
-      кода. Если по этим правилам изучение документации **не требуется**, этот пункт можно пропустить.
-- [ ] Если были изменения, влияющие на документацию (пути/импорты, entry points/экспорт из баррелей, структура
-  каталогов, публичные имена — slice/reducer/context/hook/prop, API/CLI/URLs, конфиги/env, контракты) — все
-  соответствующие места в `docs` обновлены (пути, дерево директорий, примеры импортов/использования, команды); поиск по
-  `docs` не содержит устаревших путей/упоминаний.
+### Step 1: Automated Validation (Fail Fast)
+Before analyzing code with your eyes, use tools:
+
+1.  **Linter & Type Check**:
+    - Run `read_lints` for modified files.
+    - **Goal**: 0 errors, 0 warnings. Fix all new issues.
+2.  **File Integrity**:
+    - Read modified files from disk (`read_file`) to verify that content is actually saved and matches expectations. (Writes often fail silently or partially).
+
+### Step 2: Role-Based Analysis (Mental Sandbox)
+Review your changes through three different "lenses" (roles):
+
+1.  **Product Lens (User Perspective)**:
+    - Does this code fully solve the user's problem?
+    - Did I break any existing functionality?
+    - **Backward Compatibility**: For bug fixes and refactoring (unless user-facing logic change is requested), ensure **FULL backward compatibility**.
+
+2.  **Architect Lens (System Perspective)**:
+    - **Principles**: Are SOLID, DRY, KISS, and **High Cohesion & Low Coupling** respected?
+    - **Elegance**: Is this the most idiomatic and elegant solution for this specific codebase/stack?
+    - **Simplicity**: Is there any overengineering? (Is this the simplest correct solution?)
+    - **Safety**: Are the changes safe regarding performance and memory leaks?
+
+3.  **Maintainer Lens (Future Perspective)**:
+    - Will another developer understand this code in a month?
+    - Does the style match `ecmascript-code-style.mdc`?
+    - Are comments synchronized with code (no outdated/misleading comments)?
+
+### Step 3: Structured Checklist
+
+#### Functionality & Stability
+- [ ] **Success Criteria**: All requirements from the prompt are met.
+- [ ] **Regression Check**: Old functionality works as before.
+- [ ] **Performance**: No unnecessary re-renders or obvious performance regressions.
+- [ ] **Safety**: No potential memory leaks (forgotten subscriptions, event listeners, closures).
+- [ ] **Edge Cases**: Edge cases (empty arrays, nulls, network errors) are handled.
+
+#### Code Quality & Style
+- [ ] **Modern Stack**: Used the most recent language/framework features **supported by the project's current configuration**.
+- [ ] **Style Compliance**: Code complies with `.cursor/rules/ecmascript-code-style.mdc`.
+- [ ] **No Dead Code**: Commented-out code and unused imports are removed.
+
+#### Documentation & Context
+- [ ] **Comments**: All comments are up-to-date, concise, and in English.
+- [ ] **Internal Docs**:
+    - Have all `docs` on the path to the files been consulted?
+    - **Triggers for Update**: If changes affect paths, imports, entry points (barrels), directory structure, public names (slice/reducer/context/hook/prop), API/CLI/URLs, configs/env, or contracts — **update the corresponding `.md` docs**.
+- [ ] **External Deps (Context7)**:
+    - If new libraries were added, was `use context7` used to verify versions/API?
+    - Am I confident in the correctness of external API usage (Zero Hallucination)?
 
 ---
 

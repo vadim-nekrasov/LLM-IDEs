@@ -1,5 +1,5 @@
 ---
-description: Ensures all recent edits are verified for quality, stability, and best practices before task completion.
+description: Apply before completion a task that involved editing files. To ensure that all recent edits are verified for quality, stability, and best practices.
 alwaysApply: false
 ---
 

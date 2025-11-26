@@ -66,7 +66,10 @@ Review your changes through three different "lenses" (roles):
 - [ ] **Comments**: All comments are up-to-date, concise, and in English.
 - [ ] **Internal Docs**:
     - Have all `docs` on the path to the files been consulted?
-    - **Triggers for Update**: If changes affect paths, imports, entry points (barrels), directory structure, public names (slice/reducer/context/hook/prop), API/CLI/URLs, configs/env, or contracts — **update the corresponding `.md` docs**.
+    - **Triggers for Update**: If changes affect **architecture**, paths, imports, entry points (barrels), directory
+      structure, public names (slice/reducer/context/hook/prop), API/CLI/URLs, configs/env, or contracts — **update the
+      corresponding `.md` docs**.
+    - **Stale Docs**: Did you update any documentation that was found to be outdated/incorrect during the task?
 - [ ] **External Deps (Context7)**:
     - If new libraries were added, was `use context7` used to verify versions/API?
     - Am I confident in the correctness of external API usage (Zero Hallucination)?

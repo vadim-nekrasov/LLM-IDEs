@@ -1,5 +1,5 @@
 ---
-description: Apply when debugging errors or unclear behavior. Add targeted, JSON/stringified console logs to isolate the single root cause.
+description: Apply when it needs to debug errors or unclear behavior. When it needs to add console logs to find the root cause.
 alwaysApply: false
 ---
 

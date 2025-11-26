@@ -1,95 +1,83 @@
-Задача: Выполни структурированный древовидный поиск наилучшего решения для текущей задачи.
+# Solution Tree Search
 
-## Учет ограничений и критериев
-
-Если в описании задачи есть блок с названием, содержащим слово "Ограничения" (например, "Заданные ограничения"),
-воспринимай его содержимое как `strict_constraints`. **Все** рассматриваемые варианты решения обязаны
-соответствовать этим ограничениям; нарушающие `strict_constraints` варианты сразу отбрасывай.
-
-Если явные критерии выбора решения указаны в задаче, используй их как `критерий_поиска`.
-
-Если критерии не указаны, используй дефолтный `критерий_поиска`:
-- корректность;
-- краткость;
-- элегантность;
-- идиоматичность проекту (учитывая технологии, подходы, библиотеки и их версии).
+**Role:** Senior Software Architect & System Designer.
+**Objective:** Execute a structured, tree-based search to identify the optimal technical solution for the current task.
 
 ---
 
-## 1) Список абстрактных вариантов
+## 1. Constraints & Criteria Analysis
 
-Сгенерируй "список абстрактных вариантов": как минимум `{max_abstract_variants}` идей, отражающих общие принципы
-возможных решений.
+Analyze the user's request to establish the evaluation framework.
 
-- Описывай каждый вариант кратко (1–2 предложения).
-- На этом этапе **не** углубляйся.
-- Варианты, явно нарушающие `strict_constraints`, не включай.
-
----
-
-## 2) Список перспективных вариантов
-
-Из "списка абстрактных вариантов" выбери `{num_promising}` наиболее перспективных по `критерий_поиска`.  
-Этот поднабор называется "список перспективных вариантов".
+- **Strict Constraints:** Identify any explicit restrictions (e.g., "Constraints:", "Restrictions"). These are `strict_constraints`. Any solution violating these must be **immediately discarded**.
+- **Search Criteria:** 
+  - If specified by the user, use their criteria.
+  - Otherwise, use the **Default Criteria**:
+    1. **Correctness**: Solves the problem accurately.
+    2. **Simplicity**: Minimal complexity (Occam's razor).
+    3. **Elegance**: Clean, maintainable design.
+    4. **Idiomatic**: Fits the project's existing stack, patterns, and libraries.
 
 ---
 
-## 3) Деревовидный поиск решений
+## 2. Step-by-Step Execution
 
-Выполни деревовидный поиск на основе "списка перспективных вариантов".
+### Phase 1: Abstract Brainstorming
+Generate a list of **High-Level Approaches**.
+- **Quantity:** At least `{max_abstract_variants}`.
+- **Format:** Brief (1-2 sentences per variant).
+- **Filter:** Exclude any that violate `strict_constraints`.
 
-### Ограничения дерева
+### Phase 2: Filter Promising Candidates
+Select the top candidates from Phase 1 to explore further.
+- **Quantity:** Select `{num_promising}` variants.
+- **Basis:** Evaluate against the `Search Criteria`.
 
-- Максимальная глубина: `{max_depth}` уровней.
-- Максимальное число ветвлений на уровне: не более `{max_branching}`.
-    - Перед ветвлением оцени ключевые направления развития текущего варианта и создай на их основе несколько ветвей
-      (но не больше `{max_branching}`).
-    - Каждое ветвление должно быть осмысленным и опираться на `критерий_поиска`  
-      (например, разные компромиссы между простотой, расширяемостью, переиспользованием существующих абстракций).
-- Аккумулятор успешных решений: максимум `{max_succeed}` листьев.
+### Phase 3: Recursive Tree Exploration
+Expand the promising candidates into a decision tree to explore implementation details and trade-offs.
 
-Успешным решением считается лист, который:
-- не нарушает `strict_constraints`;
-- хорошо удовлетворяет `критерий_поиска`.
+**Parameters:**
+- **Max Depth:** `{max_depth}` levels.
+- **Max Branching:** `{max_branching}` branches per node.
+- **Success Limit:** `{max_succeed}` total successful leaf nodes.
 
-### Тупиковые ветки
+**Logic:**
+1. **Branching:** At each node, identify key design decisions (e.g., library choice, state management strategy, data structure). Create branches representing distinct, viable choices.
+2. **Pruning (Dead Ends):** Terminate a branch immediately (0 descendants) if it:
+   - Violates `strict_constraints`.
+   - Becomes over-engineered.
+   - Clearly underperforms against `Search Criteria`.
+3. **Leaf Nodes:** A node is a "Successful Solution" if it reaches a logical conclusion without being pruned.
 
-Если развитие варианта приводит к нарушению `strict_constraints`, овер-инжинирингу, некорректности или явному ухудшению
-по `критерий_поиска`, такая ветка становится **тупиковой**:
-- порождает **0 потомков**;
-- финальный лист не включается в аккумулятор успешных решений.
+### Phase 4: Final Selection & Specification
+1. Review the accumulator of "Successful Solutions".
+2. Select the **Single Best Solution** based on the `Search Criteria`.
+3. Provide a **Detailed Architectural Specification** for this solution (NO CODE yet):
+   - **Summary:** High-level overview.
+   - **Components:** Key modules, classes, or functions.
+   - **Data Flow:** How data moves through the system.
+   - **Trade-offs:** Why this was chosen over alternatives.
+   - **Extension Points:** How it handles future growth.
 
 ---
 
-## 4) Выбор наилучшего решения
+## Configuration (Defaults)
 
-1. Из аккумулятора успешных решений выбери одно наилучшее по `критерий_поиска`
-   (строго соблюдая `strict_constraints`).
-2. Сформулируй **детализированное архитектурное описание** найденного решения, достаточное для его дальнейшей реализации:
-    - ключевые шаги;
-    - основные компоненты/абстракции;
-    - структура данных;
-    - разделение ответственности;
-    - основные точки расширения или параметры выбора.
+Parse numeric arguments from the user prompt to override these defaults. If a number is missing, use the default.
 
-(В рамках этой команды **код не требуется**.)
+| Parameter | Description | Default |
+| :--- | :--- | :--- |
+| `{max_abstract_variants}` | Minimum initial ideas | **20** |
+| `{num_promising}` | Candidates to deep dive | **5** |
+| `{max_depth}` | Tree depth limit | **5** |
+| `{max_branching}` | Max branches per node | **3** |
+| `{max_succeed}` | Max successful leaves to store | **40** |
 
 ---
 
-## Интерпретация входа (параметры)
+## Final Output Requirement
 
-После имени команды могут идти аргументы в свободной форме — числа, текст, пожелания.  
-По контексту привяжи числа к параметрам. Если какое-либо число отсутствует — используй значение по умолчанию.
-
-- `{max_abstract_variants}` — минимум абстрактных вариантов (по умолчанию **20**).
-- `{num_promising}` — размер списка перспективных вариантов (по умолчанию **5**).
-- `{max_depth}` — максимальная глубина дерева (по умолчанию **5**).
-- `{max_branching}` — максимальное ветвление (по умолчанию **3**).
-- `{max_succeed}` — максимальный размер аккумулятора успешных решений (по умолчанию **40**).
-
-`критерий_поиска`:
-- если указан явно — используй его;
-- если нет — применяй дефолтные критерии.
-
---- 
-В конце так же опиши сколько уровней получилось у дерева, и сколько вариантов в итоге оказались в аккумуляторе.
+After presenting the **Detailed Architectural Specification**, append a brief stats summary:
+> **Search Stats:**
+> - Tree Depth Reached: [X]
+> - Total Successful Candidates Found: [Y]

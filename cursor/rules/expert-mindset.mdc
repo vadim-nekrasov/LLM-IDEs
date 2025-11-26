@@ -39,6 +39,6 @@ Apply these three perspectives during **Planning** (Analysis) and **Verification
 
 ## 3. Documentation & Context Policy
 - **Language Policy**: All internal documentation (`.md`, `.mdc`) and code comments MUST be in **English**.
-- **Docs First**: Always read relevant `docs` before planning.
+- **Docs First**: Always read relevant `docs` before planning (unless the task is trivial/atomic and allows skipping).
 - **Keep Sync**: If you change architecture, API, or config -> **Update the Docs**.
 - **Zero Hallucination**: Verification of external APIs via tools (Context7) is mandatory. Do not guess.

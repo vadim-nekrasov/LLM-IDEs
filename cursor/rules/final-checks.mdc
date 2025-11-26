@@ -37,6 +37,8 @@ Ask yourself the "Core Questions" from that file, plus the specific checks below
 
 #### Functionality & Stability
 - [ ] **Success Criteria**: All requirements from the prompt are met.
+- [ ] **Strict Constraints**: All `strict_constraints` (if present) are strictly followed.
+- [ ] **Questions Answered**: All `questions_answered` (if present) are explicitly answered in the response.
 - [ ] **Regression Check**: Old functionality works as before.
 - [ ] **Performance**: No unnecessary re-renders or obvious performance regressions.
 - [ ] **Safety**: No potential memory leaks (forgotten subscriptions, event listeners, closures).

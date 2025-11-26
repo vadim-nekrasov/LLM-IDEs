@@ -29,9 +29,9 @@ Follow this pipeline strictly for every complex task or when `submit` rule is ac
 
 4.  **Constraints & Questions Detection**:
     - **Constraint Identification**:
-        - If the prompt contains a block with "Ограничения" in the title (e.g., "Заданные ограничения"), treat its content as strict `заданные_ограничения`.
+        - If the prompt contains a block with "Ограничения" in the title (e.g., "Заданные ограничения"), treat its content as strict `strict_constraints`.
     - **Question Identification**:
-        - If the prompt contains a block with "Вопрос" or "Вопросы" in the title (e.g., "Критически важные вопросы"), treat its content as `заданные_вопросы`.
+        - If the prompt contains a block with "Вопрос" or "Вопросы" in the title (e.g., "Критически важные вопросы"), treat its content as `questions_answered`.
         - You MUST answer these questions during the investigation phase.
 
 ## Phase 2: Documentation & Context (The Docs-First Checklist)
@@ -79,8 +79,8 @@ For new features, complex refactoring, or non-trivial bug fixes:
 
 2.  **Convergent Phase (Selection & Filtering)**:
     - **Filter**: Discard any options that:
-        - Violate strict `заданные_ограничения`.
-        - Cannot logically answer `заданные_вопросы`.
+        - Violate strict `strict_constraints`.
+        - Cannot logically answer `questions_answered`.
     - **Select**: Choose the **Top 3-5 options** from the remaining list.
     - **Late Breaking Heuristic**: If your best option appeared only at the very end of the list (e.g., #19 or #20), consider generating 5-10 more variants to ensure you haven't missed a better adjacent idea.
 

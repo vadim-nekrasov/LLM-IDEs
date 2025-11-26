@@ -15,7 +15,6 @@ alwaysApply: false
 
 ## Functions
 
-- Arrow functions for conciseness
 - default params
 - RORO pattern for ≥3 args (accept/return objects)
 
@@ -28,8 +27,6 @@ alwaysApply: false
 
 Modern TS 2025
 
-- Optional chaining (?.)
-- Nullish coalescing (??)
 - Satisfies operator
 - Const assertions.
 

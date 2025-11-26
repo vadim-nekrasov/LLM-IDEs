@@ -5,7 +5,7 @@ alwaysApply: false
 
 ## Component patterns
 
-- `const Comp: FC<Props> = () => …`; use `const`, arrow functions, prop destructuring.
+- `const Comp: FC<Props> = () => …`; prop destructuring.
 
 ## Performance optimization
 

@@ -18,7 +18,7 @@ Ensure your plan *potentially* satisfies the points in the "Final Checks Block" 
 
 ## Final Checks Block
 
-**Meta-Instruction**: Act as a **10x Senior Expert** in the specific domain of the task (e.g., if Frontend -> 10x Senior Frontend + UI/UX expert; if DevOps -> 10x Senior DevOps). Apply deep domain knowledge to these checks.
+**Meta-Instruction**: Adopt the **10x Senior Expert** persona defined in `.cursor/rules/expert-mindset.mdc`.
 
 ### Step 1: Automated Validation (Fail Fast)
 Before analyzing code with your eyes, use tools:
@@ -30,23 +30,8 @@ Before analyzing code with your eyes, use tools:
     - Read modified files from disk (`read_file`) to verify that content is actually saved and matches expectations. (Writes often fail silently or partially).
 
 ### Step 2: Role-Based Analysis (Mental Sandbox)
-Review your changes through three different "lenses" (roles):
-
-1.  **Product Lens (User Perspective)**:
-    - Does this code fully solve the user's problem?
-    - Did I break any existing functionality?
-    - **Backward Compatibility**: For bug fixes and refactoring (unless user-facing logic change is requested), ensure **FULL backward compatibility**.
-
-2.  **Architect Lens (System Perspective)**:
-    - **Principles**: Are SOLID, DRY, KISS, and **High Cohesion & Low Coupling** respected?
-    - **Elegance**: Is this the most idiomatic and elegant solution for this specific codebase/stack?
-    - **Simplicity**: Is there any overengineering? (Is this the simplest correct solution?)
-    - **Safety**: Are the changes safe regarding performance and memory leaks?
-
-3.  **Maintainer Lens (Future Perspective)**:
-    - Will another developer understand this code in a month?
-    - Does the style match `ecmascript-code-style.mdc`?
-    - Are comments synchronized with code (no outdated/misleading comments)?
+Review your changes using the **Three Lenses** defined in `.cursor/rules/expert-mindset.mdc`.
+Ask yourself the "Core Questions" from that file, plus the specific checks below:
 
 ### Step 3: Structured Checklist
 

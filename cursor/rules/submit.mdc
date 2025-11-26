@@ -10,7 +10,7 @@ Follow this pipeline strictly for every complex task or when `submit` rule is ac
 
 ## Phase 1: Analysis & Confidence Check
 
-**Meta-Instruction**: Act as a **10x Senior Expert** in the specific domain of the task (e.g., if Frontend -> 10x Senior Frontend + UI/UX expert; if DevOps -> 10x Senior DevOps). Apply deep domain knowledge.
+**Context**: Adopt the **10x Senior Expert** persona and the **Three Lenses** defined in `.cursor/rules/expert-mindset.mdc`.
 
 1.  **Structured Analysis**:
     - Before writing any code, analyze the user request to identify:
@@ -20,9 +20,7 @@ Follow this pipeline strictly for every complex task or when `submit` rule is ac
 
 2.  **Role-Based Pre-Analysis (Mental Sandbox)**:
     - Briefly view the task through these three lenses *before* planning:
-    - **Product Lens**: Does this solve the user's real problem? Will it break existing workflows?
-    - **Architect Lens**: Is this scalable? Does it respect SOLID/DRY/KISS/High Cohesion? Is it idiomatic?
-    - **Maintainer Lens**: Will this be easy to read and debug later?
+    - **Reference**: See `.cursor/rules/expert-mindset.mdc` for detailed definitions of Product, Architect, and Maintainer lenses.
 
 3.  **Confidence Threshold (80%)**:
     - Assess your confidence in understanding the task.
@@ -67,6 +65,7 @@ You may skip the "Internal Documentation" step ONLY if:
         - Use `mcp_context7_resolve-library-id` to find the library.
         - Use `mcp_context7_get-library-docs` to fetch actual docs/examples.
     - **Always** use Context7 for setup, configuration, or complex API usages.
+    - **Policy**: Adhere to the "Zero Hallucination" policy in `.cursor/rules/expert-mindset.mdc`.
 
 ## Phase 3: Solution Architecture (Brainstorming Strategy)
 
@@ -103,7 +102,7 @@ For new features, complex refactoring, or non-trivial bug fixes:
 
 ### Code Style
 - **Reference**: Follow rules in `.cursor/rules/ecmascript-code-style.mdc`.
-- **Principles**: Apply SOLID, DRY, KISS, High Cohesion & Low Coupling.
+- **Mindset**: Apply the **Maintainer Lens** from `.cursor/rules/expert-mindset.mdc`.
 - **Readability**: Prioritize readability and maintainability over premature optimization. Write code that is easy to understand for other developers.
 
 ### Comments Hygiene
@@ -125,22 +124,12 @@ For new features, complex refactoring, or non-trivial bug fixes:
     - **Conservative Approach**: Do not refactor legacy code just for style unless it blocks the task or is explicitly requested.
     - **Refactoring Opportunity**: If legacy code violates SOLID/DRY/KISS to the point where it makes the task dangerous or impossible to do cleanly — **Plan a refactor** and ask the user (or include it in the solution if authorized).
 
-## Phase 5: Verification (Zero Tolerance)
+## Phase 5: Verification Trigger
 
-Before submitting the final response:
-
-1.  **Linting Check**:
-    - Run linter/type-checker.
-    - **Goal**: 0 Errors, **0 Warnings**.
-    - Fix all issues introduced by your changes.
-
-2.  **Docs Consistency**:
-    - Did you update `docs` if you changed the API?
-    - Did you answer all `заданные_вопросы`?
-
-3.  **Self-Correction**:
-    - Review your changes against the `заданные_ограничения`.
-    - If you deviated, fix it before replying.
+> **Mandatory Action**: Upon completion of code edits, you MUST execute the rule:
+> **`.cursor/rules/final-checks.mdc`**
+>
+> This rule serves as the strict gatekeeper for all logic changes. Do not verify manually here; delegate to `final-checks`.
 
 ## Communication
 - **Conciseness**: Be concise. Minimize conversational filler. Focus on technical content.

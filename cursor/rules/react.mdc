@@ -24,13 +24,13 @@ alwaysApply: false
 - Destructure props in function params.
 - Avoid inline event handlers.
 - Use latest React APIs where they improve performance or clarity (e.g., `useTransition`, `useDeferredValue`,
-  `useOptimistic`, `lazy`, `Suspense`, e.t.c..).
+  `useOptimistic`, `lazy`, `Suspense`, etc.).
 - Minimize `useEffect` calls by combining logic.
 - Use `useId` for unique IDs.
 
 ## Code style
 
-- Для применения опциональных classname используй библиотеку classnames. Пример:
+- Use `classnames` library for optional classnames. Example:
   `<div className={cx('my-class', { 'my-class--active': isActive })} />`
 
 ## Error handling
@@ -50,4 +50,3 @@ alwaysApply: false
 ❌ `some.length && <JSX>` → ✅ `some.length > 0 && <JSX>`
 ❌ Inline objects/functions without memo
 ❌ Using index as key
-

@@ -5,10 +5,10 @@ alwaysApply: false
 
 ## Types
 
-- any → конкретные типы/generics (если возможно)
-- unknown → type guards для сужения (если возможно)
-- enums → const objects или union types
-- Избегай (если возможно) type assertions (as/!) — use type guards.
+- any → concrete types/generics (if possible)
+- unknown → type guards for narrowing (if possible)
+- enums → const objects or union types
+- Avoid type assertions (as/!) if possible — use type guards.
 - infer interfaces from Zod schemas
 - Use utility types (Partial, Pick, Omit, etc)
 - import type for type-only.
@@ -30,7 +30,5 @@ Modern TS 2025
 - Satisfies operator
 - Const assertions.
 
-Анти-паттерны:
-❌ improper generic constraints; 
-
-
+Anti-patterns:
+❌ improper generic constraints;

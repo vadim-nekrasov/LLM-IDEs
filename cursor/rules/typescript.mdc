@@ -30,5 +30,24 @@ Modern TS 2025
 - Satisfies operator
 - Const assertions.
 
+```ts
+// satisfies - verifies the shape but preserves exact literal types
+const config = {
+  apiBaseUrl: '/api',
+  retryCount: 3,
+} satisfies {
+  apiBaseUrl: string;
+  retryCount: number;
+};
+
+// const assertion - "freezes" literals and makes them suitable for type inference
+const ROUTES = {
+  HOME: '/',
+  ADMIN: '/admin',
+} as const;
+
+type RoutePath = (typeof ROUTES)[keyof typeof ROUTES]; // "/" | "/admin"
+```
+
 Anti-patterns:
 ❌ improper generic constraints;

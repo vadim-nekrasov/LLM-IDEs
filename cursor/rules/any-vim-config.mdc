@@ -1,5 +1,5 @@
 ---
-description: Always apply when the task involves editing or investigating Neovim or Vim configs.
+description: Apply when the task involves editing or investigating Neovim or Vim configs.
 alwaysApply: false
 ---
 

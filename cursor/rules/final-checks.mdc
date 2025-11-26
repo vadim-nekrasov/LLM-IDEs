@@ -5,14 +5,21 @@ alwaysApply: false
 
 ## When to Apply
 
+**Exception**: You may skip this rule if the changes were exclusively non-logic updates (e.g., adding console logs,
+comments, or fixing typos in documentation).
+
 ### 1. After Writing Code
+
 Run the "Final Checks Block" below. If issues are found:
-1.  Fix them.
-2.  Re-run the "Final Checks Block".
-3.  Repeat the cycle (Check -> Fix -> Re-Check) until all checks pass successfully.
+
+1. Fix them.
+2. Re-run the "Final Checks Block".
+3. Repeat the cycle (Check -> Fix -> Re-Check) until all checks pass successfully.
 
 ### 2. After Planning
-Ensure your plan *potentially* satisfies the points in the "Final Checks Block" (especially architectural and product aspects).
+
+Ensure your plan *potentially* satisfies the points in the "Final Checks Block" (especially architectural and product
+aspects).
 
 ---
 
@@ -21,21 +28,25 @@ Ensure your plan *potentially* satisfies the points in the "Final Checks Block" 
 **Meta-Instruction**: Adopt the **10x Senior Expert** persona defined in `.cursor/rules/expert-mindset.mdc`.
 
 ### Step 1: Automated Validation (Fail Fast)
+
 Before analyzing code with your eyes, use tools:
 
-1.  **Linter & Type Check**:
+1. **Linter & Type Check**:
     - Run `read_lints` for modified files.
     - **Goal**: 0 errors, 0 warnings. Fix all new issues.
-2.  **File Integrity**:
-    - Read modified files from disk (`read_file`) to verify that content is actually saved and matches expectations. (Writes often fail silently or partially).
+2. **File Integrity**:
+    - Read modified files from disk (`read_file`) to verify that content is actually saved and matches expectations. (
+      Writes often fail silently or partially).
 
 ### Step 2: Role-Based Analysis (Mental Sandbox)
+
 Review your changes using the **Three Lenses** defined in `.cursor/rules/expert-mindset.mdc`.
 Ask yourself the "Core Questions" from that file, plus the specific checks below:
 
 ### Step 3: Structured Checklist
 
 #### Functionality & Stability
+
 - [ ] **Success Criteria**: All requirements from the prompt are met.
 - [ ] **Strict Constraints**: All `strict_constraints` (if present) are strictly followed.
 - [ ] **Questions Answered**: All `questions_answered` (if present) are explicitly answered in the response.
@@ -45,11 +56,14 @@ Ask yourself the "Core Questions" from that file, plus the specific checks below
 - [ ] **Edge Cases**: Edge cases (empty arrays, nulls, network errors) are handled.
 
 #### Code Quality & Style
-- [ ] **Modern Stack**: Used the most recent language/framework features **supported by the project's current configuration**.
+
+- [ ] **Modern Stack**: Used the most recent language/framework features **supported by the project's current
+  configuration**.
 - [ ] **Style Compliance**: Code complies with `.cursor/rules/ecmascript-code-style.mdc`.
 - [ ] **No Dead Code**: Commented-out code and unused imports are removed.
 
 #### Documentation & Context
+
 - [ ] **Comments**: All comments are up-to-date, concise, and in English.
 - [ ] **Internal Docs**:
     - Have all `docs` on the path to the files been consulted?

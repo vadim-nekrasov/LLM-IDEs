@@ -9,7 +9,8 @@
 
 Analyze the user's request to establish the evaluation framework.
 
-- **Strict Constraints:** Identify any explicit restrictions (e.g., "Constraints:", "Restrictions"). These are `strict_constraints`. Any solution violating these must be **immediately discarded**.
+- **Strict Constraints:** Identify any explicit restrictions (e.g., "Constraints:", "Restrictions"). These are
+  `strict_constraints`. Any solution violating these must be **immediately discarded**.
 - **Search Criteria:** 
   - If specified by the user, use their criteria.
   - Otherwise, use the **Default Criteria**:
@@ -32,6 +33,7 @@ Generate a list of **High-Level Approaches**.
 Select the top candidates from Phase 1 to explore further.
 - **Quantity:** Select `{num_promising}` variants.
 - **Basis:** Evaluate against the `Search Criteria`.
+- **Late-Breaking Heuristic:** If your best option appeared only at the very end of the list (e.g., last 3-5 items), consider generating 5-10 more variants to ensure you haven't missed a better adjacent idea.
 
 ### Phase 3: Recursive Tree Exploration
 Expand the promising candidates into a decision tree to explore implementation details and trade-offs.
@@ -51,8 +53,9 @@ Expand the promising candidates into a decision tree to explore implementation d
 
 ### Phase 4: Final Selection & Specification
 1. Review the accumulator of "Successful Solutions".
-2. Select the **Single Best Solution** based on the `Search Criteria`.
-3. Provide a **Detailed Architectural Specification** for this solution (NO CODE yet):
+2. **Comparison**: Briefly list the **Top `{num_promising}` Candidates** with their key Pros & Cons.
+3. Select the **Single Best Solution** based on the `Search Criteria`.
+4. Provide a **Detailed Architectural Specification** for this solution (NO CODE yet):
    - **Summary:** High-level overview.
    - **Components:** Key modules, classes, or functions.
    - **Data Flow:** How data moves through the system.
@@ -63,15 +66,16 @@ Expand the promising candidates into a decision tree to explore implementation d
 
 ## Configuration (Defaults)
 
-Parse numeric arguments from the user prompt to override these defaults. If a number is missing, use the default.
+Parse numeric arguments from the user prompt to override these defaults. 
+**Auto-Adjustment:** If the task is determined to be simple/straightforward, automatically reduce `{max_abstract_variants}` to **5**.
 
-| Parameter | Description | Default |
-| :--- | :--- | :--- |
-| `{max_abstract_variants}` | Minimum initial ideas | **20** |
-| `{num_promising}` | Candidates to deep dive | **5** |
-| `{max_depth}` | Tree depth limit | **5** |
-| `{max_branching}` | Max branches per node | **3** |
-| `{max_succeed}` | Max successful leaves to store | **40** |
+| Parameter | Description | Default    |
+| :--- | :--- |:-----------|
+| `{max_abstract_variants}` | Minimum initial ideas | **20** (or **5** for simple tasks) |
+| `{num_promising}` | Candidates to deep dive | **5**      |
+| `{max_depth}` | Tree depth limit | **5**      |
+| `{max_branching}` | Max branches per node | **3**      |
+| `{max_succeed}` | Max successful leaves to store | **40**     |
 
 ---
 

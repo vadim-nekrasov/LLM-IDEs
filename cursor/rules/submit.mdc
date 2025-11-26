@@ -69,34 +69,29 @@ You may skip the "Internal Documentation" step ONLY if:
 
 ## Phase 3: Solution Architecture (Brainstorming Strategy)
 
-For new features, complex refactoring, or non-trivial bug fixes:
+For new features, complex refactoring, or non-trivial bug fixes, use the **Solution Tree Search** method.
 
-1.  **Divergent Phase (Wide Search)**:
-    - Generate a list of **~20 potential approaches/hypotheses** (or `заданное_число_вариантов_для_рассмотрения` if specified).
-    - Format: Concise bullet points (1 sentence each).
-    - Goal: Maximize variety (explore different architectural patterns, libraries, algorithms).
-    - *Note: If the task is simple, you may reduce this number, but default to broad exploration.*
+1.  **Determine Complexity**:
+    - **Complex Task**: Requires serious architectural decisions, affects multiple modules, or has high risk.
+    - **Simple Task**: Localized change, straightforward implementation, low risk.
 
-2.  **Convergent Phase (Selection & Filtering)**:
-    - **Filter**: Discard any options that:
-        - Violate strict `strict_constraints`.
-        - Cannot logically answer `questions_answered`.
-    - **Select**: Choose the **Top 3-5 options** from the remaining list.
-    - **Late Breaking Heuristic**: If your best option appeared only at the very end of the list (e.g., #19 or #20), consider generating 5-10 more variants to ensure you haven't missed a better adjacent idea.
+2.  **Execute Tree Search**:
+    - Run the process defined in `.cursor/commands/solution-tree-search.md`.
+    - **Parameters**:
+        - For **Complex Tasks**: Use defaults (start with 20+ variants).
+        - For **Simple Tasks**: Override `{max_abstract_variants}` to **5** (or similar small number).
 
-3.  **Detailed Analysis & Reasoning**:
-    - For the selected Top 3-5 options:
-        - Pros/Cons analysis.
-        - Pseudo-code or rough architecture sketch.
-        - Complexity estimation.
+3.  **Detailed Analysis & Reasoning** (Integrated in Tree Search):
+    - The tree search concludes with a selected solution and detailed specification.
+    - **Comparison**: Ensure a brief comparison of the Top candidates (Pros & Cons) is included.
     - **Reasoning Guidelines**:
         - Value good arguments over authority.
         - You may speculate, but clearly flag it ("I suspect that...", "Hypothetically...").
-    - Recommendation: Explicitly state which option you recommend and why.
+        - Explicitly state why the chosen option wins over the others.
+    - **Strict Rule**: Before writing any code files, ensure the plan from the tree search is clear and robust.
 
-4.  **Final Plan Formalization**:
-    - **Strict Rule**: Before writing any code files, fix the detailed step-by-step plan and/or pseudocode.
-    - Do not proceed to Phase 4 until the plan is clear and robust.
+4.  **Immediate Action**:
+    - Proceed directly to implementation (Phase 4) using the selected solution. **Do not ask for confirmation.**
 
 ## Phase 4: Implementation Standards
 
@@ -128,6 +123,9 @@ For new features, complex refactoring, or non-trivial bug fixes:
 
 > **Mandatory Action**: Upon completion of code edits, you MUST execute the rule:
 > **`.cursor/rules/final-checks.mdc`**
+>
+> **Exception**: You may skip this rule ONLY if the changes were exclusively non-logic updates (e.g., adding console
+> logs, comments, or fixing typos in documentation).
 >
 > This rule serves as the strict gatekeeper for all logic changes. Do not verify manually here; delegate to `final-checks`.
 

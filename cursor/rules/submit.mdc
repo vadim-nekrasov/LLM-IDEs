@@ -1,5 +1,5 @@
 ---
-description: Apply when a task needs analysis and implementation
+description: Apply when a task needs analysis and implementation via editing files.
 globs: 
 alwaysApply: false
 ---

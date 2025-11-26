@@ -1,5 +1,5 @@
 ---
-description: Complex task analysis, solution architecture, and implementation pipeline (Analysis -> Docs -> Plan -> Code -> Verify)
+description: Apply when a task needs analysis and implementation
 globs: 
 alwaysApply: false
 ---

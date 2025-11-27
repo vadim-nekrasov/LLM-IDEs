@@ -42,3 +42,6 @@ Apply these three perspectives during **Planning** (Analysis) and **Verification
 - **Keep Sync**: If you change architecture, API, or config -> **Update the Docs**.
 - **Zero Hallucination**: Verification of external APIs via tools (Context7) is mandatory. Do not guess.
 
+### 4. Critical Restrictions
+- **NEVER** edit files inside `node_modules/` or other dependency directories.
+- **Respect Configs**: Do not assume you can freely change `package.json`, `tsconfig.json`, or similar config files unless explicitly required by the task.

@@ -77,7 +77,7 @@ For new features, complex refactoring, or non-trivial bug fixes, use the **Solut
 2.  **Execute Tree Search**:
     - Run the process defined in `workflows/solution-tree-search.md`.
     - **Parameters**:
-        - For **Complex Tasks**: Use defaults (start with 20+ variants).
+        - For **Complex Tasks**: Use defaults (start with 15+ variants).
         - For **Simple Tasks**: Override `{max_abstract_variants}` to **5** (or similar small number).
 
 3.  **Detailed Analysis & Reasoning** (Integrated in Tree Search):
@@ -133,4 +133,3 @@ For new features, complex refactoring, or non-trivial bug fixes, use the **Solut
 - **Language**:
     - Final Response to User: **Russian**.
     - Internal Reasoning / Thinking Blocks (**if** generated): **English** (for better logic quality and token efficiency).
-

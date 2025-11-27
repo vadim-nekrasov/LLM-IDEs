@@ -1,43 +1,27 @@
-Задача: Если в текущем сообщении я предоставил тебе patch из набора правок, то проведи критический аудит правок из этого
-патча. А если в текущем сообщении я не предоставил тебе такого патча, то просто проведи критический аудит всех правок по
-задаче, которой посвящен текущий диалог.
+Task: If I provided a patch of changes in the current message, perform a critical audit of the changes in that patch. If I did not provide such a patch, simply perform a critical audit of all changes related to the task discussed in the current dialogue.
 
-1) Проанализируй сумму всех правок для этой задачи. Ответь на вопросы:
-    - [ ] Все ли они нужны?
-    - [ ] Нет ли в них овер-инженеринга?
-    - [ ] Можно ли было эту задачу решить проще, элегантнее, корректнее?
-    - [ ] Если правки касались ecmascript-файлов, то все ли они соответствуют правилам, прописанным в файле
-      ecmascript-code-style.md?
+1) **Critical Audit & Quality Check**:
+    - **Explicit Checklist**:
+        - [ ] Are all changes necessary?
+        - [ ] Is there any overengineering or avoidable complexity?
+        - [ ] Could this task be solved more simply or more elegantly while staying correct?
+        - [ ] For ECMAScript files: does the code comply with `rules/ecmascript-code-style.md`?
+    - Apply the **Three Lenses** (especially Architect and Maintainer) from `rules/expert-mindset.md`.
+    - Execute the checklist from `rules/final-checks.md` (Functional, Code Quality, Docs).
+    - **Additional Focus Points**:
+        - **Priority**: Readability & Maintainability > Micro-optimizations (prefer clear code over premature optimization).
+        - **Local Consistency**: If adding functionality similar to existing code (e.g., a reducer, component or hook), strictly follow the style and structure of the *current* module/file.
 
-2) Рассмотри на всякий случай как минимум {N} альтернативных вариантов. Если найдешь вариант получше, то примени его.
-   При поиске альтернатив следуй следующим правилам:
-    - При размшлении над каждым из вариантов, начни рассуждение с большой неуверенностью, и по мере размышлений
-      постепенно набирай уверенность, анализируя плюсы и минусы конкретного варианта. Не делай поспешных выводов. Делай
-      описание этих вариантов кратким.
-    - Follow the user’s requirements carefully and to the letter.
-    - Fully implement all requested functionality.
-    - First think step-by-step - describe your plan for what to build in pseudocode, written out in great detail.
-    - Value good arguments over authorities, the source is irrelevant
-    - You may use high levels of speculation or prediction, just flag it for me
-    - Focus on easy and readability code, over being performant. Write maintainable and scalable code
-    - Если добавляешь функциональность, аналогичную уже существующей (например, редьюсер или компонент), следуй стилю и
-      структуре текущего кода.
-    - Старайся следовать наилучшим практикам Clean Code.
-    - При проектировании старайся следовать принципам SOLID, DRY, а так же "High Cohesion & Low Coupling".
-    - Be concise Minimize any other prose.
-    - Ensure code is complete! Verify thoroughly finalized.
+2) **Solution Search (Alternatives)**:
+    - **Execute Tree Search**: Run the process defined in `workflows/solution-tree-search.md`.
+    - **Parameters**:
+        - Set `{max_abstract_variants}` to **{N}** (default: **15**).
+        - Follow the "Late-Breaking Heuristic" from `solution-tree-search.md` (adding more variants if the best one is at the end).
+    - **Result**: If the search identifies a solution better than the current implementation, apply it.
 
-3) Если в итоге ты выбрал последний или предпоследний вариант из рассматриваемых, то добавь еще к рассмотрению 10
-   вариантов. Примеры:
-    - Если ты рассматривал 20 вариантов и лучшим оказался, на твой взгляд, 19-й вариант, то добавь к рассмотрению еще 10
-      вариантов.
-    - Если ты рассматривал 20 вариантов и лучшим оказался, на твой взгляд, 20-й вариант, то добавь к рассмотрению еще 10
-      вариантов.
+3) **Cleanup**:
+    - Remove all console logs added during this task.
 
-4) Удали все консольные логи, добавленные в ходе данной задачи.
-
-Интерпретация входа:
-
-- {N} — первое число после имени команды (если не указано, используй 20+).
-- Если переданы текстовые пометки после числа — учти их как дополнительные ограничения/пожелания.
-
+**Input Interpretation**:
+- `{N}` — the first number after the command name (default: **15**).
+- Text after the number — additional constraints/requests.

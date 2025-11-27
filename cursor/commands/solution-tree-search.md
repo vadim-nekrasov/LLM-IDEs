@@ -5,7 +5,16 @@
 
 ---
 
-## 1. Constraints & Criteria Analysis
+## 1. Mindset & Reasoning Guidelines
+
+- **Epistemic Style:** Start with high uncertainty. Gradually build confidence by rigorously analyzing pros, cons, and trade-offs for each option. Do not jump to conclusions.
+- **Speculation:** You may use high levels of speculation or prediction to explore novel solutions, but you **must clearly flag it** (e.g., "Hypothetically...", "I suspect that...").
+- **Authority:** Value good arguments over authorities. The source is irrelevant; the logic is everything.
+- **Planning:** Use pseudocode if it helps structure complex logic or data flows.
+
+---
+
+## 2. Constraints & Criteria Analysis
 
 Analyze the user's request to establish the evaluation framework.
 
@@ -21,7 +30,7 @@ Analyze the user's request to establish the evaluation framework.
 
 ---
 
-## 2. Step-by-Step Execution
+## 3. Step-by-Step Execution
 
 ### Phase 1: Abstract Brainstorming
 Generate a list of **High-Level Approaches**.
@@ -67,11 +76,19 @@ Expand the promising candidates into a decision tree to explore implementation d
 ## Configuration (Defaults)
 
 Parse numeric arguments from the user prompt to override these defaults. 
-**Auto-Adjustment:** If the task is determined to be simple/straightforward, automatically reduce `{max_abstract_variants}` to **5**.
+
+**Auto-Adjustment (Simple Tasks Only):**
+Treat the task as "simple/straightforward" and reduce `{max_abstract_variants}` to **5** only if **all** of the following are true:
+- Changes are limited to **1–2 files**.
+- No new public APIs, routes, Redux slices, shared components, or other cross-cutting abstractions are introduced.
+- No changes to global or cross-cutting architecture (state management, routing, global config, build tooling).
+- The user explicitly frames the task as a "small/local fix", "minor cosmetic change", or equivalent.
+
+If you are unsure whether the task is simple, **do NOT apply auto-adjustment**.
 
 | Parameter | Description | Default                                            |
 | :--- | :--- |:---------------------------------------------------|
-| `{max_abstract_variants}` | Minimum initial ideas | **15** (or **5** for simple/straightforward tasks) |
+| `{max_abstract_variants}` | Minimum initial ideas | **15** (auto-adjustment may reduce to **5** for simple tasks) |
 | `{num_promising}` | Candidates to deep dive | **5**                                              |
 | `{max_depth}` | Tree depth limit | **5**                                              |
 | `{max_branching}` | Max branches per node | **3**                                              |

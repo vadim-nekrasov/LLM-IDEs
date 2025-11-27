@@ -1,0 +1,83 @@
+# Final Checks
+
+## Scope
+- **Description**: Apply before completion a task that involved editing files. To ensure that all recent edits are verified for quality, stability, and best practices.
+
+## Rules
+
+### When to Apply
+
+**Exception**: You may skip this rule if the changes were exclusively non-logic updates (e.g., adding console logs,
+comments, or fixing typos in documentation).
+
+#### 1. After Writing Code
+
+Run the "Final Checks Block" below. If issues are found:
+
+1. Fix them.
+2. Re-run the "Final Checks Block".
+3. Repeat the cycle (Check -> Fix -> Re-Check) until all checks pass successfully.
+
+#### 2. After Planning
+
+Ensure your plan *potentially* satisfies the points in the "Final Checks Block" (especially architectural and product
+aspects).
+
+---
+
+### Final Checks Block
+
+**Meta-Instruction**: Adopt the **10x Senior Expert** persona defined in `expert-mindset.md`.
+
+#### Step 1: Automated Validation (Fail Fast)
+
+Before analyzing code with your eyes, use tools:
+
+1. **Linter & Type Check**:
+    - Run `read_lints` for modified files.
+    - **Goal**: 0 errors, 0 warnings. Fix all new issues.
+2. **File Integrity**:
+    - Read modified files from disk (`read_file`) to verify that content is actually saved and matches expectations. (
+      Writes often fail silently or partially).
+
+#### Step 2: Role-Based Analysis (Mental Sandbox)
+
+Review your changes using the **Three Lenses** defined in `expert-mindset.md`.
+Ask yourself the "Core Questions" from that file, plus the specific checks below:
+
+#### Step 3: Structured Checklist
+
+##### Functionality & Stability
+
+- [ ] **Success Criteria**: All requirements from the prompt are met.
+- [ ] **Strict Constraints**: All `strict_constraints` (if present) are strictly followed.
+- [ ] **Questions Answered**: All `questions_answered` (if present) are explicitly answered in the response.
+- [ ] **Regression Check**: Old functionality works as before.
+- [ ] **Performance**: No unnecessary re-renders or obvious performance regressions.
+- [ ] **Safety**: No potential memory leaks (forgotten subscriptions, event listeners, closures).
+- [ ] **Edge Cases**: Edge cases (empty arrays, nulls, network errors) are handled.
+
+##### Code Quality & Style
+
+- [ ] **Modern Stack**: Used the most recent language/framework features **supported by the project's current
+  configuration**.
+- [ ] **Style Compliance**: Code complies with `ecmascript-code-style.md`.
+- [ ] **No Dead Code**: Commented-out code and unused imports are removed.
+
+##### Documentation & Context
+
+- [ ] **Comments**: All comments are up-to-date, concise, and in English.
+- [ ] **Internal Docs**:
+    - Have all `docs` on the path to the files been consulted?
+    - **Triggers for Update**: If changes affect **architecture**, paths, imports, entry points (barrels), directory
+      structure, public names (slice/reducer/context/hook/prop), API/CLI/URLs, configs/env, or contracts — **update the
+      corresponding `.md` docs**.
+    - **Stale Docs**: Did you update any documentation that was found to be outdated/incorrect during the task?
+- [ ] **External Deps (Context7)**:
+    - If new libraries were added, was `use context7` used to verify versions/API?
+    - Am I confident in the correctness of external API usage (Zero Hallucination)?
+
+---
+
+use context7
+

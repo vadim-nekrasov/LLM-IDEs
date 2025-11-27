@@ -1,0 +1,56 @@
+# React Development Rules
+
+## Scope
+- **Globs**: `*.tsx`, `*.jsx`
+- **Description**: Patterns and best practices for React.
+
+## Rules
+
+### Component patterns
+
+- `const Comp: FC<Props> = () => …`; prop destructuring.
+
+### Performance optimization
+
+- Heavy calc → `useMemo`.
+- Stable callbacks → `useCallback`.
+- List keys → stable IDs.
+- Use React concurrent features when useful.
+- Avoid inline functions in JSX to reduce re-renders.
+- Wrap rarely changing components in `React.memo`.
+- Use `Suspense` for loading states.
+- Batch `setState` updates in async code to minimize renders.
+- Implement proper cleanup in useEffect hooks
+
+### JSX best practices
+
+- Destructure props in function params.
+- Avoid inline event handlers.
+- Use latest React APIs where they improve performance or clarity (e.g., `useTransition`, `useDeferredValue`,
+  `useOptimistic`, `lazy`, `Suspense`, etc.).
+- Minimize `useEffect` calls by combining logic.
+- Use `useId` for unique IDs.
+
+### Code style
+
+- Use `classnames` library for optional classnames. Example:
+  `<div className={cx('my-class', { 'my-class--active': isActive })} />`
+
+### Error handling
+
+- Use Error Boundaries for unexpected errors.
+- Handle expected errors via return values.
+- Validate props/forms (e.g., Zod, controlled inputs, React Hook Form).
+
+### A11y
+
+- Use `aria-*`, semantic HTML, `role="button"`, `tabIndex={0}`, `onKeyDown`.
+- Support Enter and Space keys.
+- Touch support is critical.
+
+### Anti-patterns
+
+❌ `some.length && <JSX>` → ✅ `some.length > 0 && <JSX>`
+❌ Inline objects/functions without memo
+❌ Using index as key
+

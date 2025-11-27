@@ -1,0 +1,491 @@
+# Code Style & Modern JS/TS Usage (2025)
+
+## Scope
+- **Globs**: `*.tsx`, `*.ts`, `*.jsx`, `*.js`
+- **Description**: Code style guidelines for modern ECMAScript.
+
+## Rules
+
+Use modern language features **where it improves readability and reduces boilerplate**, without compromising performance.
+
+By "modern JS/TS", we specifically mean:
+
+- optional chaining, nullish coalescing, logical assignments (??= ||= &&=);
+- Iterator Helpers (`Iterator.from`, `.map/.filter/.take/.drop/.find/.toArray`, etc.);
+- new `Set` methods (`intersection`, `union`, `difference`, `symmetricDifference`, `isSubsetOf`, `isSupersetOf`, `isDisjointFrom`, etc.);
+- immutable Array methods (`toSorted`, `toReversed`, `toSpliced`, etc.);
+- `Object.groupBy`, `Promise.withResolvers`, `Promise.try`, `structuredClone`, `Intl.*`, etc.
+
+### General Environment & Style Preferences
+
+- **Target Environment** — **latest Chrome** only (current JS 2025 specification).
+  You can safely use all modern Iterator APIs and other new language features.
+- **Functional style** is preferred over imperative, provided it **does not degrade performance** or clarity.
+- Where possible without penalty, replace imperative loops (`for`, `for...of`, `while`) with functional constructs:
+    - Array methods (`map`, `filter`, `reduce`, `flatMap`, `some`, `every`, etc.),
+    - Iterator Helpers,
+    - Set operations.
+- In many cases, **iterators are preferred over arrays**, especially:
+    - when working with potentially large/lazy sources (generators, streams);
+    - when **early termination** is needed (`find`, `take`, `drop`) without full materialization;
+    - when implementing one-pass data processing without intermediate large arrays.
+- Whenever possible, formulate logic to **use `const` instead of `let`**:
+    - instead of external "counters" and accumulators with `let`, use `reduce`, lazy iterators, and pure functions.
+
+---
+
+### Optional Chaining
+
+**Bad / Good**
+
+```js
+// ❌ Bad
+if (user && user.profile && user.profile.address) {
+  const city = user?.profile?.address?.city;
+}
+
+// ✅ Good
+const city = user?.profile?.address?.city ?? 'Unknown';
+```
+
+```js
+// ❌ Bad
+typeof maybeFn === 'function' && maybeFn();
+
+// ✅ Good
+maybeFn?.();
+```
+
+---
+
+### Nullish Coalescing (??)
+
+```js
+// ❌ Bad — 0 and '' are considered empty
+const limit = opts.limit || 20;
+
+// ✅ Good
+const limit = opts.limit ?? 20;
+```
+
+---
+
+### Logical Assignments (??= ||= &&=)
+
+```js
+// ❌ Bad
+if (cfg.retries === null || cfg.retries === undefined) {
+  cfg.retries = 3;
+}
+
+// ✅ Good
+cfg.retries ??= 3;
+```
+
+```js
+// ❌ Bad — mixing logic and side effects
+connected &&= ping();
+
+// ✅ Good
+connected = connected ? ping() : false;
+```
+
+---
+
+### Iterator Helpers
+
+#### General Rules
+
+Use Iterator Helpers when it provides advantages:
+
+* Source is **not an array** (generators, lazy collections, streams), and array materialization is not needed.
+* **Early termination** is needed (e.g., `find`, `take`, `drop`) without creating large intermediate arrays.
+* "Pure" reduction from `Map`/`Set`/Iterator to a final structure is needed in **one pass**, without multiple sequential `.map/.filter/.slice` calls.
+* However, if the collection already has a **simple and readable method** (e.g., `map`, `filter` on Array), do not replace it with an iterator just for the sake of it.
+
+ANY iterators, including those returned by `Array.prototype`, `Map.prototype`, and `Set.prototype` methods (like `.keys()`, `.values()`, etc.), already inherit `Iterator.prototype` and directly support helper methods (`.reduce`, `.map`, `.some`, etc.). Wrap in `Iterator.from()` only **iterable** sources that are not iterators (Arrays, Set, Map, generators, etc.) when necessary.
+
+#### Input Normalization
+
+```js
+// ❌ Bad — custom iterator constructor
+const toIterator = x =>
+  x && typeof x[Symbol.iterator] === 'function'
+    ? x[Symbol.iterator]()
+    : x && typeof x.next === 'function'
+      ? x
+      : [][Symbol.iterator]();
+
+// ✅ Good — unified path
+const it = Iterator.from(maybeIterableOrIterator);
+```
+
+#### Filtering, Mapping, and Limiting
+
+```js
+// ❌ Do not wrap built-in array iterators
+// Bad
+Iterator.from(Array(n).keys()).map(i => i + 1).toArray();
+
+// ✅ Good — in ES2025 built-in iterators inherit Iterator Helpers
+Array(n).keys().map(i => i + 1).toArray();
+```
+
+```js
+// ❌ Bad — manual loops
+function* naturals() { let i = 1; while (true) yield i++; }
+const it = naturals();
+const out = [];
+while (out.length < 5) {
+  const n = it.next().value;
+  if (n % 2 === 0) out.push(n * n);
+}
+
+// ✅ Good — lazy, readable
+const out = naturals()
+  .filter(n => n % 2 === 0)
+  .map(n => n * n)
+  .take(5)
+  .toArray();
+```
+
+#### Pagination without extra arrays
+
+```js
+// ❌ Bad — full array materialization
+const arr = Array.from(iterable);
+const pageItems = arr.slice(page * size, page * size + size);
+
+// ✅ Good
+const pageItems = Iterator.from(iterable)
+  .drop(page * size)
+  .take(size)
+  .toArray();
+```
+
+#### Window: "skip N, take M" from a large source
+
+```js
+// ❌ Bad — full materialization
+const win = Array.from(events).slice(offset, offset + limit);
+
+// ✅ Good — lazy window
+const win = Iterator.from(events)
+  .drop(offset)
+  .take(limit)
+  .toArray();
+```
+
+#### Top-N
+
+```js
+// ❌ Bad — arrays and mutations
+const top10 = Array.from(items)
+  .map(x => ({ x, score: scoreOf(x) }))
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 10)
+  .map(v => v.x);
+
+// ✅ Good — lazy, only final materialization
+const top10 = Iterator.from(items)
+  .map(x => ({ x, score: scoreOf(x) }))
+  .toArray()
+  .toSorted((a, b) => b.score - a.score)
+  .slice(0, 10)
+  .map(v => v.x);
+```
+
+#### Early termination / "infinite" sources
+
+```js
+// ❌ Bad — hang / OOM
+Array.from(naturals()).find(...);
+
+// ✅ Good
+const found = naturals().find(n => n % 12345 === 0);
+```
+
+---
+
+### Working with files and streams
+
+```js
+// ❌ Bad — collect everything first
+const lines = Array.from(readLines(stream));
+const first = lines.find(l => l.includes(key));
+
+// ✅ Good — read as needed
+const first = readLines(stream).find(l => l.includes(key));
+```
+
+---
+
+### Set Operations (intersection / union / difference / symmetricDifference / isSubsetOf ...)
+
+```js
+// ❌ Bad — O(n²)
+const common = arrA.filter(x => arrB.includes(x));
+
+// ✅ Good
+const common = new Set(arrA).intersection(new Set(arrB));
+```
+
+```js
+// ❌ Bad — mutations
+for (const v of b) if (a.has(v)) a.delete(v);
+
+// ✅ Good
+const diff = new Set(a).difference(new Set(b));
+```
+
+```js
+// ❌ Bad — manual XOR via arrays
+const sym = [
+  ...arrA.filter(x => !arrB.includes(x)),
+  ...arrB.filter(x => !arrA.includes(x)),
+];
+
+// ✅ Good
+const sym = new Set(arrA).symmetricDifference(new Set(arrB));
+```
+
+```js
+// ❌ Bad — O(n·m) and duplicate issues
+const isSub = arrA.every(x => arrB.includes(x));
+
+// ✅ Good
+const isSub = new Set(arrA).isSubsetOf(new Set(arrB));
+```
+
+```js
+// ❌ Bad
+const isSuper = arrB.every(x => arrA.includes(x));
+
+// ✅ Good
+const isSuper = new Set(arrA).isSupersetOf(new Set(arrB));
+```
+
+```js
+// ❌ Bad
+const disjoint = arrA.every(x => !arrB.includes(x));
+
+// ✅ Good
+const disjoint = new Set(arrA).isDisjointFrom(new Set(arrB));
+```
+
+---
+
+### Immutable Array Methods
+
+```js
+// ❌ Bad — mutates
+nums.sort((a, b) => a - b);
+
+// ✅ Good
+const sorted = nums.toSorted((a, b) => a - b);
+```
+
+---
+
+### Object.groupBy
+
+```js
+// ❌ Bad
+const groups = {};
+for (const u of users) (groups[u.role] ??= []).push(u);
+
+// ✅ Good
+const byRole = Object.groupBy(users, u => u.role);
+```
+
+---
+
+### Promise / Error Handling
+
+#### Promise.withResolvers
+
+```ts
+// ❌ Bad — lost reject
+let holder!: Promise<string>;
+{
+  const { promise, resolve } = Promise.withResolvers<string>();
+  holder = promise;
+  setTimeout(() => resolve('done'), 100);
+}
+
+// ✅ Good
+const { promise, resolve, reject } = Promise.withResolvers<string>();
+const timeout = setTimeout(() => reject(new Error('timeout')), 5000);
+doAsync().then(v => {
+  clearTimeout(timeout);
+  resolve(v);
+});
+await promise;
+```
+
+#### Promise.try
+
+```js
+// ❌ Bad — sync error does not turn into reject
+new Promise(resolve => resolve(callback()));
+
+// ✅ Good
+Promise.try(callback).then(handle).catch(report);
+```
+
+#### Sync/Async Unification
+
+```js
+// ❌ Bad
+function runMaybe(fn) {
+  try {
+    const r = fn();
+    return Promise.resolve(r);
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
+
+// ✅ Good
+const runMaybe = fn => Promise.try(fn);
+```
+
+#### Unified try/catch flow
+
+```js
+// ❌ Bad — mixed style
+try {
+  const data = await maybeSyncOrAsync();
+  return doSomething(data);
+} catch (e) {
+  return handle(e);
+}
+
+// ✅ Good
+await Promise.try(() => maybeSyncOrAsync())
+  .then(doSomething)
+  .catch(handle);
+```
+
+#### Batch processing of "dubious" callbacks
+
+```js
+// ❌ Bad
+const results = await Promise.all(
+  tasks.map(task => {
+    try {
+      return task();
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }),
+);
+
+// ✅ Good
+const results = await Promise.all(
+  tasks.map(task => Promise.try(task)),
+);
+```
+
+#### Universal wrapper for external callbacks
+
+```js
+// ✅ Good — unified interface for sync/async hooks
+export const compute = (input, { onCompute } = {}) =>
+  Promise.try(() => onCompute?.(input))
+    .then(res => merge(input, res))
+    .catch(reportAndFallback);
+```
+
+---
+
+### Deep Clone
+
+```js
+// ❌ Bad — breaks Date/Map/cycles
+const copy = JSON.parse(JSON.stringify(obj));
+
+// ✅ Good
+const copy = structuredClone(obj);
+```
+
+---
+
+### Intl API
+
+```js
+// ❌ Bad
+const price = 'RUB ' + Math.round(value * 100) / 100;
+
+// ✅ Good
+const fmt = new Intl.NumberFormat('ru-RU', {
+  style: 'currency',
+  currency: 'RUB',
+});
+const price = fmt.format(value);
+```
+
+---
+
+### Performance & Optimization
+
+* Avoid full materialization of large collections when lazy iterators suffice.
+* Use Iterator Helpers and Set operations if they improve readability and do not harm performance.
+* Watch out for memory leaks: do not hold unnecessary references to large structures.
+* Cache heavy calculations and network requests if reused multiple times.
+* Efficiently handle asynchronous operations:
+    * do not create unnecessary `await` in chains;
+    * run independent tasks in parallel (`Promise.all`) where possible.
+
+---
+
+### Security
+
+* Do not trust input data.
+* Avoid direct use of unverified HTML.
+* Consider XSS and injections when working with strings and external sources.
+* Ensure code does not have obvious spots for SQL/NoSQL injections and insecure serialization.
+
+---
+
+### Console Logs (Debugging)
+
+If in doubt about the bug cause — **add working `console.log`** that actually help figure it out:
+
+* Log **key input data and intermediate states**.
+* Remember that objects in browser console may become strings like `"{}"` / `"{...}"` when copied. To copy data as text conveniently, use serialization:
+
+```js
+console.log('payload:', JSON.stringify(payload, null, 2));
+```
+
+Logs can be removed later, but at the diagnostic moment they must be **working**, not commented out.
+
+---
+
+### Code Style Guidelines
+
+* Use **early returns** to avoid excessive nesting.
+* Name event handlers with `handle` prefix:
+    * `handleClick`, `handleKeyDown`, `handleSubmit`, etc.
+* Use **meaningful names**: `isLoading`, `hasPermission`, `hasError`, `itemsById`.
+* Prefer **ternary operator** over `if/else` if it doesn't create nested ternaries and code remains readable.
+* Prefer **functional style**:
+    * `map`, `filter`, `reduce`, `flatMap`, `some`, `every`;
+    * Iterator Helpers;
+    * Set operations.
+* Avoid `let` where possible: aim to formulate code to use `const` (especially for accumulators via `reduce` and iterators).
+* Write **arrow functions**, preferably without parentheses around a single argument.
+* Remember hoisting: arrow functions **are not hoisted**, do not use them before declaration.
+
+---
+
+### Avoiding Problems
+
+* Do not mix logical operations and side effects (especially with `&&=` and `||=`).
+* Treat all iterating methods except `forEach` as "pure": inside `map`/`filter`/`reduce`/`flatMap`/`some`/`every` etc. **no side effects** allowed, except local temporary structure mutation (e.g., `reduce` accumulator). Side effects — only in `forEach` or separate functions.
+* Do not mutate function arguments without extreme necessity.
+* Do not wrap already ready iterators in `Iterator.from`.
+* Ensure consistency in sync/async path handling (prefer `Promise.try` where appropriate).
+* Avoid redundant intermediate arrays if lazy iterators suffice.
+

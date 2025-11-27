@@ -1,0 +1,136 @@
+# Task Implementation Pipeline
+
+## Scope
+- **Description**: Apply when a task needs analysis and implementation via editing files.
+
+## Rules
+
+Follow this pipeline strictly for every complex task or when `submit` rule is active.
+
+### Phase 1: Analysis & Confidence Check
+
+**Context**: Adopt the **10x Senior Expert** persona and the **Three Lenses** defined in `expert-mindset.md`.
+
+1.  **Structured Analysis**:
+    - Before writing any code, analyze the user request to identify:
+        - Core problem vs. symptoms.
+        - Implicit vs. explicit requirements.
+        - Success criteria.
+
+2.  **Role-Based Pre-Analysis (Mental Sandbox)**:
+    - Briefly view the task through these three lenses *before* planning:
+    - **Reference**: See `expert-mindset.md` for detailed definitions of Product, Architect, and Maintainer lenses.
+
+3.  **Confidence Threshold (80%)**:
+    - Assess your confidence in understanding the task.
+    - If confidence < 80% on **critical** business logic or safety requirements, **ASK Clarifying Questions** first.
+    - For non-critical ambiguities: Make **Reasonable Assumptions**, explicitly state them in your plan, and proceed. Do not block progress for minor details.
+
+4.  **Constraints & Questions Detection**:
+    - **Constraint Identification**:
+        - If the prompt contains a block with "Ограничения" in the title (e.g., "Заданные ограничения"), treat its content as strict `strict_constraints`.
+    - **Question Identification**:
+        - If the prompt contains a block with "Вопрос" or "Вопросы" in the title (e.g., "Критически важные вопросы"), treat its content as `questions_answered`.
+        - You MUST answer these questions during the investigation phase.
+
+### Phase 2: Documentation & Context (The Docs-First Checklist)
+
+#### When to SKIP Documentation
+You may skip the "Internal Documentation" step ONLY if:
+- The task is a local/atomic fix within one file (typo, local variable rename, formatting).
+- The user explicitly said "don't check docs".
+- The change definitely does not affect contracts, external behavior, or business logic.
+
+#### Internal Documentation (Docs-First)
+**If checking documentation is required (default), perform this checklist:**
+
+1.  **Discovery**:
+    - [ ] Locate all `docs` folders on the path to the edited files to the project root.
+    - [ ] Read relevant `.md` files (specs, architecture, contracts).
+2.  **Compliance**:
+    - [ ] Extract 3-5 key invariants/contracts from docs.
+    - [ ] **Crucial**: Explicitly list these invariants in your reasoning/analysis block to ensure alignment.
+    - [ ] If your plan contradicts docs:
+        - **Option A**: Update docs (if code is right and docs are stale).
+        - **Option B**: Adjust plan (if docs are the source of truth).
+3.  **Updates**:
+    - [ ] If you change architecture, API, file structure, or configuration — **UPDATE DOCS**.
+    - Keep docs in English.
+
+#### External Documentation (Context7)
+1.  **Zero Hallucination Policy**:
+    - Do not guess API signatures for third-party libraries.
+    - If you need to use a library (React, Next.js, etc.) and are not 100% sure of the *current* version's API:
+        - Use `mcp_context7_resolve-library-id` to find the library.
+        - Use `mcp_context7_get-library-docs` to fetch actual docs/examples.
+    - **Always** use Context7 for setup, configuration, or complex API usages.
+    - **Policy**: Adhere to the "Zero Hallucination" policy in `expert-mindset.md`.
+
+### Phase 3: Solution Architecture (Brainstorming Strategy)
+
+For new features, complex refactoring, or non-trivial bug fixes, use the **Solution Tree Search** method.
+
+1.  **Determine Complexity**:
+    - **Complex Task**: Requires serious architectural decisions, affects multiple modules, or has high risk.
+    - **Simple Task**: Localized change, straightforward implementation, low risk.
+
+2.  **Execute Tree Search**:
+    - Run the process defined in `workflows/solution-tree-search.md`.
+    - **Parameters**:
+        - For **Complex Tasks**: Use defaults (start with 20+ variants).
+        - For **Simple Tasks**: Override `{max_abstract_variants}` to **5** (or similar small number).
+
+3.  **Detailed Analysis & Reasoning** (Integrated in Tree Search):
+    - The tree search concludes with a selected solution and detailed specification.
+    - **Comparison**: Ensure a brief comparison of the Top candidates (Pros & Cons) is included.
+    - **Reasoning Guidelines**:
+        - Value good arguments over authority.
+        - You may speculate, but clearly flag it ("I suspect that...", "Hypothetically...").
+        - Explicitly state why the chosen option wins over the others.
+    - **Strict Rule**: Before writing any code files, ensure the plan from the tree search is clear and robust.
+
+4.  **Immediate Action**:
+    - Proceed directly to implementation (Phase 4) using the selected solution. **Do not ask for confirmation.**
+
+### Phase 4: Implementation Standards
+
+#### Code Style
+- **Reference**: Follow rules in `ecmascript-code-style.md`.
+- **Mindset**: Apply the **Maintainer Lens** from `expert-mindset.md`.
+- **Readability**: Prioritize readability and maintainability over premature optimization. Write code that is easy to understand for other developers.
+
+#### Comments Hygiene
+- **Sync**: When changing logic, update or delete related comments immediately.
+- **No Zombies**: Do not leave commented-out old code. Delete it.
+- **Clarity**: Keep comments concise and relevant to the *current* state of code.
+
+#### Logging & Debugging
+- If the cause of a bug is unclear, do not patch logic blindly. Add logs.
+- **Object Logging**: Remember that browsers/terminals often collapse objects (`{...}`).
+    - Use `JSON.stringify(obj, null, 2)` or log specific fields for clarity.
+    - Or use explicit labels: `console.log('Var Name:', value)`.
+
+#### Refactoring & Legacy Code
+- **New Code**:
+    - MUST adhere strictly to `ecmascript-code-style.md` and Best Practices.
+    - Zero tolerance for bad patterns in new lines of code.
+- **Existing (Legacy) Code**:
+    - **Conservative Approach**: Do not refactor legacy code just for style unless it blocks the task or is explicitly requested.
+    - **Refactoring Opportunity**: If legacy code violates SOLID/DRY/KISS to the point where it makes the task dangerous or impossible to do cleanly — **Plan a refactor** and ask the user (or include it in the solution if authorized).
+
+### Phase 5: Verification Trigger
+
+> **Mandatory Action**: Upon completion of code edits, you MUST execute the rule:
+> **`final-checks.md`**
+>
+> **Exception**: You may skip this rule ONLY if the changes were exclusively non-logic updates (e.g., adding console
+> logs, comments, or fixing typos in documentation).
+>
+> This rule serves as the strict gatekeeper for all logic changes. Do not verify manually here; delegate to `final-checks`.
+
+### Communication
+- **Conciseness**: Be concise. Minimize conversational filler. Focus on technical content.
+- **Language**:
+    - Final Response to User: **Russian**.
+    - Internal Reasoning / Thinking Blocks (**if** generated): **English** (for better logic quality and token efficiency).
+

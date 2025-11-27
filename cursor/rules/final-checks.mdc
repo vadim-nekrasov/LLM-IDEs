@@ -75,6 +75,13 @@ Ask yourself the "Core Questions" from that file, plus the specific checks below
     - If new libraries were added, was `use context7` used to verify versions/API?
     - Am I confident in the correctness of external API usage (Zero Hallucination)?
 
+### Step 4: Context Audit
+
+To ensure transparency and rule compliance:
+
+- [ ] **Rule Usage**: List all `.mdc` rule files from `.cursor/rules` that you explicitly relied on or referenced in
+  reasoning while solving this task.
+
 ---
 
 use context7

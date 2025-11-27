@@ -69,13 +69,13 @@ Expand the promising candidates into a decision tree to explore implementation d
 Parse numeric arguments from the user prompt to override these defaults. 
 **Auto-Adjustment:** If the task is determined to be simple/straightforward, automatically reduce `{max_abstract_variants}` to **5**.
 
-| Parameter | Description | Default    |
-| :--- | :--- |:-----------|
-| `{max_abstract_variants}` | Minimum initial ideas | **20** (or **5** for simple tasks) |
-| `{num_promising}` | Candidates to deep dive | **5**      |
-| `{max_depth}` | Tree depth limit | **5**      |
-| `{max_branching}` | Max branches per node | **3**      |
-| `{max_succeed}` | Max successful leaves to store | **40**     |
+| Parameter | Description | Default                                            |
+| :--- | :--- |:---------------------------------------------------|
+| `{max_abstract_variants}` | Minimum initial ideas | **15** (or **5** for simple/straightforward tasks) |
+| `{num_promising}` | Candidates to deep dive | **5**                                              |
+| `{max_depth}` | Tree depth limit | **5**                                              |
+| `{max_branching}` | Max branches per node | **3**                                              |
+| `{max_succeed}` | Max successful leaves to store | **40**                                             |
 
 ---
 

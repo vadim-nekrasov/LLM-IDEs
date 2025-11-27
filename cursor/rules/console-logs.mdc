@@ -3,27 +3,99 @@ description: Apply when it needs to debug errors or unclear behavior. When it ne
 alwaysApply: false
 ---
 
-Если задача заключается в выяснении причины проблем, то пропиши консоль-логи, которые позволят тебе наиболее точно
-вычислить причину.
+# Debugging & Root Cause Analysis
 
-## Необходимые ответы на вопросы
-Если в моем описании задачи есть блок с названием, содержащим слово "Вопрос" или "Вопросы" (типа "Критически важные
-вопросы при поиске решения" или "Вопросы для анализа" и т.п.), и если этот блок состоит из вопросов, на которые должны
-быть даны ответы при поиске причин бага, то этот набор вопросов мы далее будем именовать как <<questions_answered>>.
+Apply this rule when the task involves investigating bugs, unclear behavior, or performing root cause analysis.
 
-## Число вариантов для рассмотрения
-<<заданное_число_вариантов_для_рассмотрения>> - это указанное мною выше число вариантов реализации или версий причин
-бага, которые нужно рассмотреть. А если я не указал выше данного числа, то это число ≥20.
+## 0. Placeholder: `{a_given_number_of_options_to_consider}`
 
-## Рассмотрение версий
-Рассмотри КАК МИНИМУМ <<заданное_число_вариантов_для_рассмотрения>> версий.
-После того как рассмотришь <<заданное_число_вариантов_для_рассмотрения>>, пропиши детальные консоль логи,
-которые позволят вычленить из всех возможных вариантов лишь 1 правильный, или хотя бы позволят максимально сузить число
-возможных и вариантов.
-ВАЖНО!!! К рассмотрению принимай только те версии причин бага, в которых ты можешь дать хоть какие-то логические ответы
-на <<questions_answered>>.
+If the user explicitly defines `{a_given_number_of_options_to_consider}` in the prompt (as a number of variants /
+root-cause versions to consider), treat it as the **minimum number of hypotheses** you must generate.
 
-## Вывод логов в браузере 
-При написании логов помни что объекты из консоли браузера копируются в сокращенном виде, типа {...}. Так что либо для
-вывода данных в виде объектов используй какой-нибудь JSON-сериализатор, либо выводи данные в виде строк.
+- If `{a_given_number_of_options_to_consider}` is **not** defined, use `20` as the default.
+- In all cases, you are allowed to go **beyond** this number if it improves coverage of edge cases and non-obvious
+  scenarios.
+
+Let `N` denote this effective minimum (either the user-defined number or the default 20).
+
+---
+
+## 1. The Debugging Procedure (Strict Step-by-Step)
+
+When the task requires finding a root cause, you MUST follow this strict sequence:
+
+1. **Generate `N` Hypotheses**: Create the list of potential causes (see Section 2).
+2. **Filter & Select**: Apply logic and questions to filter this list down to the most probable candidates (see Section
+   3).
+3. **Design Logging**: ONLY AFTER filtering, design specific console logs to verify the remaining candidates (see
+   Section 4 & 5).
+
+---
+
+## 2. Step 1: Generate Hypotheses
+
+1. **Quantity Rule**: You MUST generate **at least `N` hypotheses** (potential root causes).
+    - `N` is defined in Section 0.
+    - This means **`N` or more**, not exactly `N`.
+    - *Rationale*: Forces exploration of edge cases, race conditions, and environment issues.
+
+2. **Late-Breaking Heuristic**: If the best ideas appear only at the **end** of your list (e.g., last 3–5 items),
+   generate **5–10 more** to ensure you haven't missed adjacent solutions.
+
+---
+
+## 3. Step 2: Filter & Prioritize
+
+After generating the list:
+
+1. **Logical Filter**: Discard clearly impossible hypotheses based on existing evidence.
+2. **Question Alignment Filter**:
+    - If the prompt contains "Questions" / "Вопросы" (see Section 4), check each hypothesis against them.
+    - **Discard** any hypothesis that cannot be logically connected to answering these questions.
+3. **Selection**: Pick the top candidates that are most probable and testable.
+
+---
+
+## 4. Step 3: Question-Driven Design
+
+If the user's prompt includes a section labeled with English words like `"Questions"`, `"Critical Questions"` or Russian
+words like `"Вопрос"`, `"Вопросы"`, treat this as the **canonical set `questions_answered`**.
+
+- **Mandatory Alignment**: Your logging strategy must be explicitly designed to answer these questions.
+- **Traceability**: Ensure every critical question maps to specific intended log outputs.
+
+---
+
+## 5. Console Logging Standards
+
+### 5.1 Goal
+
+Design logs to:
+
+- Isolate a **single most likely root cause**.
+- Or **shrink the candidate set** as much as possible.
+
+### 5.2 Object Visibility
+
+**Rule**: For complex objects, always log a **serialized** representation or **specific subset**.
+*Reasoning*: Browsers collapse objects in the console (e.g., `{...}`), making them hard to copy-paste or analyze
+externally. `JSON.stringify` ensures the full structure is captured as text.
+
+**Bad**
+
+```js
+console.log('User:', user); // Risk of [object Object] or collapsed view
+```
+
+**Good**
+
+```js
+console.log('User:', JSON.stringify(user, null, 2));
+```
+
+### 5.3 Traceability
+
+- Use **unique labels**: `console.log('[Auth:Login] Step 1:', token);`
+- Include **IDs/Indexes** in loops: `console.log(\`Item idx=${index} id=${item.id}\`);`
+- Include **Timestamps** for race conditions.
 

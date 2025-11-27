@@ -27,7 +27,7 @@ aspects).
 
 ### Final Checks Block
 
-**Meta-Instruction**: Adopt the **10x Senior Expert** persona defined in `expert-mindset.md`.
+**Meta-Instruction**: Adopt the **10x Senior Expert** persona defined in `.agent/rules/expert-mindset.md`.
 
 #### Step 1: Automated Validation (Fail Fast)
 
@@ -42,7 +42,7 @@ Before analyzing code with your eyes, use tools:
 
 #### Step 2: Role-Based Analysis (Mental Sandbox)
 
-Review your changes using the **Three Lenses** defined in `expert-mindset.md`.
+Review your changes using the **Three Lenses** defined in `.agent/rules/expert-mindset.md`.
 Ask yourself the "Core Questions" from that file, plus the specific checks below:
 
 #### Step 3: Structured Checklist
@@ -61,7 +61,7 @@ Ask yourself the "Core Questions" from that file, plus the specific checks below
 
 - [ ] **Modern Stack**: Used the most recent language/framework features **supported by the project's current
   configuration**.
-- [ ] **Style Compliance**: Code complies with `ecmascript-code-style.md`.
+- [ ] **Style Compliance**: Code complies with `.agent/rules/ecmascript-code-style.md`.
 - [ ] **No Dead Code**: Commented-out code and unused imports are removed.
 
 ##### Documentation & Context
@@ -81,7 +81,7 @@ Ask yourself the "Core Questions" from that file, plus the specific checks below
 
 To ensure transparency and rule compliance:
 
-- [ ] **Rule Usage**: List all `.md` rule files from `rules/` that you explicitly relied on or referenced in
+- [ ] **Rule Usage**: List all `.md` rule files from `.agent/rules/` that you explicitly relied on or referenced in
   reasoning while solving this task.
 
 ---

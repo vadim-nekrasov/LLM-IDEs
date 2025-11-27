@@ -9,7 +9,7 @@ Follow this pipeline strictly for every complex task or when `submit` rule is ac
 
 ### Phase 1: Analysis & Confidence Check
 
-**Context**: Adopt the **10x Senior Expert** persona and the **Three Lenses** defined in `expert-mindset.md`.
+**Context**: Adopt the **10x Senior Expert** persona and the **Three Lenses** defined in `.agent/rules/expert-mindset.md`.
 
 1.  **Structured Analysis**:
     - Before writing any code, analyze the user request to identify:
@@ -19,7 +19,7 @@ Follow this pipeline strictly for every complex task or when `submit` rule is ac
 
 2.  **Role-Based Pre-Analysis (Mental Sandbox)**:
     - Briefly view the task through these three lenses *before* planning:
-    - **Reference**: See `expert-mindset.md` for detailed definitions of Product, Architect, and Maintainer lenses.
+    - **Reference**: See `.agent/rules/expert-mindset.md` for detailed definitions of Product, Architect, and Maintainer lenses.
 
 3.  **Confidence Threshold (80%)**:
     - Assess your confidence in understanding the task.
@@ -64,7 +64,7 @@ You may skip the "Internal Documentation" step ONLY if:
         - Use `mcp_context7_resolve-library-id` to find the library.
         - Use `mcp_context7_get-library-docs` to fetch actual docs/examples.
     - **Always** use Context7 for setup, configuration, or complex API usages.
-    - **Policy**: Adhere to the "Zero Hallucination" policy in `expert-mindset.md`.
+    - **Policy**: Adhere to the "Zero Hallucination" policy in `.agent/rules/expert-mindset.md`.
 
 ### Phase 3: Solution Architecture (Brainstorming Strategy)
 
@@ -75,7 +75,7 @@ For new features, complex refactoring, or non-trivial bug fixes, use the **Solut
     - **Simple Task**: Localized change, straightforward implementation, low risk.
 
 2.  **Execute Tree Search**:
-    - Run the process defined in `workflows/solution-tree-search.md`.
+    - Run the process defined in `.agent/workflows/solution-tree-search.md`.
     - **Parameters**:
         - For **Complex Tasks**: Use defaults (start with 15+ variants).
         - For **Simple Tasks**: Override `{max_abstract_variants}` to **5** (or similar small number).
@@ -95,8 +95,8 @@ For new features, complex refactoring, or non-trivial bug fixes, use the **Solut
 ### Phase 4: Implementation Standards
 
 #### Code Style
-- **Reference**: Follow rules in `ecmascript-code-style.md`.
-- **Mindset**: Apply the **Maintainer Lens** from `expert-mindset.md`.
+- **Reference**: Follow rules in `.agent/rules/ecmascript-code-style.md`.
+- **Mindset**: Apply the **Maintainer Lens** from `.agent/rules/expert-mindset.md`.
 - **Readability**: Prioritize readability and maintainability over premature optimization. Write code that is easy to understand for other developers.
 
 #### Comments Hygiene
@@ -112,7 +112,7 @@ For new features, complex refactoring, or non-trivial bug fixes, use the **Solut
 
 #### Refactoring & Legacy Code
 - **New Code**:
-    - MUST adhere strictly to `ecmascript-code-style.md` and Best Practices.
+    - MUST adhere strictly to `.agent/rules/ecmascript-code-style.md` and Best Practices.
     - Zero tolerance for bad patterns in new lines of code.
 - **Existing (Legacy) Code**:
     - **Conservative Approach**: Do not refactor legacy code just for style unless it blocks the task or is explicitly requested.
@@ -121,7 +121,7 @@ For new features, complex refactoring, or non-trivial bug fixes, use the **Solut
 ### Phase 5: Verification Trigger
 
 > **Mandatory Action**: Upon completion of code edits, you MUST execute the rule:
-> **`final-checks.md`**
+> **`.agent/rules/final-checks.md`**
 >
 > **Exception**: You may skip this rule ONLY if the changes were exclusively non-logic updates (e.g., adding console
 > logs, comments, or fixing typos in documentation).

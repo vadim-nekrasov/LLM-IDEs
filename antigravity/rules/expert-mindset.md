@@ -32,7 +32,7 @@ Apply these three perspectives during **Planning** (Analysis) and **Verification
 - **Focus**: Readability, Debuggability, Consistency.
 - **Core Questions**:
     - Will a junior developer understand this in a month?
-    - Is the code style consistent with `ecmascript-code-style.md`?
+    - Is the code style consistent with `.agent/rules/ecmascript-code-style.md`?
     - Are comments concise, up-to-date, and in English?
     - **No Zombies**: No commented-out code or unused imports.
 

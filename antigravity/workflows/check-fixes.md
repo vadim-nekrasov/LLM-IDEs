@@ -5,18 +5,18 @@ Task: If I provided a patch of changes in the current message, perform a critica
         - [ ] Are all changes necessary?
         - [ ] Is there any overengineering or avoidable complexity?
         - [ ] Could this task be solved more simply or more elegantly while staying correct?
-        - [ ] For ECMAScript files: does the code comply with `rules/ecmascript-code-style.md`?
-    - Apply the **Three Lenses** (especially Architect and Maintainer) from `rules/expert-mindset.md`.
-    - Execute the checklist from `rules/final-checks.md` (Functional, Code Quality, Docs).
+        - [ ] For ECMAScript files: does the code comply with `.agent/rules/ecmascript-code-style.md`?
+    - Apply the **Three Lenses** (especially Architect and Maintainer) from `.agent/rules/expert-mindset.md`.
+    - Execute the checklist from `.agent/rules/final-checks.md` (Functional, Code Quality, Docs).
     - **Additional Focus Points**:
         - **Priority**: Readability & Maintainability > Micro-optimizations (prefer clear code over premature optimization).
         - **Local Consistency**: If adding functionality similar to existing code (e.g., a reducer, component or hook), strictly follow the style and structure of the *current* module/file.
 
 2) **Solution Search (Alternatives)**:
-    - **Execute Tree Search**: Run the process defined in `workflows/solution-tree-search.md`.
+    - **Execute Tree Search**: Run the process defined in `.agent/workflows/solution-tree-search.md`.
     - **Parameters**:
         - Set `{max_abstract_variants}` to **{N}** (default: **15**).
-        - Follow the "Late-Breaking Heuristic" from `solution-tree-search.md` (adding more variants if the best one is at the end).
+        - Follow the "Late-Breaking Heuristic" from `.agent/workflows/solution-tree-search.md` (adding more variants if the best one is at the end).
     - **Result**: If the search identifies a solution better than the current implementation, apply it.
 
 3) **Cleanup**:

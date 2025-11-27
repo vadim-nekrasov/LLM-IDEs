@@ -22,7 +22,7 @@ Analyze the user's request to establish the evaluation framework.
   `strict_constraints`. Any solution violating these must be **immediately discarded**.
 - **Search Criteria:** 
   - If specified by the user, use their criteria.
-  - Otherwise, use the **Default Criteria** (aligned with "The Three Lenses" from `rules/expert-mindset.md`):
+  - Otherwise, use the **Default Criteria** (aligned with "The Three Lenses" from `.agent/rules/expert-mindset.md`):
     1. **Correctness & Safety**: The solution must be functionally correct, respect invariants, and avoid regressions.
     2. **Architecture & Idiomaticity**: Scalable, pattern-consistent, and fits the existing stack (SOLID, DRY, KISS).
     3. **Simplicity, Maintainability & Elegance**: Readable, debuggable, minimal complexity, with a clean, non-hacky design.

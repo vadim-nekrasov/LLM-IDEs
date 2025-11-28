@@ -101,17 +101,21 @@ LLMs (including you) have a natural tendency to jump to the first plausible solu
 **Classification outcomes:**
 - **COMPLEX** → Full Tree Search (15+ variants)
 - **SIMPLE** → Reduced Tree Search (5 variants)
-- **SKIPPED** → User override, proceed to Phase 4 immediately
+- **TRIVIAL** → No Tree Search (mechanical edit, skip to Phase 4)
+- **SKIPPED** → User override, skip to Phase 4
 
 ---
 
-### Step 2: Execute Tree Search
+### Step 2: Execute Tree Search (if applicable)
 
-**MANDATORY ACTION**: 
+**If complexity is COMPLEX or SIMPLE:**
 1. **First, READ the command file**: Use `read_file` tool to load `.cursor/commands/solution-tree-search.md`. Do NOT rely on memory — the file may have been updated.
 2. **Then, EXECUTE the process** as defined in that file.
 
 Use the default parameters from the command file. Do NOT hardcode numbers here to avoid sync issues.
+
+**If complexity is TRIVIAL or SKIPPED:**
+- **Do NOT run Tree Search.** Output the Complexity Declaration, then proceed directly to Phase 4.
 
 #### Reasoning Guidelines (from command file):
 - **Arguments > Authority**: The logic matters, not the source.
@@ -125,8 +129,10 @@ Use the default parameters from the command file. Do NOT hardcode numbers here t
 
 1. **Complexity Declaration** (1 line):
    ```
-   Complexity: [COMPLEX | SIMPLE | SKIPPED] — [brief reason]
+   Complexity: [COMPLEX | SIMPLE | TRIVIAL | SKIPPED] — [brief reason]
    ```
+
+**If COMPLEX or SIMPLE** — continue with:
 
 2. **Top Candidates** (2-3 finalists, 1 line each):
    - Candidate A: [name] — Pro: [...], Con: [...]
@@ -138,6 +144,8 @@ Use the default parameters from the command file. Do NOT hardcode numbers here t
    - **Data Flow**: How data moves through the system (2-3 bullets).
    - **Extension Points**: Where future growth can happen (1-2 bullets).
    - **Blueprint**: Files to create/edit with responsibilities.
+
+**If TRIVIAL or SKIPPED** — skip items 2-3, proceed to Phase 4.
 
 ---
 

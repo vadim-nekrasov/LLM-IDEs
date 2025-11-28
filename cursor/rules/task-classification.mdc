@@ -16,6 +16,7 @@ This file defines the canonical criteria for classifying task complexity. Other 
 |-------|-------------|-------------|
 | **COMPLEX** | Default. Requires full tree search. | Full (15+ variants) |
 | **SIMPLE** | Meets all simplicity criteria. | Reduced (5 variants) |
+| **TRIVIAL** | Purely mechanical edits, no behavioral change. | None |
 | **SKIPPED** | User explicitly requested skip. | None |
 
 ---
@@ -33,6 +34,24 @@ A task is **SIMPLE** only if **ALL** of the following are true:
 | 5 | **Low Risk** | Mistake would be trivially reversible, no data loss or security implications |
 
 **Rule:** If ANY criterion is FALSE → Task is **COMPLEX**.
+
+---
+
+## Trivial Tasks (Mechanical Edits)
+
+A task is **TRIVIAL** if **ALL** of the following are true:
+
+| # | Criterion | Must be TRUE to classify as TRIVIAL |
+|---|-----------|-------------------------------------|
+| 1 | **Type of Change** | ONLY: renaming (files, methods, variables, props) to names **specified by user**, OR deleting comments, OR pure formatting (whitespace, indentation) |
+| 2 | **No Behavioral Change** | Runtime behavior, contracts, and public APIs remain exactly the same |
+| 3 | **No New Abstractions** | No new functions, classes, hooks, components, or utilities introduced |
+| 4 | **Deterministic Pattern** | Changes follow a clear, user-defined pattern (e.g., "rename X to Y everywhere") |
+| 5 | **Easy to Revert** | Mistakes are trivially detectable and reversible (git, IDE rename history) |
+
+**Rule:** If ALL Trivial criteria are TRUE → Complexity: **TRIVIAL** → Skip tree search entirely.
+
+> **Note**: TRIVIAL tasks may touch many files — scope alone doesn't disqualify. The key is: no thinking required, just execution.
 
 ---
 

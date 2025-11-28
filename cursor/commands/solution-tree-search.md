@@ -106,16 +106,18 @@ If you are unsure whether the task is simple, **do NOT apply auto-adjustment**.
 Output a **compact but complete** result (do NOT dump full tree or all 15+ variants):
 
 ```
-Complexity: [COMPLEX | SIMPLE | SKIPPED] — [brief reason]
+Complexity: [COMPLEX | SIMPLE | TRIVIAL | SKIPPED] — [brief reason]
 
-## Top Candidates
+## Top Candidates (only for COMPLEX/SIMPLE)
 - Candidate A: [name] — Pro: [...], Con: [...]
 - Candidate B: [name] — Pro: [...], Con: [...]
 
-## Selected Solution
+## Selected Solution (only for COMPLEX/SIMPLE)
 **Summary**: [1-2 sentences]
 **Components**: [3-5 bullets]
 **Data Flow**: [2-3 bullets]
 **Extension Points**: [1-2 bullets]
 **Blueprint**: [files to create/edit]
 ```
+
+> **Note**: For TRIVIAL or SKIPPED tasks, output only the Complexity Declaration, then proceed to implementation.

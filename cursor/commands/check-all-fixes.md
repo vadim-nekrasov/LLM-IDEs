@@ -16,7 +16,7 @@ Task: If I provided a patch of changes in the current message, perform a critica
     - **Execute Tree Search**: Run the process defined in `.cursor/commands/solution-tree-search.md`.
     - **Parameters**:
         - Set `{max_abstract_variants}` to **{N}** (default: **15**).
-        - Follow the "Late-Breaking Heuristic" from `solution-tree-search.md` (adding more variants if the best one is at the end).
+        - Follow the "Late-Breaking Heuristic" from `.cursor/commands/solution-tree-search.md` (adding more variants if the best one is at the end).
     - **Result**: If the search identifies a solution better than the current implementation, apply it.
 
 3) **Cleanup**:

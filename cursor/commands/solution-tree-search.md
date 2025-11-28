@@ -118,6 +118,10 @@ Complexity: [COMPLEX | SIMPLE | TRIVIAL | SKIPPED] — [brief reason]
 **Data Flow**: [2-3 bullets]
 **Extension Points**: [1-2 bullets]
 **Blueprint**: [files to create/edit]
+
+## Search Stats (diagnostic)
+- Tree Depth Reached: [X]
+- Total Successful Candidates Found: [Y]
 ```
 
 > **Note**: For TRIVIAL or SKIPPED tasks, output only the Complexity Declaration, then proceed to implementation.

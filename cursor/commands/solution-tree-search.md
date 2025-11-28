@@ -42,7 +42,7 @@ Select the top candidates from Phase 1 to explore further.
 - **Quantity:** Select `{num_promising}` variants (default: **5**).
 - **Basis:** Evaluate against the `Search Criteria`.
 - **Late-Breaking Heuristic:** If your best option appeared only at the very end of the list (e.g., last 3-5 items),
-  consider generating 5-10 more variants to ensure you haven't missed a better adjacent idea.
+  you MUST generate 5-10 more variants to ensure you haven't missed a better adjacent idea.
 
 ### Phase 3: Recursive Tree Exploration
 Expand the promising candidates into a decision tree to explore implementation details and trade-offs.

@@ -1,5 +1,5 @@
 ---
-description: Apply before completion a task that involved editing files. To ensure that all recent edits are verified for quality, stability, and best practices.
+description: Apply before completing any task that involved editing code or configuration.
 alwaysApply: false
 ---
 
@@ -15,11 +15,6 @@ Run the "Final Checks Block" below. If issues are found:
 1. Fix them.
 2. Re-run the "Final Checks Block".
 3. Repeat the cycle (Check -> Fix -> Re-Check) until all checks pass successfully.
-
-### 2. After Planning
-
-Ensure your plan *potentially* satisfies the points in the "Final Checks Block" (especially architectural and product
-aspects).
 
 ---
 

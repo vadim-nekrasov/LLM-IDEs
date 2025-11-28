@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Task Implementation Pipeline
 
-Follow this pipeline strictly for every complex task or when `submit` rule is active.
+Follow this pipeline strictly for every non-trivial task or when `submit` rule is active.
 
 ## Phase 1: Analysis & Confidence Check
 
@@ -19,13 +19,16 @@ Follow this pipeline strictly for every complex task or when `submit` rule is ac
         - Success criteria.
 
 2.  **Role-Based Pre-Analysis (Mental Sandbox)**:
-    - Briefly view the task through these three lenses *before* planning:
-    - **Reference**: See `.cursor/rules/expert-mindset.mdc` for detailed definitions of Product, Architect, and Maintainer lenses.
+    - Briefly view the task through the three lenses *before* planning:
+        - Product, Architect, Maintainer.
+    - **Reference**: See `.cursor/rules/expert-mindset.mdc` for detailed definitions.
 
 3.  **Confidence Threshold (80%)**:
     - Assess your confidence in understanding the task.
-    - If confidence < 80% on **critical** business logic or safety requirements, **ASK Clarifying Questions** first.
-    - For non-critical ambiguities: Make **Reasonable Assumptions**, explicitly state them in your plan, and proceed. Do not block progress for minor details.
+    - If confidence < 80% on **critical** business logic or safety requirements, **ASK clarifying questions** first.
+    - For non-critical ambiguities:
+        - Make **reasonable assumptions**, explicitly state them in your plan, and proceed.
+        - Do not block progress for minor details.
 
 4.  **Constraints & Questions Detection**:
     - **Constraint Identification**:
@@ -37,7 +40,9 @@ Follow this pipeline strictly for every complex task or when `submit` rule is ac
 ## Phase 2: Documentation & Context (The Docs-First Checklist)
 
 ### When to SKIP Documentation
-You may skip the "Internal Documentation" step ONLY if:
+
+You may skip the "Internal Documentation" step ONLY if **all** are true:
+
 - The task is a local/atomic fix within one file (typo, local variable rename, formatting).
 - The user explicitly said "don't check docs".
 - The change definitely does not affect contracts, external behavior, or business logic.

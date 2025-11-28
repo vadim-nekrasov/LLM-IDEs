@@ -72,33 +72,88 @@ You may skip the "Internal Documentation" step ONLY if **all** are true:
     - **Always** use Context7 for setup, configuration, or complex API usages.
     - **Policy**: Adhere to the "Zero Hallucination" policy in `.cursor/rules/expert-mindset.mdc`.
 
-## Phase 3: Solution Architecture (Brainstorming Strategy)
+---
 
-For new features, complex refactoring, or non-trivial bug fixes, use the **Solution Tree Search** method.
+## Phase 3: Solution Architecture — MANDATORY Tree Search Gate
 
-1.  **Determine Complexity**:
-    - **Complex Task**: Requires serious architectural decisions, affects multiple modules, or has high risk.
-    - **Simple Task**: Localized change, straightforward implementation, low risk.
+> **⚠️ CRITICAL**: This phase is a **MANDATORY GATE**. You MUST NOT proceed to Phase 4 (Implementation) until you have completed Solution Tree Search and produced the required artifacts.
 
-2.  **Execute Tree Search**:
-    - Run the process defined in `.cursor/commands/solution-tree-search.md`.
-    - **Parameters**:
-        - For **Complex Tasks**: Use defaults (start with 15+ variants).
-        - For **Simple Tasks**: Override `{max_abstract_variants}` to **5** (or similar small number).
+### Why Tree Search is Non-Negotiable
 
-3.  **Detailed Analysis & Reasoning** (Integrated in Tree Search):
-    - The tree search concludes with a selected solution and detailed specification.
-    - **Comparison**: Ensure a brief comparison of the Top candidates (Pros & Cons) is included.
-    - **Reasoning Guidelines**:
-        - Value good arguments over authority.
-        - You may speculate, but clearly flag it ("I suspect that...", "Hypothetically...").
-        - Explicitly state why the chosen option wins over the others.
-    - **Strict Rule**: Before writing any code files, ensure the plan from the tree search is clear and robust.
+LLMs (including you) have a natural tendency to jump to the first plausible solution to conserve tokens. This leads to:
+- Suboptimal architectural decisions that are expensive to fix later.
+- Missing edge cases and alternative approaches.
+- Technical debt from unexplored trade-offs.
 
-4.  **Immediate Action**:
-    - Proceed directly to implementation (Phase 4) using the selected solution. **Do not ask for confirmation.**
+**Tree Search forces systematic exploration before commitment.**
+
+---
+
+### Step 1: Complexity Assessment (Default = COMPLEX)
+
+**Default Assumption**: The task is **COMPLEX** and requires full Tree Search.
+
+> **📄 Source of Truth**: All complexity criteria, simplicity conditions, and skip keywords are defined in:
+> **`.cursor/rules/task-classification.mdc`**
+>
+> Read that file to determine the correct classification. Do not rely on memory.
+
+**Classification outcomes:**
+- **COMPLEX** → Full Tree Search (15+ variants)
+- **SIMPLE** → Reduced Tree Search (5 variants)
+- **SKIPPED** → User override, proceed to Phase 4 immediately
+
+---
+
+### Step 2: Execute Tree Search
+
+**MANDATORY ACTION**: 
+1. **First, READ the command file**: Use `read_file` tool to load `.cursor/commands/solution-tree-search.md`. Do NOT rely on memory — the file may have been updated.
+2. **Then, EXECUTE the process** as defined in that file.
+
+Use the default parameters from the command file. Do NOT hardcode numbers here to avoid sync issues.
+
+#### Reasoning Guidelines (from command file):
+- **Arguments > Authority**: The logic matters, not the source.
+- **Flag Speculation**: Mark uncertain claims ("I suspect...", "Hypothetically...").
+- **Justify Selection**: Explicitly explain why the chosen option wins over alternatives.
+
+#### Required Output Artifacts
+
+> **Note**: The tree search process (brainstorming, full tree exploration) happens **internally**. 
+> Output only the **final results** below — do NOT dump all 15+ variants or the full tree structure.
+
+1. **Complexity Declaration** (1 line):
+   ```
+   Complexity: [COMPLEX | SIMPLE | SKIPPED] — [brief reason]
+   ```
+
+2. **Top Candidates** (2-3 finalists, 1 line each):
+   - Candidate A: [name] — Pro: [...], Con: [...]
+   - Candidate B: [name] — Pro: [...], Con: [...]
+
+3. **Selected Solution Specification**:
+   - **Summary**: 1-2 sentences.
+   - **Components**: Key modules/classes (3-5 bullets).
+   - **Data Flow**: How data moves through the system (2-3 bullets).
+   - **Extension Points**: Where future growth can happen (1-2 bullets).
+   - **Blueprint**: Files to create/edit with responsibilities.
+
+---
+
+### Step 3: Gate Validation (Output Structure Requirement)
+
+> **⛔ FAILURE CONDITION**: If your response does NOT contain the `## Architecture & Planning` section with the artifacts above, you have **failed** this phase. Go back and produce them before any code.
+
+After the `## Architecture & Planning` section is complete and all artifacts are present:
+- **Proceed directly to Phase 4 (Implementation).**
+- **Do NOT ask the user for confirmation** of the chosen solution, unless they explicitly requested to review the plan first.
+
+---
 
 ## Phase 4: Implementation Standards
+
+> **Prerequisite**: Phase 3 Gate Validation must be complete.
 
 ### Code Style
 - **Reference**: Follow rules in `.cursor/rules/ecmascript-code-style.mdc`.
@@ -135,7 +190,7 @@ For new features, complex refactoring, or non-trivial bug fixes, use the **Solut
 > This rule serves as the strict gatekeeper for all logic changes. Do not verify manually here; delegate to `final-checks`.
 
 ## Communication
-- **Conciseness**: Be concise. Minimize conversational filler. Focus on technical content.
+- **Conciseness**: Be concise. Tree Search happens internally; only output the compact final result.
 - **Language**:
     - Final Response to User: **Russian**.
     - Internal Reasoning / Thinking Blocks (**if** generated): **English** (for better logic quality and token efficiency).

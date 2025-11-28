@@ -1,0 +1,69 @@
+---
+description: Canonical source of truth for task complexity classification criteria.
+globs: 
+alwaysApply: false
+---
+
+# Task Complexity Classification
+
+This file defines the canonical criteria for classifying task complexity. Other rules and commands reference this file to avoid duplication and ensure consistency.
+
+---
+
+## Complexity Levels
+
+| Level | Description | Tree Search |
+|-------|-------------|-------------|
+| **COMPLEX** | Default. Requires full tree search. | Full (15+ variants) |
+| **SIMPLE** | Meets all simplicity criteria. | Reduced (5 variants) |
+| **SKIPPED** | User explicitly requested skip. | None |
+
+---
+
+## Simplicity Criteria Table
+
+A task is **SIMPLE** only if **ALL** of the following are true:
+
+| # | Criterion | Must be TRUE to classify as SIMPLE |
+|---|-----------|-----------------------------------|
+| 1 | **File Scope** | Changes are limited to **1-2 files** |
+| 2 | **No New Abstractions** | No new public APIs, routes, Redux slices, shared components, hooks, or cross-cutting concerns |
+| 3 | **No Architecture Impact** | No changes to state management, routing, global config, build tooling, or project structure |
+| 4 | **User Framing** | User explicitly described it as "small fix", "minor change", "typo", "cosmetic" |
+| 5 | **Low Risk** | Mistake would be trivially reversible, no data loss or security implications |
+
+**Rule:** If ANY criterion is FALSE → Task is **COMPLEX**.
+
+---
+
+## Quick Mode (Skip) Keywords
+
+If the user's prompt contains any of these **explicit** phrases, the task is classified as **SKIPPED**:
+
+**English:** 
+- `skip tree search`
+- `skip analysis`
+- `no tree search`
+- `just implement`
+- `straight to code`
+
+**Russian:** 
+- `без дерева решений`
+- `пропусти анализ`
+- `сразу к коду`
+- `без выбора вариантов`
+
+> **Note**: Common words like "быстро", "quick", "fast" are NOT triggers — they're too easy to say accidentally.
+
+When SKIPPED:
+- Output: `Complexity: SKIPPED (user override)`
+- Proceed directly to implementation.
+- Do not warn or question the user's choice.
+
+---
+
+## Usage
+
+Reference this file from:
+- `.cursor/rules/submit.mdc` — for the complexity gate in Phase 3.
+- `.cursor/commands/solution-tree-search.md` — for auto-adjustment of search parameters.

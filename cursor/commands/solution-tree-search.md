@@ -31,20 +31,22 @@ Analyze the user's request to establish the evaluation framework.
 
 ## 3. Step-by-Step Execution
 
-### Phase 1: Abstract Brainstorming
+> **Output Policy**: Phases 1-3 are **internal processing** — execute them mentally or in thinking blocks, but do NOT output all intermediate variants or tree structures to the user. Only Phase 4 results are output.
+
+### Phase 1: Abstract Brainstorming (Internal)
 Generate a list of **High-Level Approaches**.
 - **Quantity:** At least `{max_abstract_variants}`.
 - **Format:** Brief (1-2 sentences per variant).
 - **Filter:** Exclude any that violate `strict_constraints`.
 
-### Phase 2: Filter Promising Candidates
+### Phase 2: Filter Promising Candidates (Internal)
 Select the top candidates from Phase 1 to explore further.
 - **Quantity:** Select `{num_promising}` variants (default: **5**).
 - **Basis:** Evaluate against the `Search Criteria`.
 - **Late-Breaking Heuristic:** If your best option appeared only at the very end of the list (e.g., last 3-5 items),
-  you MUST generate 5-10 more variants to ensure you haven't missed a better adjacent idea.
+  generate 5-10 more variants to ensure you haven't missed a better adjacent idea.
 
-### Phase 3: Recursive Tree Exploration
+### Phase 3: Recursive Tree Exploration (Internal)
 Expand the promising candidates into a decision tree to explore implementation details and trade-offs.
 
 **Parameters:**
@@ -62,19 +64,18 @@ Expand the promising candidates into a decision tree to explore implementation d
    - Clearly underperforms against `Search Criteria`.
 3. **Leaf Nodes:** A node is a "Successful Solution" if it reaches a logical conclusion without being pruned.
 
-### Phase 4: Final Selection & Specification
+### Phase 4: Final Selection & Output
 1. Review the accumulator of "Successful Solutions".
-2. **Comparison**: Briefly list the **Top `{num_promising}` Candidates** with their key Pros & Cons.
-3. Select the **Single Best Solution** based on the `Search Criteria`.
-4. **Final Validation**: Before finalizing the specification, explicitly confirm:
-   - **Three Lenses Check**: Briefly list 1 key point per lens (Product, Architect, Maintainer) validating the choice.
-   - **Docs Compliance**: Ensure it does not contradict existing internal documentation (or note required updates).
-5. Provide a **Detailed Architectural Specification** for this solution (NO CODE yet):
-   - **Summary:** High-level overview.
-   - **Components:** Key modules, classes, or functions.
-   - **Data Flow:** How data moves through the system.
-   - **Trade-offs:** Why this was chosen over alternatives.
-   - **Extension Points:** How it handles future growth.
+2. Select the **Single Best Solution** based on the `Search Criteria`.
+3. **Final Validation** (internal): Confirm Three Lenses Check and Docs Compliance.
+4. **Output** the following (compact but complete):
+   - **Top 2-3 Candidates**: 1 line each with name, 1 pro, 1 con.
+   - **Selected Solution Specification**:
+     - Summary (1-2 sentences)
+     - Components (3-5 bullets: key modules/classes)
+     - Data Flow (2-3 bullets: how data moves)
+     - Extension Points (1-2 bullets: where to grow)
+     - Blueprint (files to create/edit)
 
 ---
 
@@ -83,11 +84,10 @@ Expand the promising candidates into a decision tree to explore implementation d
 Parse numeric arguments from the user prompt to override these defaults. 
 
 **Auto-Adjustment (Simple Tasks Only):**
-Treat the task as "simple/straightforward" and reduce `{max_abstract_variants}` to **5** only if **all** of the following are true:
-- Changes are limited to **1–2 files**.
-- No new public APIs, routes, Redux slices, shared components, or other cross-cutting abstractions are introduced.
-- No changes to global or cross-cutting architecture (state management, routing, global config, build tooling).
-- The user explicitly frames the task as a "small/local fix", "minor cosmetic change", or equivalent.
+Reduce `{max_abstract_variants}` to **5** only if the task was classified as **SIMPLE**.
+
+> **📄 Source of Truth**: The complexity criteria are defined in `.cursor/rules/task-classification.mdc`.
+> Read that file for the full classification logic. Do not duplicate criteria here.
 
 If you are unsure whether the task is simple, **do NOT apply auto-adjustment**.
 
@@ -103,7 +103,19 @@ If you are unsure whether the task is simple, **do NOT apply auto-adjustment**.
 
 ## Final Output Requirement
 
-After presenting the **Detailed Architectural Specification**, append a brief stats summary:
-> **Search Stats:**
-> - Tree Depth Reached: [X]
-> - Total Successful Candidates Found: [Y]
+Output a **compact but complete** result (do NOT dump full tree or all 15+ variants):
+
+```
+Complexity: [COMPLEX | SIMPLE | SKIPPED] — [brief reason]
+
+## Top Candidates
+- Candidate A: [name] — Pro: [...], Con: [...]
+- Candidate B: [name] — Pro: [...], Con: [...]
+
+## Selected Solution
+**Summary**: [1-2 sentences]
+**Components**: [3-5 bullets]
+**Data Flow**: [2-3 bullets]
+**Extension Points**: [1-2 bullets]
+**Blueprint**: [files to create/edit]
+```

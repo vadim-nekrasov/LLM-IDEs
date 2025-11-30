@@ -5,7 +5,7 @@ alwaysApply: false
 
 ## Component patterns
 
-- `const Comp: FC<Props> = () => …`; use `const`, arrow functions, prop destructuring.
+- `const Comp: FC<Props> = () => …`; prop destructuring.
 
 ## Performance optimization
 
@@ -19,18 +19,18 @@ alwaysApply: false
 - Batch `setState` updates in async code to minimize renders.
 - Implement proper cleanup in useEffect hooks
 
-## JSX best practices
+## Modern React best practices
 
 - Destructure props in function params.
 - Avoid inline event handlers.
 - Use latest React APIs where they improve performance or clarity (e.g., `useTransition`, `useDeferredValue`,
-  `useOptimistic`, `lazy`, `Suspense`, e.t.c..).
+  `useOptimistic`, `lazy`, `Suspense`, etc.).
 - Minimize `useEffect` calls by combining logic.
 - Use `useId` for unique IDs.
 
 ## Code style
 
-- Для применения опциональных classname используй библиотеку classnames. Пример:
+- Use `classnames` library for optional classnames. Example:
   `<div className={cx('my-class', { 'my-class--active': isActive })} />`
 
 ## Error handling
@@ -47,7 +47,7 @@ alwaysApply: false
 
 ## Anti-patterns
 
+❌ `useEffect` for derived state (use simple var or useMemo)
 ❌ `some.length && <JSX>` → ✅ `some.length > 0 && <JSX>`
 ❌ Inline objects/functions without memo
 ❌ Using index as key
-

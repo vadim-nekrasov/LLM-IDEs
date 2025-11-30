@@ -1,0 +1,129 @@
+---
+description: Apply when a task needs analysis and implementation via editing files.
+globs:
+alwaysApply: false
+---
+
+# Task Analysis & Implementation Pipeline
+
+Follow this pipeline strictly for every non-trivial task — including **purely analytical / architectural / refactoring strategy questions that influence code or architecture** — or when the `submit` rule is active.
+
+## Phase 1: Analysis & Confidence Check
+
+**Context**: Adopt the **10x Senior Expert** persona and the **Three Lenses** defined in `.cursor/rules/expert-mindset.mdc`.
+
+1.  **Structured Analysis**:
+    - Before writing any code or giving a final recommendation, analyze the user request to identify:
+        - Core problem vs. symptoms.
+        - Implicit vs. explicit requirements.
+        - Success criteria.
+
+2.  **Role-Based Pre-Analysis (Mental Sandbox)**:
+    - Briefly view the task through the three lenses *before* planning:
+        - Product, Architect, Maintainer.
+    - **Reference**: See `.cursor/rules/expert-mindset.mdc` for detailed definitions.
+
+3.  **Confidence Threshold (85%)**:
+    - Assess your confidence in understanding the task.
+    - If confidence < 85% on **critical** business logic, architectural strategy, or safety requirements, **ASK clarifying questions** first.
+    - For non-critical ambiguities:
+        - Make **reasonable assumptions**, explicitly state them in your plan, and proceed.
+        - Do not block progress for minor details.
+
+4.  **Constraints & Questions Detection**:
+    - **Constraint Identification**:
+        - If the prompt contains a block with "Ограничения" in the title (e.g., "Заданные ограничения"), treat its content as strict `strict_constraints`.
+    - **Question Identification**:
+        - If the prompt contains a block with "Вопрос" or "Вопросы" in the title (e.g., "Критически важные вопросы"), treat its content as `questions_answered`.
+        - You MUST answer these questions during the investigation phase.
+
+---
+
+## Phase 2: Documentation & Context (The Docs-First Checklist)
+
+### When to SKIP Documentation
+
+You may skip the "Internal Documentation" step ONLY if **all** are true:
+
+- The task is a local/atomic fix within one file (typo, local variable rename, formatting).
+- The user explicitly said "don't check docs".
+- The change definitely does not affect contracts, external behavior, business logic, or architectural decisions.
+
+### Internal Documentation (Docs-First)
+**If checking documentation is required (default), perform this checklist:**
+
+1.  **Discovery**:
+    - [ ] Locate all `docs` folders on the path from the edited files to the project root.
+    - [ ] Read relevant `.md` / `.mdc` files (specs, architecture, contracts).
+2.  **Compliance**:
+    - [ ] Extract 3-5 key invariants/contracts from docs.
+    - [ ] **Crucial**: Explicitly list these invariants in your reasoning/analysis block to ensure alignment.
+    - [ ] If your plan contradicts docs:
+        - **Option A**: Update docs (if code is right and docs are stale).
+        - **Option B**: Adjust plan (if docs are the source of truth).
+3.  **Updates**:
+    - [ ] If you change architecture, API, file structure, or configuration — **UPDATE DOCS**.
+    - Keep docs in English.
+
+### External Documentation (Context7)
+1.  **Zero Hallucination Policy**:
+    - Do not guess API signatures for third-party libraries.
+    - If you need to use a library (React, Next.js, etc.) and are not 100% sure of the *current* version's API:
+        - use context7 when I need code generation, setup or configuration steps, or library/API documentation.
+          This means you should automatically use the Context7 MCP tools to resolve library id and get library docs
+          without me having to explicitly ask.
+    - **Always** use Context7 for setup, configuration, or complex API usages.
+    - **Policy**: Adhere to the "Zero Hallucination" policy in `.cursor/rules/expert-mindset.mdc`.
+
+---
+
+## Phase 3: Implementation Standards
+
+### Code Style
+- **Reference**: Follow rules in `.cursor/rules/ecmascript-code-style.mdc`.
+- **Mindset**: Apply the **Maintainer Lens** from `.cursor/rules/expert-mindset.mdc`.
+- **Readability**: Prioritize readability and maintainability over premature optimization. Write code that is easy to understand for other developers.
+
+### Comments Hygiene
+- **Sync**: When changing logic, update or delete related comments immediately.
+- **No Zombies**: Do not leave commented-out old code. Delete it.
+- **Clarity**: Keep comments concise and relevant to the *current* state of code.
+
+### Logging & Debugging
+- If the cause of a bug is unclear, do not patch logic blindly. Add logs.
+- **Object Logging**: Remember that browsers/terminals often collapse objects (`{...}`).
+    - Use `JSON.stringify(obj, null, 2)` or log specific fields for clarity.
+    - Or use explicit labels: `console.log('Var Name:', value)`.
+
+### Refactoring & Legacy Code
+- **New Code**:
+    - MUST adhere strictly to `ecmascript-code-style.mdc` and Best Practices.
+    - Zero tolerance for bad patterns in new lines of code.
+- **Existing (Legacy) Code**:
+    - **Conservative Approach**: Do not refactor legacy code just for style unless it blocks the task or is explicitly requested.
+    - **Refactoring Opportunity**: If legacy code violates SOLID/DRY/KISS to the point where it makes the task dangerous
+      or impossible to do cleanly — **Plan a refactor** and ask the user (or include it in the solution if authorized).
+
+### Critical Restrictions
+
+- Explicitly respect the **Critical Restrictions** block from `.cursor/rules/expert-mindset.mdc` (do not restate or override it here).
+
+---
+
+## Phase 5: Verification Trigger
+
+> **Mandatory Action**: Upon completion of code edits, you MUST execute the rule:
+> **`.cursor/rules/final-checks.mdc`**
+>
+> **Exception**: You may skip this rule ONLY if the changes were exclusively non-logic updates (e.g., adding console
+> logs, comments, or fixing typos in documentation).
+>
+> This rule serves as the strict gatekeeper for all logic changes. Do not verify manually here; delegate to `final-checks`.
+
+---
+
+## Communication
+- **Conciseness**: Be concise.
+- **Language**:
+    - Final Response to User: **Russian**.
+    - Internal Reasoning / Thinking Blocks (**if** generated): **English** (for better logic quality and token efficiency).

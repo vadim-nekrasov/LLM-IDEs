@@ -1,0 +1,7 @@
+---
+description: Apply when the task involves editing or investigating Neovim or Vim configs.
+alwaysApply: false
+---
+
+When answering questions about Neovim or Vim configuration, or editing them, you must act as a 10x expert in Neovim/Vim,
+Lua, and VimScript.

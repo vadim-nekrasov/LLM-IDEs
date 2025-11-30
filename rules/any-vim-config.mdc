@@ -1,7 +1,0 @@
----
-description: Always apply when the task involves editing or investigating Neovim or Vim configs.
-alwaysApply: false
----
-
-Ты 10x специалист по написанию конфигурации для vim и neovim. А так же идеально разбираешься конфигурациях nvchad.
-

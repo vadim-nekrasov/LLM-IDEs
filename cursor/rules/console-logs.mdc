@@ -1,0 +1,100 @@
+---
+description: Apply when it needs to debug errors or unclear behavior. When it needs to add console logs to find the root cause.
+alwaysApply: false
+---
+
+# Debugging & Root Cause Analysis
+
+Apply this rule when the task involves investigating bugs, unclear behavior, or performing root cause analysis.
+
+## 0. Placeholder: `{a_given_number_of_options_to_consider}`
+
+If the user explicitly defines `{a_given_number_of_options_to_consider}` in the prompt (as a number of variants /
+root-cause versions to consider), treat it as the **minimum number of hypotheses** you must generate.
+
+- If `{a_given_number_of_options_to_consider}` is **not** defined, use `20` as the default.
+- In all cases, you are allowed to go **beyond** this number if it improves coverage of edge cases and non-obvious
+  scenarios.
+
+Let `N` denote this effective minimum (either the user-defined number or the default 20).
+
+---
+
+## 1. The Debugging Procedure (Strict Step-by-Step)
+
+When the task requires finding a root cause, you MUST follow this strict sequence:
+
+1. **Generate `N` Hypotheses**: Create the list of potential causes (see Section 2).
+2. **Filter & Select**: Apply logic and questions to filter this list down to the most probable candidates (see Section
+   3).
+3. **Design Logging**: ONLY AFTER filtering, design specific console logs to verify the remaining candidates (see
+   Section 4 & 5).
+
+---
+
+## 2. Step 1: Generate Hypotheses
+
+1. **Quantity Rule**: You MUST generate **at least `N` hypotheses** (potential root causes).
+    - `N` is defined in Section 0.
+    - This means **`N` or more**, not exactly `N`.
+    - *Rationale*: Forces exploration of edge cases, race conditions, and environment issues.
+
+2. **Late-Breaking Heuristic**: If the best ideas appear only at the **end** of your list (e.g., last 3–5 items),
+   generate **5–10 more** to ensure you haven't missed adjacent solutions.
+
+---
+
+## 3. Step 2: Filter & Prioritize
+
+After generating the list:
+
+1. **Logical Filter**: Discard clearly impossible hypotheses based on existing evidence.
+2. **Question Alignment Filter**:
+    - If the prompt contains "Questions" / "Вопросы" (see Section 4), check each hypothesis against them.
+    - **Discard** any hypothesis that cannot be logically connected to answering these questions.
+3. **Selection**: Pick the top candidates that are most probable and testable.
+
+---
+
+## 4. Step 3: Question-Driven Design
+
+If the user's prompt includes a section labeled with English words like `"Questions"`, `"Critical Questions"` or Russian
+words like `"Вопрос"`, `"Вопросы"`, treat this as the **canonical set `questions_answered`**.
+
+- **Mandatory Alignment**: Your logging strategy must be explicitly designed to answer these questions.
+- **Traceability**: Ensure every critical question maps to specific intended log outputs.
+
+---
+
+## 5. Console Logging Standards
+
+### 5.1 Goal
+
+Design logs to:
+
+- Isolate a **single most likely root cause**.
+- Or **shrink the candidate set** as much as possible.
+
+### 5.2 Object Visibility
+
+**Rule**: For complex objects, always log a **serialized** representation or **specific subset**.
+*Reasoning*: Browsers collapse objects in the console (e.g., `{...}`), making them hard to copy-paste or analyze
+externally. `JSON.stringify` ensures the full structure is captured as text.
+
+**Bad**
+
+```js
+console.log('User:', user); // Risk of [object Object] or collapsed view
+```
+
+**Good**
+
+```js
+console.log('User:', JSON.stringify(user, null, 2));
+```
+
+### 5.3 Traceability
+
+- Use **unique labels**: `console.log('[Auth:Login] Step 1:', token);`
+- Include **IDs/Indexes** in loops: `console.log(\`Item idx=${index} id=${item.id}\`);`
+- Include **Timestamps** for race conditions.

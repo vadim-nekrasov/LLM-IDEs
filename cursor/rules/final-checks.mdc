@@ -55,6 +55,8 @@ Ask yourself the "Core Questions" from that file, plus the specific checks below
 - [ ] **Modern Stack**: Used the most recent language/framework features **supported by the project's current
   configuration**.
 - [ ] **Style Compliance**: Code complies with `.cursor/rules/ecmascript-code-style.mdc`.
+- [ ] **Design Principles**: Architectural decisions respect SOLID, DRY, KISS, High Cohesion & Low Coupling, and other
+      principles referenced in `.cursor/rules/expert-mindset.mdc`.
 - [ ] **No Dead Code**: Commented-out code and unused imports are removed.
 
 #### Documentation & Context
@@ -67,8 +69,12 @@ Ask yourself the "Core Questions" from that file, plus the specific checks below
       corresponding `.md` docs**.
     - **Stale Docs**: Did you update any documentation that was found to be outdated/incorrect during the task?
 - [ ] **External Deps (Context7)**:
-    - If new libraries were added, was `use context7` used to verify versions/API?
-    - Am I confident in the correctness of external API usage (Zero Hallucination)?
+    - If new libraries were added, was Context7 used to verify versions/API?
+    - Are you confident in the correctness of external API usage (Zero Hallucination)?
+
+#### Critical Restrictions
+
+- [ ] **Critical Restrictions**: Changes comply with the `Critical Restrictions` block in `.cursor/rules/expert-mindset.mdc`.
 
 ### Step 4: Context Audit
 

@@ -11,6 +11,7 @@ Task: If I provided a patch of changes in the current message, perform a critica
     - **Additional Focus Points**:
         - **Priority**: Readability & Maintainability > Micro-optimizations (prefer clear code over premature optimization).
         - **Local Consistency**: If adding functionality similar to existing code (e.g., a reducer, component or hook), strictly follow the style and structure of the *current* module/file.
+        - **Critical Restrictions**: Ensure that changes respect the `Critical Restrictions` block from `.cursor/rules/expert-mindset.mdc`.
 
 2) **Solution Search (Alternatives)**:
     - **Classify Task First**: Before running Tree Search, classify the task using `.cursor/rules/task-classification.mdc` (if not already done in the current pipeline).

@@ -1,6 +1,6 @@
 ---
 description: Apply when a task needs analysis and implementation via editing files.
-globs: 
+globs:
 alwaysApply: false
 ---
 
@@ -23,9 +23,9 @@ Follow this pipeline strictly for every non-trivial task or when `submit` rule i
         - Product, Architect, Maintainer.
     - **Reference**: See `.cursor/rules/expert-mindset.mdc` for detailed definitions.
 
-3.  **Confidence Threshold (80%)**:
+3.  **Confidence Threshold (85%)**:
     - Assess your confidence in understanding the task.
-    - If confidence < 80% on **critical** business logic or safety requirements, **ASK clarifying questions** first.
+    - If confidence < 85% on **critical** business logic or safety requirements, **ASK clarifying questions** first.
     - For non-critical ambiguities:
         - Make **reasonable assumptions**, explicitly state them in your plan, and proceed.
         - Do not block progress for minor details.
@@ -67,8 +67,9 @@ You may skip the "Internal Documentation" step ONLY if **all** are true:
 1.  **Zero Hallucination Policy**:
     - Do not guess API signatures for third-party libraries.
     - If you need to use a library (React, Next.js, etc.) and are not 100% sure of the *current* version's API:
-        - Use `mcp_context7_resolve-library-id` to find the library.
-        - Use `mcp_context7_get-library-docs` to fetch actual docs/examples.
+        - use context7 when I need code generation, setup or configuration steps, or library/API documentation.
+          This means you should automatically use the Context7 MCP tools to resolve library id and get library docs
+          without me having to explicitly ask.
     - **Always** use Context7 for setup, configuration, or complex API usages.
     - **Policy**: Adhere to the "Zero Hallucination" policy in `.cursor/rules/expert-mindset.mdc`.
 
@@ -124,7 +125,7 @@ Use the default parameters from the command file. Do NOT hardcode numbers here t
 
 #### Required Output Artifacts
 
-> **Note**: The tree search process (brainstorming, full tree exploration) happens **internally**. 
+> **Note**: The tree search process (brainstorming, full tree exploration) happens **internally**.
 > Output only the **final results** below — do NOT dump all 15+ variants or the full tree structure.
 
 1. **Complexity Declaration** (1 line):
@@ -185,7 +186,11 @@ After the `## Architecture & Planning` section is complete and all artifacts are
     - Zero tolerance for bad patterns in new lines of code.
 - **Existing (Legacy) Code**:
     - **Conservative Approach**: Do not refactor legacy code just for style unless it blocks the task or is explicitly requested.
-    - **Refactoring Opportunity**: If legacy code violates SOLID/DRY/KISS to the point where it makes the task dangerous or impossible to do cleanly — **Plan a refactor** and ask the user (or include it in the solution if authorized).
+    - **Refactoring Opportunity**: If legacy code violates SOLID/DRY/KISS to the point where it makes the task dangerous
+      or impossible to do cleanly — **Plan a refactor** and ask the user (or include it in the solution if authorized).
+
+### Critical Restrictions
+- Explicitly respect the **Critical Restrictions** block from `.cursor/rules/expert-mindset.mdc`.
 
 ## Phase 5: Verification Trigger
 

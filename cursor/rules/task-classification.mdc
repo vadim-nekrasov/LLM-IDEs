@@ -12,6 +12,8 @@ This file defines the canonical criteria for classifying task complexity. Other 
 
 ## Complexity Levels
 
+The **Tree Search** column describes which Solution Tree Search mode to apply: full, reduced, or none.
+
 | Level | Description | Tree Search |
 |-------|-------------|-------------|
 | **COMPLEX** | Default. Requires full tree search. | Full (15+ variants) |
@@ -55,34 +57,21 @@ A task is **TRIVIAL** if **ALL** of the following are true:
 
 ---
 
-## Quick Mode (Skip) Keywords
+## Quick Mode (Skip) Keywords & User Overrides
 
-If the user's prompt contains any of these **explicit** phrases, the task is classified as **SKIPPED**:
+If the user's prompt **clearly expresses a request** to skip analysis or tree search, the task is classified as **SKIPPED**,
+even if the exact wording differs from the examples below.
 
-**English:** 
-- `skip tree search`
-- `skip analysis`
-- `no tree search`
-- `just implement`
-- `straight to code`
+The following phrases are **typical triggers** (examples, not an exhaustive list):
 
-**Russian:** 
+**examples:** 
 - `без дерева решений`
 - `пропусти анализ`
-- `сразу к коду`
-- `без выбора вариантов`
 
-> **Note**: Common words like "быстро", "quick", "fast" are NOT triggers — they're too easy to say accidentally.
+> **Note**: Common words like "быстро", "quick", "fast" are NOT triggers by themselves — they're too easy to say accidentally. Use your language understanding: if the user explicitly asks to "skip all the analysis and just code it", treat it as SKIPPED.
 
 When SKIPPED:
 - Output: `Complexity: SKIPPED (user override)`
 - Proceed directly to implementation.
 - Do not warn or question the user's choice.
 
----
-
-## Usage
-
-Reference this file from:
-- `.cursor/rules/submit.mdc` — for the complexity gate in Phase 3.
-- `.cursor/commands/solution-tree-search.md` — for auto-adjustment of search parameters.

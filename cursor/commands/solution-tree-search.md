@@ -72,10 +72,10 @@ Expand the promising candidates into a decision tree to explore implementation d
    - **Top 2-3 Candidates**: 1 line each with name, 1 pro, 1 con.
    - **Selected Solution Specification**:
      - Summary (1-2 sentences)
-     - Components (3-5 bullets: key modules/classes)
-     - Data Flow (2-3 bullets: how data moves)
+     - Components (3-5 bullets: key modules/classes or logical parts of the strategy)
+     - Data Flow (2-3 bullets: how data moves, or how the strategy would be applied)
      - Extension Points (1-2 bullets: where to grow)
-     - Blueprint (files to create/edit)
+     - Blueprint (files to create/edit **or** concrete next steps to take)
 
 ---
 
@@ -117,7 +117,7 @@ Complexity: [COMPLEX | SIMPLE | TRIVIAL | SKIPPED] — [brief reason]
 **Components**: [3-5 bullets]
 **Data Flow**: [2-3 bullets]
 **Extension Points**: [1-2 bullets]
-**Blueprint**: [files to create/edit]
+**Blueprint**: [files to create/edit OR concrete next steps]
 
 ## Search Stats (diagnostic)
 - Tree Depth Reached: [X]

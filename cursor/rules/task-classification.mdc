@@ -37,6 +37,9 @@ A task is **SIMPLE** only if **ALL** of the following are true:
 
 **Rule:** If ANY criterion is FALSE → Task is **COMPLEX**.
 
+> For **decision-only tasks**, interpret these criteria in terms of **impact of the recommended strategy**.  
+> Example: a question like “rewrite vs incremental refactor?” almost always implies architecture impact → classify as **COMPLEX**.
+
 ---
 
 ## Trivial Tasks (Mechanical Edits)
@@ -63,6 +66,6 @@ If the user explicitly requests to skip tree search, the task is classified as *
 
 When SKIPPED:
 - Output: `Complexity: SKIPPED (user override)`
-- Proceed directly to implementation.
+- Proceed directly to implementation or recommendation.
 - Do not warn or question the user's choice.
 

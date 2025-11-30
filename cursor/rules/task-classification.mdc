@@ -59,16 +59,7 @@ A task is **TRIVIAL** if **ALL** of the following are true:
 
 ## Quick Mode (Skip) Keywords & User Overrides
 
-If the user's prompt **clearly expresses a request** to skip analysis or tree search, the task is classified as **SKIPPED**,
-even if the exact wording differs from the examples below.
-
-The following phrases are **typical triggers** (examples, not an exhaustive list):
-
-**examples:** 
-- `без дерева решений`
-- `пропусти анализ`
-
-> **Note**: Common words like "быстро", "quick", "fast" are NOT triggers by themselves — they're too easy to say accidentally. Use your language understanding: if the user explicitly asks to "skip all the analysis and just code it", treat it as SKIPPED.
+If the user explicitly requests to skip tree search, the task is classified as **SKIPPED**.
 
 When SKIPPED:
 - Output: `Complexity: SKIPPED (user override)`

@@ -1,12 +1,11 @@
 ---
-name: debugger
-description: Systematic debugging and root cause analysis with hypothesis generation. Use PROACTIVELY when investigating bugs, errors, stack traces, unexpected behavior, or when user mentions "bug", "error", "broken", "не работает".
-tools: Read, Grep, Glob, Edit, Bash
+name: debugging
+description: Systematic debugging and root cause analysis with hypothesis generation. Use PROACTIVELY when investigating bugs, errors, stack traces, unexpected behavior, or when user mentions "bug", "error", "broken", "не работает", "doesn't work".
 ---
 
 # Debugging & Root Cause Analysis
 
-Apply this agent when investigating bugs, unclear behavior, or performing root cause analysis.
+Apply this methodology when investigating bugs, unclear behavior, or performing root cause analysis.
 
 ## Configuration
 

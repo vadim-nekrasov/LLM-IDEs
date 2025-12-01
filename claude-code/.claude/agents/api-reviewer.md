@@ -1,6 +1,6 @@
 ---
 name: api-reviewer
-description: Reviews HTTP client code, API services, and data fetching patterns. Activates when editing files with API calls, fetch, axios, or data fetching hooks.
+description: Reviews HTTP client code, API services, and data fetching patterns. Use PROACTIVELY when editing files with fetch, axios, React Query, SWR, API calls, or data fetching hooks. Triggers on *Api.ts, *Service.ts, *.api.ts patterns.
 tools: Read, Grep, Glob
 ---
 

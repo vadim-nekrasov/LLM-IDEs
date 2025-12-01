@@ -1,7 +1,6 @@
 ---
 name: workflow-default
-description: Apply structured development workflow with docs-first discovery, analysis, Context7 verification, and final checking. Use when editing code files or implementing features.
-globs: "*.ts,*.tsx,*.js,*.jsx,*.py,*.go,*.lua,*.rs,*.rb"
+description: Structured development workflow with docs-first discovery, Three Lenses analysis, Context7 verification, and final checking. Use PROACTIVELY when editing code files, implementing features, fixing bugs, or making any code changes. Triggers on TypeScript, JavaScript, React, Python, Go, Rust development tasks.
 ---
 
 # Development Workflow

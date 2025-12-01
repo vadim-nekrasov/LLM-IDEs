@@ -1,7 +1,6 @@
 ---
 name: configuring-neovim
-description: Neovim and Vim configuration patterns. Apply when editing or investigating Neovim/Vim configs, plugins, keymaps, LSP setup, and Treesitter queries.
-globs: "*.vim,**/nvim/**/*.lua,**/.config/nvim/**,**/init.lua,**/init.vim"
+description: Neovim and Vim configuration patterns for plugins, keymaps, LSP setup, and Treesitter queries. Use PROACTIVELY when editing Neovim config files, init.lua, plugin configurations, or vim scripts.
 ---
 
 # Neovim/Vim Configuration

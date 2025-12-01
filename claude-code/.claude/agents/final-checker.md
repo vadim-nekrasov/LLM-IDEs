@@ -1,6 +1,6 @@
 ---
 name: final-checker
-description: Performs final verification after code changes. Activates when completing implementation tasks to validate quality and correctness.
+description: Final verification after code changes with linting, type checking, and Three Lenses analysis. Use PROACTIVELY after completing any implementation task, bug fix, or code modification to validate quality and correctness.
 tools: Read, Grep, Glob, Bash
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: debugger
-description: Performs systematic debugging and root cause analysis. Activates when investigating bugs, errors, or unexpected behavior.
+description: Systematic debugging and root cause analysis with hypothesis generation. Use PROACTIVELY when investigating bugs, errors, stack traces, unexpected behavior, or when user mentions "bug", "error", "broken", "не работает".
 tools: Read, Grep, Glob, Edit, Bash
 ---
 

@@ -130,18 +130,107 @@ const copy = JSON.parse(JSON.stringify(obj));
 
 // ❌ Bad - 0 and '' treated as empty
 const limit = opts.limit || 20;
+
+// ❌ Bad - mixing logic and side effects
+connected &&= ping();
+
+// ✅ Good
+connected = connected ? ping() : false;
 ```
 
-## Performance & Security
+## Advanced Iterator Patterns
+
+### Window: skip N, take M from large source
+```js
+// ❌ Bad - full materialization
+const win = Array.from(events).slice(offset, offset + limit);
+
+// ✅ Good - lazy window
+const win = Iterator.from(events)
+  .drop(offset)
+  .take(limit)
+  .toArray();
+```
+
+### Top-N pattern
+```js
+// ✅ Good - lazy until sort
+const top10 = Iterator.from(items)
+  .map(x => ({ x, score: scoreOf(x) }))
+  .toArray()
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 10)
+  .map(v => v.x);
+```
+
+### Early termination / infinite sources
+```js
+// ❌ Bad - hang / OOM
+Array.from(naturals()).find(...);
+
+// ✅ Good
+const found = naturals().find(n => n % 12345 === 0);
+```
+
+## Advanced Promise Patterns
+
+### Promise.withResolvers with timeout
+```ts
+const { promise, resolve, reject } = Promise.withResolvers<string>();
+const timeout = setTimeout(() => reject(new Error('timeout')), 5000);
+doAsync().then(v => {
+  clearTimeout(timeout);
+  resolve(v);
+});
+```
+
+### Batch processing with Promise.try
+```js
+// ✅ Good - unified interface for dubious callbacks
+const results = await Promise.all(
+  tasks.map(task => Promise.try(task)),
+);
+```
+
+### Universal wrapper for external callbacks
+```js
+export const compute = (input, { onCompute } = {}) =>
+  Promise.try(() => onCompute?.(input))
+    .then(res => merge(input, res))
+    .catch(fallback);
+```
+
+## Performance
 
 - Avoid full materialization of large collections when lazy iterators suffice
-- Cache heavy calculations and network requests
-- Run independent async tasks in parallel (`Promise.all`)
+- Use Iterator Helpers and Set operations if they improve readability without performance penalty
+- Watch for memory leaks: don't hold unnecessary references to large structures
+- Cache heavy calculations and network requests if reused multiple times
+- Efficient async handling:
+  - Don't create unnecessary `await` in chains
+  - Run independent tasks in parallel (`Promise.all`)
+
+## Security
+
 - Do not trust input data
-- Consider XSS and injections when working with strings
+- Avoid direct use of unverified HTML
+- Consider XSS and injections when working with strings and external sources
+- Ensure code has no obvious spots for SQL/NoSQL injections and insecure serialization
+
+## Avoiding Problems
+
+- Don't mix logical operations and side effects (especially with `&&=` and `||=`)
+- Treat all iterating methods except `forEach` as "pure": inside `map`/`filter`/`reduce`/`flatMap`/`some`/`every` — **no side effects** (except local accumulator mutation)
+- Don't mutate function arguments without extreme necessity
+- Don't wrap already ready iterators in `Iterator.from`
+- Ensure consistency in sync/async path handling (prefer `Promise.try`)
+- Avoid redundant intermediate arrays if lazy iterators suffice
 
 ## Debugging
+
 When in doubt about bug cause, add working `console.log`:
 ```js
 console.log('payload:', JSON.stringify(payload, null, 2));
 ```
+
+Log key input data and intermediate states. Logs can be removed later, but at diagnostic moment they must be **working**, not commented out.

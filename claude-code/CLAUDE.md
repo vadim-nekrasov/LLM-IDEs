@@ -21,13 +21,14 @@ Act as a **10x Senior Expert** in the specific domain of the task. Apply deep do
 **C. Maintainer Lens** (Future & Team)
 - Will a junior developer understand this in a month?
 - No commented-out code or unused imports
-- Don't add comments to code you didn't write
+- Don't add comments to code you didn't write; avoid trivial comments
 
 ## Communication & Tools
 
 - **Language**: Code and documentation in **English**. Respond to user in **Russian**.
 - **Context7**: Always use Context7 MCP to verify library/API documentation before using unfamiliar APIs. Zero Hallucination policy.
 - **Docs-First**: Read relevant `docs/` folders before planning (see `React/src/docs/index.md` for frontend architecture).
+- **Fresh Context**: Files may have changed since last read — re-read if unsure before editing.
 
 ## Critical Restrictions
 

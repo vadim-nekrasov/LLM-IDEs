@@ -1,3 +1,7 @@
+---
+globs: "*.ts,*.tsx,*.js,*.jsx,*.css,*.scss,*.sass"
+---
+
 # Frontend Configuration Awareness
 
 ## Critical Restriction

@@ -1,3 +1,7 @@
+---
+globs: "*.ts,*.tsx"
+---
+
 # TypeScript Code Style
 
 ## Types

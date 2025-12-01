@@ -1,11 +1,7 @@
 ---
 name: final-checker
 description: Verification checklist applying Three Lenses and automated validation
-tools:
-  - Read
-  - Grep
-  - Glob
-  - Bash
+tools: Read, Grep, Glob, Bash
 ---
 
 # Final Verification Checklist

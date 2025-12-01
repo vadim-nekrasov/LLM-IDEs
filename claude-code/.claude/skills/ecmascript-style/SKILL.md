@@ -1,3 +1,7 @@
+---
+globs: "*.ts,*.tsx,*.js,*.jsx"
+---
+
 # ECMAScript Code Style (ES2025)
 
 Use modern language features where it improves readability and reduces boilerplate.

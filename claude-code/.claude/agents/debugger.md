@@ -1,12 +1,7 @@
 ---
 name: debugger
 description: Systematic debugging and root cause analysis with N hypotheses generation
-tools:
-  - Read
-  - Grep
-  - Glob
-  - Edit
-  - Bash
+tools: Read, Grep, Glob, Edit, Bash
 ---
 
 # Debugging & Root Cause Analysis

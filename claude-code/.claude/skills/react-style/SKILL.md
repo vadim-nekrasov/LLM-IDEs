@@ -1,3 +1,7 @@
+---
+globs: "*.tsx,*.jsx"
+---
+
 # React Code Style
 
 ## Component Patterns

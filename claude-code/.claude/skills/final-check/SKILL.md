@@ -1,7 +1,6 @@
 ---
-name: final-checker
-description: Final verification after code changes with linting, type checking, and Three Lenses analysis. Use PROACTIVELY after completing any implementation task, bug fix, or code modification to validate quality and correctness.
-tools: Read, Grep, Glob, Bash
+name: final-check
+description: Final verification checklist with linting, type checking, and Three Lenses analysis. Use PROACTIVELY after completing any implementation task, bug fix, or code modification to validate quality and correctness.
 ---
 
 # Final Verification Checklist

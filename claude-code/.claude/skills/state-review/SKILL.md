@@ -1,7 +1,6 @@
 ---
-name: state-reviewer
-description: Reviews state management patterns and data flow for Redux, Zustand, MobX, Jotai, Recoil, Pinia. Use PROACTIVELY when editing files with stores, slices, atoms, reducers, selectors, or state management logic.
-tools: Read, Grep, Glob
+name: state-review
+description: State management patterns checklist for Redux, Zustand, MobX, Jotai, Recoil, Pinia. Use PROACTIVELY when editing files with stores, slices, atoms, reducers, selectors, or state management logic.
 ---
 
 # State Management Review

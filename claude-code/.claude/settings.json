@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c '[[ \"$CLAUDE_FILE_PATH\" =~ \\.(ts|tsx|js|jsx|json|css|scss)$ ]] && cd \"$(git rev-parse --show-toplevel)/React/src\" && pnpm exec prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true'"
+            "command": "bash -c 'if [[ \"$CLAUDE_FILE_PATH\" =~ \\.(ts|tsx|js|jsx|json|css|scss)$ ]]; then d=\"$(dirname \"$CLAUDE_FILE_PATH\")\"; while [[ \"$d\" != \"/\" && ! -f \"$d/package.json\" ]]; do d=\"$(dirname \"$d\")\"; done; [[ -f \"$d/package.json\" ]] && cd \"$d\" && npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null; fi; true'"
           }
         ]
       }

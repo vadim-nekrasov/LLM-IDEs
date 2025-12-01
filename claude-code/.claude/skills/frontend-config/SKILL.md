@@ -27,8 +27,8 @@ When editing frontend code, pay attention to versions and settings in:
 ## Common Checks
 
 ```bash
-# Verify installed versions
-pnpm list <package-name>
+# Verify installed versions (use project's package manager)
+npm list <package-name>   # or pnpm list / yarn list
 
 # Check if feature is supported by target
 # Look at tsconfig.json "target" and "lib" fields

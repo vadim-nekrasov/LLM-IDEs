@@ -24,9 +24,9 @@ Apply after completing any task that involved editing code or configuration.
 Before analyzing with eyes, use tools:
 
 ### Linter & Type Check
-```bash
-cd React/src && pnpm lint && pnpm build
-```
+Run the project's lint and build commands from the appropriate directory.
+Check `package.json` for available scripts (typically `lint`, `build`, `typecheck`).
+
 **Goal**: 0 errors, 0 warnings in modified files.
 
 ### File Integrity

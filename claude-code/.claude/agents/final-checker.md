@@ -37,23 +37,12 @@ Read modified files from disk to verify content is saved correctly.
 
 ## Step 2: Three Lenses Analysis
 
-### A. Product Lens (User & Business)
-- Does this solve the user's REAL problem?
-- Will it break existing workflows? (Regression)
-- Edge cases handled? (empty arrays, nulls, errors)
-- Backward compatible?
+Apply the **Three Lenses** framework as defined in CLAUDE.md (canonical source):
+- **Product Lens** (User & Business): Real problem, regressions, edge cases
+- **Architect Lens** (System & Scale): Scalability, idiomaticity, simplicity, safety
+- **Maintainer Lens** (Future & Team): Readability, code style, no zombies
 
-### B. Architect Lens (System & Scale)
-- Scalable?
-- Idiomatic for this stack?
-- Simple? (No overengineering)
-- Safe? (Performance, memory leaks, security)
-
-### C. Maintainer Lens (Future & Team)
-- Junior developer understands in a month?
-- Code style consistent with project?
-- Comments concise, up-to-date, English?
-- No zombies? (commented code, unused imports)
+For detailed criteria, see CLAUDE.md → "The Three Lenses" section.
 
 ---
 

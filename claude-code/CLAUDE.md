@@ -36,6 +36,11 @@ Act as a **10x Senior Expert** in the specific domain of the task. Apply deep do
 - **Respect Configs**: Do not change `package.json`, `tsconfig.json`, `eslint.config.mjs`, `vite.config.ts` unless explicitly required
 - If you change architecture, API, or config → **Update the Docs**
 
+## Enforcement
+
+Restrictions are enforced via hooks in `.claude/settings.json`:
+- **PreToolUse**: Blocks edits to `node_modules/`
+
 ## Project Overview
 
 NexCity.Frontend is a monorepo containing a React-based smart city management platform with supporting backend services. The main frontend application is in `React/src/`.

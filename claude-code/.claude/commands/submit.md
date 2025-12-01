@@ -29,8 +29,8 @@ Adopt **10x Senior Expert** persona and **Three Lenses** (see CLAUDE.md).
    - Implicit vs. explicit requirements
    - Success criteria
 
-2. **Role-Based Pre-Analysis** (Three Lenses):
-   - Product, Architect, Maintainer perspectives
+2. **Role-Based Pre-Analysis**:
+   - Apply **Three Lenses** from CLAUDE.md (canonical source)
 
 3. **Confidence Threshold (85%)**:
    - If confidence < 85% on critical business logic/architecture/safety → **ASK first**

@@ -1,6 +1,6 @@
 ---
 name: final-checker
-description: Verification checklist applying Three Lenses and automated validation
+description: Performs final verification after code changes. Activates when completing implementation tasks to validate quality and correctness.
 tools: Read, Grep, Glob, Bash
 ---
 
@@ -25,7 +25,11 @@ Before analyzing with eyes, use tools:
 
 ### Linter & Type Check
 Run the project's lint and build commands from the appropriate directory.
-Check `package.json` for available scripts (typically `lint`, `build`, `typecheck`).
+Check project config for available scripts:
+- JS/TS: `package.json` → `lint`, `build`, `typecheck`
+- Python: `pyproject.toml` → `ruff`, `mypy`, `pytest`
+- Go: `go build`, `go vet`, `golangci-lint`
+- Rust: `cargo check`, `cargo clippy`
 
 **Goal**: 0 errors, 0 warnings in modified files.
 
@@ -53,8 +57,8 @@ For detailed criteria, see `workflow-default` skill.
 - [ ] All `strict_constraints` followed
 - [ ] All `questions_answered` explicitly answered
 - [ ] Old functionality works (regression check)
-- [ ] No unnecessary re-renders
-- [ ] No memory leaks (subscriptions, listeners, closures)
+- [ ] No performance regressions (unnecessary work, N+1 queries, etc.)
+- [ ] No resource leaks (subscriptions, listeners, connections, file handles)
 - [ ] Edge cases handled
 
 ### Code Quality & Style

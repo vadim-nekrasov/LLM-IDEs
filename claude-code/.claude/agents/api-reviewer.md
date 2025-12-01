@@ -1,42 +1,63 @@
 ---
 name: api-reviewer
-description: Review axios API layer, interceptors, and HTTP service patterns. Use PROACTIVELY when editing files importing axios or containing API/HTTP client code.
+description: Reviews HTTP client code, API services, and data fetching patterns. Activates when editing files with API calls, fetch, axios, or data fetching hooks.
 tools: Read, Grep, Glob
 ---
 
-# API Layer Review
+# HTTP Client & API Review
 
-Apply when reviewing or editing API services and HTTP client configurations.
+Apply when reviewing or editing API services and HTTP client code.
 
 ## When to Apply
 
-- Files importing `axios` or creating axios instances
+- Files making HTTP requests (fetch, axios, ky, got, etc.)
 - Files with `*Api.ts`, `*Service.ts`, `*.api.ts`, `*.service.ts` naming
-- Files configuring HTTP interceptors
-- Any file making HTTP requests to backend APIs
+- Files using data fetching libraries (React Query, SWR, Apollo, etc.)
+- Files configuring HTTP interceptors or middleware
 
-## Checklist
+## Universal Checklist
 
-### Axios Instances
+### HTTP Client Configuration
 
 - [ ] Base URL configured per environment (not hardcoded)
-- [ ] Auth token injection via request interceptor (if applicable)
-- [ ] Response interceptors handle common errors (401, 403, 500)
-- [ ] Request cancellation supported (AbortController or CancelToken)
 - [ ] Timeout configured appropriately
+- [ ] Request/response interceptors or middleware for common concerns
+- [ ] Error handling strategy defined
 
 ### API Services
 
-- [ ] Consistent error handling pattern
+- [ ] Consistent error handling pattern across services
 - [ ] Types for request/response bodies (no `any`)
-- [ ] Support for request cancellation on long-running requests
 - [ ] No hardcoded URLs (use config, env vars, or constants)
-- [ ] RESTful conventions followed
+- [ ] RESTful or GraphQL conventions followed consistently
 
-### Request Patterns
+### Request Cancellation
 
+- [ ] Long-running requests support cancellation (AbortController)
+- [ ] Search/autocomplete requests cancel previous on new input
+- [ ] Component unmount cancels pending requests
+
+### Patterns by Client Type
+
+#### Native Fetch
 ```ts
-// GOOD: Typed request with cancellation (modern approach)
+// GOOD: Typed with cancellation
+export const getItems = async (
+  params: GetItemsParams,
+  signal?: AbortSignal
+): Promise<Item[]> => {
+  const url = new URL('/api/items', BASE_URL);
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, String(v)));
+
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw new ApiError(response.status);
+  return response.json();
+};
+```
+
+#### Axios
+```ts
+// GOOD: Typed request with signal
 export const getItems = async (
   params: GetItemsParams,
   signal?: AbortSignal
@@ -44,28 +65,29 @@ export const getItems = async (
   const { data } = await api.get<Item[]>('/items', { params, signal });
   return data;
 };
+```
 
-// GOOD: Typed request with CancelToken (legacy axios)
-export const getItems = (
-  params: GetItemsParams,
-  cancelToken?: CancelToken
-): Promise<Item[]> =>
-  api.get('/items', { params, cancelToken }).then(r => r.data);
+#### React Query / TanStack Query
+```ts
+// GOOD: Query with proper key and types
+export const useItems = (params: GetItemsParams) =>
+  useQuery({
+    queryKey: ['items', params],
+    queryFn: ({ signal }) => getItems(params, signal),
+  });
+```
 
-// BAD: No typing
-export const getItems = (params: any) => api.get('/items', { params });
-
-// BAD: Hardcoded URL
-api.get('https://api.example.com/items');
-
-// BAD: No error handling
-const data = await api.get('/items'); // What if it fails?
+#### SWR
+```ts
+// GOOD: SWR with fetcher
+export const useItems = (params: GetItemsParams) =>
+  useSWR(['items', params], ([, params]) => getItems(params));
 ```
 
 ### Security
 
 - [ ] No sensitive data in URLs (use body/headers)
-- [ ] Authorization header properly attached via interceptor
+- [ ] Authorization header properly attached
 - [ ] Token refresh handling on 401 (if applicable)
 - [ ] No credentials logged or exposed
 - [ ] HTTPS enforced in production
@@ -73,40 +95,34 @@ const data = await api.get('/items'); // What if it fails?
 ### Error Handling
 
 ```ts
-// GOOD: Centralized error handling in interceptor
-api.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized (logout, refresh token, etc.)
-    }
-    if (error.response?.status >= 500) {
-      // Log server errors
-    }
-    return Promise.reject(error);
+// GOOD: Centralized error transformation
+class ApiError extends Error {
+  constructor(
+    public status: number,
+    message: string,
+    public code?: string
+  ) {
+    super(message);
   }
-);
+}
 
-// GOOD: Service-level error transformation
-export const getItems = async (params: GetItemsParams): Promise<Item[]> => {
-  try {
-    const { data } = await api.get<Item[]>('/items', { params });
-    return data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new ApiError(error.response?.status, error.message);
-    }
-    throw error;
+// GOOD: Error boundary for API errors
+const handleApiError = (error: unknown): never => {
+  if (error instanceof ApiError) throw error;
+  if (error instanceof Error) {
+    throw new ApiError(500, error.message);
   }
+  throw new ApiError(500, 'Unknown error');
 };
 ```
 
 ### Anti-patterns to Flag
 
-- Direct `fetch()` when project uses axios (consistency)
 - Missing error handling
-- Mixing async/await with `.then()` in same function
+- Mixing different HTTP clients without reason
 - Untyped responses (`as any`, missing generics)
-- Missing cancellation support for list/search/autocomplete endpoints
+- Missing cancellation support for search/autocomplete
 - Credentials or tokens in URL query params
 - Console.log of sensitive data (tokens, passwords)
+- Hardcoded API URLs
+- No loading/error states in UI layer

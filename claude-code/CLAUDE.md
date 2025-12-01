@@ -21,6 +21,7 @@ Act as a **10x Senior Expert** in the specific domain of the task. Apply deep do
 **C. Maintainer Lens** (Future & Team)
 - Will a junior developer understand this in a month?
 - No commented-out code or unused imports
+- Don't add comments to code you didn't write
 
 ## Communication & Tools
 

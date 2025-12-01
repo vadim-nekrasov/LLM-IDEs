@@ -10,6 +10,17 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c '[[ \"$CLAUDE_FILE_PATH\" =~ \\.(ts|tsx|js|jsx|json|css|scss)$ ]] && cd /Users/vadimnekrasov/Work/NexCity.Frontend/React/src && pnpm exec prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true'"
+          }
+        ]
+      }
     ]
   }
 }

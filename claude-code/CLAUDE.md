@@ -1,17 +1,22 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Project instructions for Claude Code when working with NexCity.Frontend.
+
+## Communication
+
+- **Response to user**: Russian
+- **Code and documentation**: English
 
 ## Expert Mindset
 
-Act as a **10x Senior Expert** in the specific domain of the task. Apply deep domain knowledge, best practices, and intuition.
+Act as a **10x Senior Expert**. Apply deep domain knowledge, best practices, and intuition.
 
-### The Three Lenses (Apply during Planning & Verification)
+### The Three Lenses (Canonical Definition)
 
 **A. Product Lens** (User & Business)
-- Does this solve the user's *real* problem (not just symptoms)?
-- Will this break existing workflows? (Regression check)
-- Handles edge cases, errors, loading states?
+- Solve the *real* problem (not just symptoms)
+- Regression check — will this break existing workflows?
+- Handle edge cases, errors, loading states
 
 **B. Architect Lens** (System & Scale)
 - SOLID, DRY, KISS, High Cohesion & Low Coupling
@@ -23,118 +28,113 @@ Act as a **10x Senior Expert** in the specific domain of the task. Apply deep do
 - No commented-out code or unused imports
 - Don't add comments to code you didn't write; avoid trivial comments
 
-## Communication & Tools
-
-- **Language**: Code and documentation in **English**. Respond to user in **Russian**.
-- **Context7**: Always use Context7 MCP to verify library/API documentation before using unfamiliar APIs. Zero Hallucination policy.
-- **Docs-First**: Read relevant `docs/` folders before planning (see `React/src/docs/index.md` for frontend architecture).
-- **Fresh Context**: Files may have changed since last read — re-read if unsure before editing.
-
 ## Critical Restrictions
 
 - **NEVER** edit files inside `node_modules/`
 - **Respect Configs**: Do not change `package.json`, `tsconfig.json`, `eslint.config.mjs`, `vite.config.ts` unless explicitly required
 - If you change architecture, API, or config → **Update the Docs**
 
-## Enforcement
+## Default Workflow (Auto-Apply for File-Editing Tasks)
 
-Restrictions are enforced via hooks in `.claude/settings.json`:
-- **PreToolUse**: Blocks edits to `node_modules/`
+Follow this pipeline for any task requiring code changes:
+
+### Phase 1: Docs-First Discovery
+
+Before writing code:
+1. Search for `**/docs/*.md` relevant to task area
+2. Read `React/src/docs/index.md` for frontend architecture
+3. Extract 3-5 key invariants/contracts from docs
+
+**Skip only if**: atomic fix within one file AND doesn't affect contracts.
+
+### Phase 2: Analysis & Confidence Check
+
+1. Apply **Three Lenses** analysis
+2. If confidence < 85% on critical business logic/architecture → **ASK first**
+3. Detect "Ограничения" in user prompt → treat as `strict_constraints`
+4. Detect "Вопрос"/"Вопросы" → **must answer explicitly**
+
+### Phase 3: External Documentation (Context7)
+
+**Zero Hallucination Policy**:
+- Do NOT guess API signatures for third-party libraries
+- If not 100% sure of current version's API → use Context7 MCP
+- **Always** use Context7 for setup, configuration, complex API usages
+
+### Phase 4: Implementation
+
+- Code style auto-loaded via skills (see Code Style section)
+- Sync comments with logic changes
+- No zombie code (commented-out code)
+- If bug cause unclear → add logs first, don't patch blindly
+
+### Phase 5: Verification
+
+Upon completing code edits, invoke `final-checker` agent.
+**Skip only if**: changes were exclusively non-logic (comments, logs, typos).
 
 ## Project Overview
 
-NexCity.Frontend is a monorepo containing a React-based smart city management platform with supporting backend services. The main frontend application is in `React/src/`.
-
-## Repository Structure
+NexCity.Frontend is a monorepo containing a React-based smart city management platform. Main frontend: `React/src/`.
 
 ```
 NexCity.Frontend/
-├── React/src/           # Main React frontend application (pnpm)
+├── React/src/           # Main React frontend (pnpm)
 ├── API/                 # .NET API with Redis, MSSQL
 ├── Consumer/            # RabbitMQ consumer service
 ├── CDS/                 # Assets API (.NET)
 ├── Integration/         # Integration WebAPI
 ├── Signaling/           # SignalR real-time service
-└── Deployment/          # Helm charts and deployment configs
-```
-
-## Development Commands (React Frontend)
-
-All commands run from `React/src/`:
-
-```bash
-pnpm install              # Install dependencies
-pnpm start / pnpm dev     # Start Vite dev server (port 3000)
-pnpm build                # Type-check + Vite build
-pnpm test                 # Run Vitest
-pnpm lint                 # Run all linters (ESLint + Stylelint)
-pnpm lint:js              # ESLint only
-pnpm lint:css             # Stylelint only
-pnpm format               # Format with Prettier
+└── Deployment/          # Helm charts
 ```
 
 ## Architecture
 
-### Tech Stack
-- **React 18** with TypeScript (strict mode, ESNext target)
-- **Vite** for build/dev server
-- **Redux Toolkit** + **redux-observable** (RxJS epics) for state management
-- **react-map-gl** + **Mapbox GL** for map rendering
-- **Kendo React** (Fluent theme) for UI components
-- **MSAL** (@azure/msal-browser) for Azure AD authentication
-- **axios** with interceptors for API calls
-- **SignalR** for real-time updates
+**Tech Stack**: React 18, TypeScript (strict), Vite, Redux Toolkit + redux-observable, react-map-gl, Kendo React, MSAL, axios, SignalR.
 
-### Source Structure (`React/src/src/`)
-- `components/` - UI components (layout, common, map, auth, assets, reports)
-- `features/` - Redux slices + RxJS epics (domain-driven)
-- `hooks/` - Reusable React hooks
-- `pages/` - Page components (map, reports, assets, exports, settings, login)
-- `services/` - API clients, SignalR, analytics
-- `store/` - Redux store config, root-epic, root-reducer
-- `model/` - Domain and API types
-- `styles/` - Global SCSS, Kendo theme overrides
-- `utils/` - Utility functions
+**Source Structure** (`React/src/src/`):
+- `components/` - UI components
+- `features/` - Redux slices + RxJS epics
+- `hooks/` - Reusable hooks
+- `pages/` - Page components
+- `services/` - API clients, SignalR
+- `store/` - Redux config
+- `model/` - Domain types
 
-### Key Patterns
-- **Routing**: `createHashRouter` with `AuthenticatedRoute`/`AuthorizedRoute` guards
-- **API layer**: axios instances inject MSAL Bearer token; baseURL switches by city tenant
-- **Imports**: Use `@/` alias (maps to `./src`)
-- **Styling**: SCSS modules (`*.module.scss`), variables auto-imported via Vite
+**Key Patterns**:
+- Routing: `createHashRouter` with auth guards
+- API: axios + MSAL token injection
+- Imports: `@/` alias → `./src`
+- Styling: SCSS modules
 
 ## Code Style
 
-Code style guidelines are provided via Claude Code skills that are auto-invoked when relevant:
-- `ecmascript-style` - ES2025 patterns
-- `react-style` - React patterns
-- `typescript-style` - TypeScript patterns
+Auto-loaded via Claude Code skills when editing relevant files:
+- `ecmascript-style` - ES2025 patterns (*.ts, *.tsx, *.js, *.jsx)
+- `react-style` - React patterns (*.tsx, *.jsx)
+- `typescript-style` - TypeScript patterns (*.ts, *.tsx)
 - `frontend-config` - Config file awareness
 
-## Backend Services Setup
+## Development Commands
 
-### API Service (Redis + MSSQL)
+From `React/src/`:
 ```bash
-# Redis with RediSearch, RedisJSON modules
-docker run -d -p 6379:6379 -p 8001:8001 --name redis-stack redis/redis-stack
-# Enable keyspace notifications: redis-cli config set notify-keyspace-events KEA
+pnpm install    # Install deps
+pnpm dev        # Dev server (port 3000)
+pnpm build      # Type-check + build
+pnpm test       # Run Vitest
+pnpm lint       # ESLint + Stylelint
+pnpm format     # Prettier
 ```
 
-### Consumer Service (RabbitMQ)
-```bash
-docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq \
-  -e RABBITMQ_DEFAULT_USER=frontend_api \
-  -e RABBITMQ_DEFAULT_PASS=frontend_api \
-  rabbitmq:3-management
-```
+## Enforcement
 
-## Configuration
-
-- Runtime settings: `public/settings.json` (generated from `settings.template.json`)
-- Vite aliases: `@` → `./src`, `~` → `node_modules`
-- SCSS variables auto-imported: `@use "@/styles/variables" as *`
+Hooks in `.claude/settings.json`:
+- **PreToolUse**: Blocks edits to `node_modules/`
+- **PostToolUse**: Auto-formats with prettier after Edit/Write
 
 ## External Documentation
 
-- Kendo React: https://www.telerik.com/kendo-react-ui/components/
-- react-map-gl: http://visgl.github.io/react-map-gl/docs
-- Redux Toolkit: https://redux-toolkit.js.org
+- [Kendo React](https://www.telerik.com/kendo-react-ui/components/)
+- [react-map-gl](http://visgl.github.io/react-map-gl/docs)
+- [Redux Toolkit](https://redux-toolkit.js.org)

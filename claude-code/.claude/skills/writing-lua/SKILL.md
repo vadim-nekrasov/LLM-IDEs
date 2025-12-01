@@ -1,4 +1,6 @@
 ---
+name: writing-lua
+description: Lua code patterns and best practices. Apply when writing Lua code including metatables, coroutines, module patterns, and Neovim plugin development.
 globs: "*.lua"
 ---
 

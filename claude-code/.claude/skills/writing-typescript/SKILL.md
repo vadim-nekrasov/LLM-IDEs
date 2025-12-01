@@ -1,4 +1,6 @@
 ---
+name: writing-typescript
+description: TypeScript code patterns and best practices. Apply when writing TypeScript files including type definitions, generics, utility types, discriminated unions, and type guards.
 globs: "*.ts,*.tsx"
 ---
 

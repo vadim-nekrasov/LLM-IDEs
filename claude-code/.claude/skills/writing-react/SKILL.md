@@ -1,4 +1,6 @@
 ---
+name: writing-react
+description: React component patterns and best practices. Apply when writing React components including hooks, performance optimization, accessibility, and error handling.
 globs: "*.tsx,*.jsx"
 ---
 

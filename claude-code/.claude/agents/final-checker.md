@@ -37,12 +37,12 @@ Read modified files from disk to verify content is saved correctly.
 
 ## Step 2: Three Lenses Analysis
 
-Apply the **Three Lenses** framework as defined in CLAUDE.md (canonical source):
+Apply the **Three Lenses** framework:
 - **Product Lens** (User & Business): Real problem, regressions, edge cases
 - **Architect Lens** (System & Scale): Scalability, idiomaticity, simplicity, safety
 - **Maintainer Lens** (Future & Team): Readability, code style, no zombies
 
-For detailed criteria, see CLAUDE.md → "The Three Lenses" section.
+For detailed criteria, see `workflow-default` skill.
 
 ---
 
@@ -71,3 +71,30 @@ For detailed criteria, see CLAUDE.md → "The Three Lenses" section.
 ### Critical Restrictions
 - [ ] No edits to `node_modules/`
 - [ ] Config files unchanged unless required
+
+---
+
+## Step 4: Critical Audit (Optional)
+
+Additional focus points for complex changes:
+
+- [ ] Are all changes necessary?
+- [ ] Is there any overengineering or avoidable complexity?
+- [ ] Could this task be solved more simply while staying correct?
+- [ ] Local consistency: follows the style of the current module/file
+
+**Priority**: Readability & Maintainability > Micro-optimizations
+
+---
+
+## Step 5: Solution Search (Optional)
+
+For significant changes, consider `/tree-search` to find alternative solutions.
+
+If search identifies a better solution than current implementation, apply it.
+
+---
+
+## Step 6: Cleanup
+
+Remove all console logs added during this task (unless explicitly needed for debugging).

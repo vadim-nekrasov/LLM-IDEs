@@ -1,5 +1,7 @@
 ---
-globs: "*.ts,*.tsx,*.js,*.jsx"
+name: writing-ecmascript
+description: Modern ECMAScript (ES2025) code patterns and best practices. Apply when writing JavaScript code including Iterator Helpers, Set operations, Promise patterns, and immutable array methods.
+globs: "*.js,*.mjs,*.cjs"
 ---
 
 # ECMAScript Code Style (ES2025)

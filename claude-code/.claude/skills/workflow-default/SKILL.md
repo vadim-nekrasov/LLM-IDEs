@@ -57,6 +57,6 @@ Before writing code:
 
 ## Phase 5: Verification
 
-Upon completing code edits, invoke `final-checker` agent.
+Upon completing code edits, invoke `final-check` skill.
 
 **Skip only if**: changes were exclusively non-logic (comments, logs, typos).

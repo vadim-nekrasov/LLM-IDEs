@@ -38,7 +38,7 @@ Understand intent in any language, declension, or phrasing.
 
 | Semantic Concept | Maps to | Example phrasings |
 |------------------|---------|-------------------|
-| Initial/starting number of ideas, seed, brainstorm size | `{max_abstract_variants}` | "посев 10", "изначально 7 вариантов", "начни с 20 идей", "seed 15", "start with 12 options" |
+| Initial/starting number of ideas, seed, brainstorm size, abstract variants | `{max_abstract_variants}` | "посев 10", "изначально 7 вариантов", "15 абстрактных вариантов", "начни с 20 идей", "seed 15", "start with 12 options" |
 | Promising candidates to deep-dive, shortlist size | `{num_promising}` | "5 лучших кандидатов", "отбери 3 перспективных", "explore top 5", "narrow to 4" |
 | Tree depth, exploration levels, recursion limit | `{max_depth}` | "глубина 3", "максимум 4 уровня", "до 5 итераций вглубь", "depth 6", "3 levels deep" |
 | Branches per node, branching factor | `{max_branching}` | "по 3 ветви на узел", "branching 4", "split into 2 at each step" |

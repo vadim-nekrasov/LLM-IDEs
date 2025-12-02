@@ -44,7 +44,9 @@ Understand intent in any language, declension, or phrasing.
 | Branches per node, branching factor | `{max_branching}` | "по 3 ветви на узел", "branching 4", "split into 2 at each step" |
 | Max successful leaves, solution cap | `{max_succeed}` | "максимум 30 решений", "cap at 50 leaves", "не более 20 финальных вариантов" |
 
-**Rule**: If user specifies a number near a concept — map it to the corresponding parameter.
+**Rules**:
+- If user specifies a number near a concept — map it to the corresponding parameter.
+- **Fallback**: A bare number without semantic context (e.g., `/tree-search 5`) defaults to `{num_promising}`.
 
 ---
 

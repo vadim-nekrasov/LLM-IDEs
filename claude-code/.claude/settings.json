@@ -1,5 +1,16 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'rm -f /tmp/.claude_code_edited_${CLAUDE_SESSION_ID:-default} /tmp/.claude_final_check_${CLAUDE_SESSION_ID:-default} 2>/dev/null; true'"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Edit|Write",
@@ -17,7 +28,16 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if [[ \"$CLAUDE_FILE_PATH\" =~ \\.(ts|tsx|js|jsx|json|css|scss)$ ]]; then d=\"$(dirname \"$CLAUDE_FILE_PATH\")\"; while [[ \"$d\" != \"/\" && ! -f \"$d/package.json\" ]]; do d=\"$(dirname \"$d\")\"; done; [[ -f \"$d/package.json\" ]] && cd \"$d\" && npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null; fi; true'"
+            "command": "bash -c 'if [[ \"$CLAUDE_FILE_PATH\" =~ \\.(ts|tsx|js|jsx|json|css|scss)$ ]]; then d=\"$(dirname \"$CLAUDE_FILE_PATH\")\"; while [[ \"$d\" != \"/\" && ! -f \"$d/package.json\" ]]; do d=\"$(dirname \"$d\")\"; done; [[ -f \"$d/package.json\" ]] && cd \"$d\" && npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null; fi; touch /tmp/.claude_code_edited_${CLAUDE_SESSION_ID:-default}; true'"
+          }
+        ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'jq -r \".tool_input.skill // empty\" | grep -q \"final-check\" && touch /tmp/.claude_final_check_${CLAUDE_SESSION_ID:-default}; true'"
           }
         ]
       }
@@ -27,8 +47,8 @@
         "matcher": "*",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Before finishing: If you edited any code files during this session and haven't run the final-check skill yet, you MUST invoke it now using: Skill(final-check). Check your conversation - did you run final-check after ALL code edits? If not, run it now."
+            "type": "command",
+            "command": "bash -c 'EDITED=\"/tmp/.claude_code_edited_${CLAUDE_SESSION_ID:-default}\"; CHECKED=\"/tmp/.claude_final_check_${CLAUDE_SESSION_ID:-default}\"; if [[ -f \"$EDITED\" && ! -f \"$CHECKED\" ]]; then echo \"The final-check skill has not been run after code edits in this session. Multiple code files were created and modified (layout modules, hooks, components) without final verification.\" >&2; exit 2; fi; true'"
           },
           {
             "type": "command",

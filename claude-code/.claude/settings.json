@@ -27,6 +27,10 @@
         "matcher": "*",
         "hooks": [
           {
+            "type": "prompt",
+            "prompt": "Before finishing: If you edited any code files during this session and haven't run the final-check skill yet, you MUST invoke it now using: Skill(final-check). Check your conversation - did you run final-check after ALL code edits? If not, run it now."
+          },
+          {
             "type": "command",
             "command": "bash -c 'if [[ \"$OSTYPE\" == \"darwin\"* ]]; then osascript -e \"display notification \\\"Claude finished\\\" with title \\\"Claude Code\\\"\"; elif command -v notify-send &>/dev/null; then notify-send \"Claude Code\" \"Claude finished\"; fi; true'"
           }

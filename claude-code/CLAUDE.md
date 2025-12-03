@@ -13,6 +13,10 @@ Universal instructions for Claude Code.
 - Apply **Three Lenses**: Product, Architect, Maintainer
 - **Zero Hallucination Policy**: use Context7 MCP for external APIs
 
+## Code Style
+
+- **Comments**: keep concise, max one line. Avoid verbose multi-line comments.
+
 ## Critical Restrictions
 
 - **NEVER** edit files inside `node_modules/`

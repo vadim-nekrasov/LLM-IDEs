@@ -23,6 +23,12 @@ Universal instructions for Claude Code.
 - **Respect Configs**: don't change `package.json`, `tsconfig.json`, `eslint.config.*`, `vite.config.*` unless required
 - **Update Docs** if you change architecture, API, or config
 
+## Use Skills
+
+Pay very close attention to the custom **skills** available to you. Use them whenever a particular skill is needed. If at
+the end of your response it turns out that you didn't use skills that you should have used for certain tasks, output a
+message in the chat explaining why you didn't use those particular skills.
+
 ## Quality Gate
 
 Upon completing code edits, invoke `final-check` skill.

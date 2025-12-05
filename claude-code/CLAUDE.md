@@ -15,7 +15,9 @@ Universal instructions for Claude Code.
 
 ## Code Style
 
-- **Comments**: keep concise, max one line. Avoid verbose multi-line comments.
+### Comments
+- Don't add comments that are usually unnecessary.
+- Keep comments concise, max one line. Avoid verbose multi-line comments.
 
 ## Critical Restrictions
 

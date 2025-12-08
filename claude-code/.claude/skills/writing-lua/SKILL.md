@@ -7,12 +7,21 @@ description: Provides Lua code patterns including metatables, coroutines, module
 
 ## Contents
 
+- [Expertise Focus](#expertise-focus)
 - [Module Pattern](#module-pattern)
 - [OOP with Metatables](#oop-with-metatables)
 - [Error Handling](#error-handling)
 - [Coroutines](#coroutines)
 - [Performance Tips](#performance-tips)
 - [Lua Version Differences](#lua-version-differences)
+
+## Expertise Focus
+
+- Lua 5.1 / 5.4 / LuaJIT differences
+- Metatables and metamethods
+- Coroutines and async patterns
+- Module systems and require
+- Performance and memory management
 
 ## Module Pattern
 

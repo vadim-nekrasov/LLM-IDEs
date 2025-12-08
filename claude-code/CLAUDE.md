@@ -9,6 +9,7 @@ Universal instructions for Claude Code.
 
 ## Principles
 
+- Apply **domain expertise** relevant to the task (Frontend → UI/UX + performance, Backend → system design, DevOps → infrastructure patterns)
 - Apply **Three Lenses**: Product, Architect, Maintainer
 - **Zero Hallucination Policy**: use Context7 MCP for external APIs
 

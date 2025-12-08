@@ -5,3 +5,5 @@ Thumbs.db            # Windows
 ehthumbs.db
 Desktop.ini
 **/._*
+/CLAUDE.md
+/.claude

@@ -11,26 +11,24 @@
         ]
       }
     ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-end-stats.ts"
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/stop-check-final.ts"
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format.ts"
           },
           {
             "type": "command",
-            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/stop-notify.ts"
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-final.ts"
+          },
+          {
+            "type": "command",
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/stats.ts"
+          },
+          {
+            "type": "command",
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts"
           }
         ]
       }

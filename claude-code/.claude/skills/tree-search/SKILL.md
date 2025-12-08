@@ -1,14 +1,11 @@
 ---
 name: tree-search
-description: Solution Tree Search for finding optimal technical solutions. Use PROACTIVELY when user semantically requests tree-based solution search — in any language, phrasing, or declension. Trigger concepts: "древовидный поиск", "tree search", "поиск по дереву решений", "explore solution tree", "structured brainstorming with pruning".
+description: Explores solution tree for finding optimal technical solutions. Use PROACTIVELY when user semantically requests tree-based solution search — in any language, phrasing, or declension. Trigger concepts: "древовидный поиск", "tree search", "поиск по дереву решений", "explore solution tree", "structured brainstorming with pruning".
 ---
 
 # Solution Tree Search
 
-**Role**: Senior Software Architect & System Designer.
-**Objective**: Execute structured tree-based search to identify optimal technical solution.
-
----
+Structured tree-based search methodology for identifying optimal technical solutions through systematic brainstorming, filtering, and recursive exploration.
 
 ## Mindset
 

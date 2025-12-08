@@ -1,6 +1,6 @@
 ---
 name: writing-ecmascript
-description: Modern ECMAScript (ES2025) patterns including Iterator Helpers, Set operations, Promise patterns, and immutable array methods. Use PROACTIVELY when writing JavaScript code in .js, .mjs, or .cjs files, using modern JS features, or implementing async logic.
+description: Provides modern ECMAScript patterns including Iterator Helpers, Set operations, Promise patterns, and immutable array methods. Use PROACTIVELY when writing JavaScript code in .js, .mjs, or .cjs files, using modern JS features, or implementing async logic.
 ---
 
 # ECMAScript Code Style (ES2025)

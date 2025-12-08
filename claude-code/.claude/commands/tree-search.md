@@ -1,3 +1,8 @@
+---
+description: Run tree-based solution search
+argument-hint: [num_promising]
+---
+
 # Solution Tree Search
 
 Apply `tree-search` skill with any arguments provided.

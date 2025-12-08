@@ -1,11 +1,18 @@
 ---
 name: api-review
-description: HTTP client and API service patterns checklist. Use PROACTIVELY when editing files with fetch, axios, React Query, SWR, API calls, or data fetching hooks. Triggers on *Api.ts, *Service.ts, *.api.ts patterns.
+description: Provides HTTP client and API service patterns checklist. Use PROACTIVELY when editing files with fetch, axios, React Query, SWR, API calls, or data fetching hooks. Triggers on *Api.ts, *Service.ts, *.api.ts patterns.
 ---
 
 # HTTP Client & API Review
 
-Apply when reviewing or editing API services and HTTP client code.
+## Contents
+
+- [When to Apply](#when-to-apply)
+- [Universal Checklist](#universal-checklist)
+- [Patterns by Client Type](#patterns-by-client-type)
+- [Security](#security)
+- [Error Handling](#error-handling)
+- [Anti-patterns to Flag](#anti-patterns-to-flag)
 
 ## When to Apply
 

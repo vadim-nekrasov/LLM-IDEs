@@ -1,6 +1,6 @@
 ---
 name: writing-react
-description: React component patterns including hooks, performance optimization, accessibility, and error handling. Use PROACTIVELY when editing .tsx or .jsx files, creating React components, using useState/useEffect/useMemo/useCallback, or implementing React features.
+description: Provides React component patterns including hooks, performance optimization, accessibility, and error handling. Use PROACTIVELY when editing .tsx or .jsx files, creating React components, using useState/useEffect/useMemo/useCallback, or implementing React features.
 ---
 
 # React Code Style

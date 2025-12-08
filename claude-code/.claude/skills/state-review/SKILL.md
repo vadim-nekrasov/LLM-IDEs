@@ -1,11 +1,9 @@
 ---
 name: state-review
-description: State management patterns checklist for Redux, Zustand, MobX, Jotai, Recoil, Pinia. Use PROACTIVELY when editing files with stores, slices, atoms, reducers, selectors, or state management logic.
+description: Provides state management patterns checklist for Redux, Zustand, MobX, Jotai, Recoil, Pinia. Use PROACTIVELY when editing files with stores, slices, atoms, reducers, selectors, or state management logic.
 ---
 
 # State Management Review
-
-Apply when reviewing or editing state management code.
 
 ## When to Apply
 

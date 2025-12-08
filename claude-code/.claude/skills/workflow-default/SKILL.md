@@ -1,11 +1,9 @@
 ---
 name: workflow-default
-description: Structured development workflow with docs-first discovery, Three Lenses analysis, Context7 verification, and final checking. Use PROACTIVELY when editing code files, implementing features, fixing bugs, or making any code changes. Triggers on TypeScript, JavaScript, React, Python, Go, Rust development tasks.
+description: Applies structured development workflow with docs-first discovery, Three Lenses analysis, Context7 verification, and final checking. Use PROACTIVELY when editing code files, implementing features, fixing bugs, or making any code changes. Triggers on TypeScript, JavaScript, React, Python, Go, Rust development tasks.
 ---
 
 # Development Workflow
-
-Apply this workflow for any task requiring code changes.
 
 ## Phase 1: Docs-First Discovery
 

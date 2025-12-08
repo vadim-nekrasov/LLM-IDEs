@@ -1,6 +1,6 @@
 ---
 name: writing-typescript
-description: TypeScript code patterns and best practices for type definitions, generics, utility types, discriminated unions, and type guards. Use PROACTIVELY when editing or creating .ts or .tsx files, defining interfaces, working with types, or writing TypeScript code.
+description: Provides TypeScript code patterns and best practices for type definitions, generics, utility types, discriminated unions, and type guards. Use PROACTIVELY when editing or creating .ts or .tsx files, defining interfaces, working with types, or writing TypeScript code.
 ---
 
 # TypeScript Code Style

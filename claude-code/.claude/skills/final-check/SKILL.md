@@ -1,11 +1,9 @@
 ---
 name: final-check
-description: Final verification checklist with linting, type checking, and Three Lenses analysis. Use PROACTIVELY after completing any implementation task, bug fix, or code modification to validate quality and correctness.
+description: Runs final verification checklist with linting, type checking, and Three Lenses analysis. Use PROACTIVELY after completing any implementation task, bug fix, or code modification to validate quality and correctness.
 ---
 
 # Final Verification Checklist
-
-Apply after completing any task that involved editing code or configuration.
 
 **Skip if**: Changes were exclusively non-logic updates (console logs, comments, typo fixes).
 

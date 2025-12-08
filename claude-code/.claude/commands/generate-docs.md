@@ -1,3 +1,8 @@
+---
+description: Generate technical documentation for a folder
+argument-hint: [folder-path]
+---
+
 # Generate Technical Documentation for Folder
 
 Analyze code in specified folder and generate/update technical documentation.

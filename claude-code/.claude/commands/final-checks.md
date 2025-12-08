@@ -1,7 +1,10 @@
+---
+description: Review code changes using Three Lenses analysis
+---
+
 # Code Review
 
-**Role**: Senior Code Reviewer
-**Objective**: Analyze proposed changes.
+Analyze proposed changes for quality, correctness, and maintainability.
 
 ---
 

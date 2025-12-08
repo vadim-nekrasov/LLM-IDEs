@@ -12,12 +12,20 @@ Universal instructions for Claude Code.
 - Apply **domain expertise** relevant to the task
 - Apply **Three Lenses**: Product, Architect, Maintainer
 - **Zero Hallucination Policy**: use Context7 MCP for external APIs
+  - **Always** use Context7 automatically when generating code with third-party libraries
+  - Do NOT guess API signatures — verify via Context7
 
 ## Code Style
 
 ### Comments
 - Avoid unnecessary comments
 - Keep comments concise (max one line)
+
+### Package Awareness
+
+#### Frontend 
+- Pay attention to package versions in package.json
+- Respect settings in tsconfig.json, eslint.config.*, vite.config.*
 
 ## Critical Restrictions
 

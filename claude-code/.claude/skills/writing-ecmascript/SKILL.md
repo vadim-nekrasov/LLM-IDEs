@@ -7,6 +7,20 @@ description: Provides modern ECMAScript patterns including Iterator Helpers, Set
 
 Use modern language features where it improves readability and reduces boilerplate.
 
+## Contents
+
+- [Target Environment](#target-environment)
+- [General Style](#general-style)
+- [Modern Features](#modern-features)
+- [Code Style Guidelines](#code-style-guidelines)
+- [Anti-patterns to Avoid](#anti-patterns-to-avoid)
+- [Advanced Iterator Patterns](#advanced-iterator-patterns)
+- [Advanced Promise Patterns](#advanced-promise-patterns)
+- [Performance](#performance)
+- [Security](#security)
+- [Avoiding Problems](#avoiding-problems)
+- [Debugging](#debugging)
+
 ## Target Environment
 - **Latest Chrome** only (ES2025 specification)
 - Use all modern Iterator APIs and language features

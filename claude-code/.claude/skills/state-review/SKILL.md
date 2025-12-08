@@ -5,6 +5,17 @@ description: Provides state management patterns checklist for Redux, Zustand, Mo
 
 # State Management Review
 
+## Contents
+
+- [When to Apply](#when-to-apply)
+- [Universal Principles](#universal-principles)
+- [Redux Toolkit](#redux-toolkit)
+- [Zustand](#zustand)
+- [MobX](#mobx)
+- [Jotai / Recoil (Atomic)](#jotai--recoil-atomic)
+- [Vue (Pinia / Vuex)](#vue-pinia--vuex)
+- [General Anti-patterns](#general-anti-patterns)
+
 ## When to Apply
 
 - Files with state management imports (Redux, Zustand, MobX, Jotai, Recoil, Pinia, Vuex)

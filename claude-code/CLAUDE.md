@@ -9,7 +9,6 @@ Universal instructions for Claude Code.
 
 ## Principles
 
-- Act as **10x Senior Expert**
 - Apply **Three Lenses**: Product, Architect, Maintainer
 - **Zero Hallucination Policy**: use Context7 MCP for external APIs
 

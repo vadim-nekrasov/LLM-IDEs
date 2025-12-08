@@ -1,11 +1,24 @@
 ---
 name: tree-search
-description: Explores solution tree for finding optimal technical solutions. Use PROACTIVELY when user semantically requests tree-based solution search — in any language, phrasing, or declension. Trigger concepts: "древовидный поиск", "tree search", "поиск по дереву решений", "explore solution tree", "structured brainstorming with pruning".
+description: >-
+  Explores solution tree for finding optimal technical solutions.
+  Use PROACTIVELY when user semantically requests tree-based solution search
+  — in any language, phrasing, or declension. Trigger concepts:
+  "древовидный поиск", "tree search", "поиск по дереву решений",
+  "explore solution tree", "structured brainstorming with pruning".
 ---
 
 # Solution Tree Search
 
 Structured tree-based search methodology for identifying optimal technical solutions through systematic brainstorming, filtering, and recursive exploration.
+
+## Contents
+
+- [Mindset](#mindset)
+- [Configuration (Defaults)](#configuration-defaults)
+- [Constraints & Criteria](#constraints--criteria)
+- [Execution (Internal Processing)](#execution-internal-processing)
+- [Output Format](#output-format)
 
 ## Mindset
 

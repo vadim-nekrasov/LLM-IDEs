@@ -1,69 +1,36 @@
 {
   "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash -c 'rm -f /tmp/.claude_code_edited_${CLAUDE_SESSION_ID:-default} /tmp/.claude_final_check_${CLAUDE_SESSION_ID:-default} 2>/dev/null; true'"
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c '[[ \"$CLAUDE_FILE_PATH\" != *node_modules* ]] || (echo \"ERROR: Cannot edit files in node_modules\" >&2 && exit 2)'"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash -c 'if [[ \"$CLAUDE_FILE_PATH\" =~ \\.(ts|tsx|js|jsx|json|css|scss)$ ]]; then d=\"$(dirname \"$CLAUDE_FILE_PATH\")\"; while [[ \"$d\" != \"/\" && ! -f \"$d/package.json\" ]]; do d=\"$(dirname \"$d\")\"; done; [[ -f \"$d/package.json\" ]] && cd \"$d\" && npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null; fi; touch /tmp/.claude_code_edited_${CLAUDE_SESSION_ID:-default}; true'"
-          }
-        ]
-      },
-      {
-        "matcher": "Skill",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash -c 'jq -r \".tool_input.skill // empty\" | grep -q \"final-check\" && touch /tmp/.claude_final_check_${CLAUDE_SESSION_ID:-default}; true'"
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-node-modules.ts"
           }
         ]
       }
     ],
     "SessionEnd": [
       {
-        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'TRANSCRIPT=$(jq -r \".transcript_path // empty\"); if [[ -f \"$TRANSCRIPT\" ]]; then SKILLS=$(jq -r \".message.content[]? | select(.type==\\\"tool_use\\\" and .name==\\\"Skill\\\") | .input.skill\" \"$TRANSCRIPT\" 2>/dev/null | sort | uniq -c | sort -rn); if [[ -n \"$SKILLS\" ]]; then echo \"\"; echo \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\"; echo \"📊 Skills used in this session:\"; echo \"$SKILLS\" | while read count skill; do echo \"   • $skill ($count)\"; done; echo \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\"; fi; fi; rm -f /tmp/.claude_code_edited_${CLAUDE_SESSION_ID:-default} /tmp/.claude_final_check_${CLAUDE_SESSION_ID:-default} 2>/dev/null; true'"
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-end-stats.ts"
           }
         ]
       }
     ],
     "Stop": [
       {
-        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'EDITED=\"/tmp/.claude_code_edited_${CLAUDE_SESSION_ID:-default}\"; CHECKED=\"/tmp/.claude_final_check_${CLAUDE_SESSION_ID:-default}\"; if [[ -f \"$EDITED\" && ! -f \"$CHECKED\" ]]; then echo \"The final-check skill has not been run after code edits in this session. Multiple code files were created and modified (layout modules, hooks, components) without final verification.\" >&2; exit 2; fi; true'"
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/stop-check-final.ts"
           },
           {
             "type": "command",
-            "command": "bash -c 'if [[ \"$OSTYPE\" == \"darwin\"* ]]; then osascript -e \"display notification \\\"Claude finished\\\" with title \\\"Claude Code\\\"\"; elif command -v notify-send &>/dev/null; then notify-send \"Claude Code\" \"Claude finished\"; fi; true'"
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/stop-notify.ts"
           }
         ]
       }

@@ -42,6 +42,17 @@
         ]
       }
     ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'TRANSCRIPT=$(jq -r \".transcript_path // empty\"); if [[ -f \"$TRANSCRIPT\" ]]; then SKILLS=$(jq -r \".message.content[]? | select(.type==\\\"tool_use\\\" and .name==\\\"Skill\\\") | .input.skill\" \"$TRANSCRIPT\" 2>/dev/null | sort | uniq -c | sort -rn); if [[ -n \"$SKILLS\" ]]; then echo \"\"; echo \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\"; echo \"📊 Skills used in this session:\"; echo \"$SKILLS\" | while read count skill; do echo \"   • $skill ($count)\"; done; echo \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\"; fi; fi; rm -f /tmp/.claude_code_edited_${CLAUDE_SESSION_ID:-default} /tmp/.claude_final_check_${CLAUDE_SESSION_ID:-default} 2>/dev/null; true'"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "matcher": "*",

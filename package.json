@@ -1,0 +1,7 @@
+{
+  "name": "cursor-ide-config",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

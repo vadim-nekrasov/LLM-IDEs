@@ -1,11 +1,6 @@
 ---
 name: searching-solutions
-description: >-
-  Explores solution tree for finding optimal technical solutions.
-  Use PROACTIVELY when user semantically requests tree-based solution search
-  — in any language, phrasing, or declension. Trigger concepts:
-  "древовидный поиск", "tree search", "поиск по дереву решений",
-  "explore solution tree", "structured brainstorming with pruning".
+description: Explores solution tree for optimal technical solutions. Use PROACTIVELY when user requests "древовидный поиск", "tree search", "поиск решений", or "structured brainstorming".
 ---
 
 # Solution Tree Search

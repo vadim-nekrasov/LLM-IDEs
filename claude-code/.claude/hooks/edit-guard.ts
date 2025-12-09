@@ -2,7 +2,7 @@
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { HookInput } from "./types";
-import { parseTranscript } from "./types";
+import { parseTranscript } from "./transcript";
 
 const CODE_EXTENSIONS = new Set([
   ".ts",

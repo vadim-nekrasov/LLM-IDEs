@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import type { HookInput } from "./types";
-import { parseTranscript } from "./types";
+import { parseTranscript } from "./transcript";
 
 const input: HookInput = await Bun.stdin.json();
 const data = await parseTranscript(input.transcript_path);

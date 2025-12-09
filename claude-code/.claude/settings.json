@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-node-modules.ts"
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/edit-guard.ts"
           }
         ]
       }

@@ -31,10 +31,20 @@ export interface TranscriptEntry {
   };
 }
 
+export interface RequiredSkillsUsed {
+  ecmascript: boolean;
+  typescript: boolean;
+  react: boolean;
+  lua: boolean;
+}
+
 export interface TranscriptData {
   editedFiles: string[];
   skills: Map<string, number>;
   hasFinalCheck: boolean;
+  hasApplyingWorkflow: boolean;
+  docsRead: Set<string>;
+  requiredSkillsUsed: RequiredSkillsUsed;
 }
 
 const FORMATTABLE = new Set([
@@ -55,6 +65,14 @@ export async function parseTranscript(
     editedFiles: [],
     skills: new Map(),
     hasFinalCheck: false,
+    hasApplyingWorkflow: false,
+    docsRead: new Set(),
+    requiredSkillsUsed: {
+      ecmascript: false,
+      typescript: false,
+      react: false,
+      lua: false,
+    },
   };
 
   if (!path || !existsSync(path)) return result;
@@ -82,6 +100,14 @@ export async function parseTranscript(
             }
           }
 
+          // Track docs reads
+          if (item.name === "Read") {
+            const filePath = item.input?.file_path;
+            if (filePath?.endsWith("docs/index.md")) {
+              result.docsRead.add(filePath);
+            }
+          }
+
           // Track skills
           if (item.name === "Skill") {
             const skill = item.input?.skill;
@@ -89,6 +115,21 @@ export async function parseTranscript(
               result.skills.set(skill, (result.skills.get(skill) ?? 0) + 1);
               if (skill.includes("final-checking")) {
                 result.hasFinalCheck = true;
+              }
+              if (skill.includes("applying-workflow")) {
+                result.hasApplyingWorkflow = true;
+              }
+              if (skill.includes("writing-ecmascript")) {
+                result.requiredSkillsUsed.ecmascript = true;
+              }
+              if (skill.includes("writing-typescript")) {
+                result.requiredSkillsUsed.typescript = true;
+              }
+              if (skill.includes("writing-react")) {
+                result.requiredSkillsUsed.react = true;
+              }
+              if (skill.includes("writing-lua")) {
+                result.requiredSkillsUsed.lua = true;
               }
             }
           }

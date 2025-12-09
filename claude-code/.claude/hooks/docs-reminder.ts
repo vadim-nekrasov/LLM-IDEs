@@ -1,33 +1,13 @@
 #!/usr/bin/env bun
-import { existsSync, statSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { dirname } from "node:path";
 import type { HookInput } from "./types";
 import { CODE_EXTENSIONS } from "./constants";
+import { findDocsUp } from "./utils";
 
 /** Check if file is a code file */
 const isCodeFile = (filePath: string): boolean => {
   const ext = filePath.slice(filePath.lastIndexOf("."));
   return CODE_EXTENSIONS.has(ext);
-};
-
-/** Find all docs/index.md files from startDir up to projectRoot */
-const findDocsUp = (startDir: string, projectRoot: string): string[] => {
-  const docs: string[] = [];
-  let current = startDir;
-
-  while (current.startsWith(projectRoot) || current === projectRoot) {
-    const indexPath = join(current, "docs", "index.md");
-
-    if (existsSync(indexPath) && statSync(indexPath).isFile()) {
-      docs.push(indexPath);
-    }
-
-    const parent = dirname(current);
-    if (parent === current) break;
-    current = parent;
-  }
-
-  return docs;
 };
 
 const input: HookInput = await Bun.stdin.json();

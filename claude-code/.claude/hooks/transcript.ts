@@ -76,12 +76,17 @@ export async function parseTranscript(
             }
           }
         }
-      } catch {
+      } catch (e) {
+        if (process.env.DEBUG) {
+          console.error("[transcript] JSON parse error:", e);
+        }
         continue;
       }
     }
-  } catch {
-    // ignore file read errors
+  } catch (e) {
+    if (process.env.DEBUG) {
+      console.error("[transcript] File read error:", e);
+    }
   }
 
   return result;

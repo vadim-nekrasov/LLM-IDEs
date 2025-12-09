@@ -1,6 +1,5 @@
 #!/usr/bin/env bun
-import { existsSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname } from "node:path";
 import type { HookInput } from "./types";
 import { parseTranscript } from "./transcript";
 import {
@@ -9,34 +8,18 @@ import {
   SKILL_NAMES,
   isReactHookFile,
 } from "./constants";
+import { isNodeModulesPath, findDocsUp } from "./utils";
 
 const isCodeFile = (filePath: string): boolean => {
   const ext = filePath.slice(filePath.lastIndexOf("."));
   return CODE_EXTENSIONS.has(ext);
 };
 
-const findExistingDocs = (startDir: string, projectRoot: string): string[] => {
-  const docs: string[] = [];
-  let current = startDir;
-
-  while (current.startsWith(projectRoot) || current === projectRoot) {
-    const indexPath = join(current, "docs", "index.md");
-    if (existsSync(indexPath)) {
-      docs.push(indexPath);
-    }
-    const parent = dirname(current);
-    if (parent === current) break;
-    current = parent;
-  }
-
-  return docs;
-};
-
 const input: HookInput = await Bun.stdin.json();
 const filePath = input.tool_input?.file_path ?? "";
 
-// Check 1: Block node_modules
-if (filePath.includes("node_modules")) {
+// Check 1: Block node_modules (using path segment check for security)
+if (isNodeModulesPath(filePath)) {
   console.error(
     "BLOCKED: Cannot edit files in node_modules/\n" +
       "This is a protected directory.",
@@ -99,7 +82,7 @@ if (missingSkills.length > 0) {
 
 // Check 4: docs/index.md must be read if it exists
 const fileDir = dirname(filePath);
-const requiredDocs = findExistingDocs(fileDir, projectRoot);
+const requiredDocs = findDocsUp(fileDir, projectRoot);
 const missingDocs = requiredDocs.filter((doc) => !data.docsRead.has(doc));
 
 if (missingDocs.length > 0) {

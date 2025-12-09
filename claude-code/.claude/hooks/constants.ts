@@ -1,3 +1,17 @@
+import { basename } from "node:path";
+
+/** Pattern for React hook file names (useAuth, UseModal, etc.) */
+const HOOK_NAME_PATTERN = /^use[A-Z]/i;
+
+/** Pattern for hooks directory in path */
+const HOOKS_DIR_PATTERN = /\/hooks\//;
+
+/** Check if file is a React hook based on name or location */
+export function isReactHookFile(filePath: string): boolean {
+  const name = basename(filePath, filePath.slice(filePath.lastIndexOf(".")));
+  return HOOK_NAME_PATTERN.test(name) || HOOKS_DIR_PATTERN.test(filePath);
+}
+
 /** Code file extensions requiring skill invocation */
 export const CODE_EXTENSIONS = new Set([
   ".ts",

@@ -3,7 +3,12 @@ import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { HookInput } from "./types";
 import { parseTranscript } from "./transcript";
-import { CODE_EXTENSIONS, EXTENSION_TO_SKILLS, SKILL_NAMES } from "./constants";
+import {
+  CODE_EXTENSIONS,
+  EXTENSION_TO_SKILLS,
+  SKILL_NAMES,
+  isReactHookFile,
+} from "./constants";
 
 const isCodeFile = (filePath: string): boolean => {
   const ext = filePath.slice(filePath.lastIndexOf("."));
@@ -65,7 +70,13 @@ if (!data.hasApplyingWorkflow) {
 }
 
 // Check 3: Required skills by file extension
-const requiredSkillKeys = EXTENSION_TO_SKILLS[ext] ?? [];
+const requiredSkillKeys = [...(EXTENSION_TO_SKILLS[ext] ?? [])];
+
+// Add react skill for hook files (.ts/.js with use* name or in hooks/)
+if (!requiredSkillKeys.includes("react") && isReactHookFile(filePath)) {
+  requiredSkillKeys.push("react");
+}
+
 const missingSkills: string[] = [];
 
 for (const key of requiredSkillKeys) {

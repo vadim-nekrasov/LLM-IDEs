@@ -1,5 +1,5 @@
 ---
-name: final-check
+name: final-checking
 description: Runs final verification checklist with linting, type checking, and Three Lenses analysis. Use PROACTIVELY after completing any implementation task, bug fix, or code modification to validate quality and correctness.
 ---
 
@@ -43,7 +43,7 @@ Apply the **Three Lenses** framework:
 - **Architect Lens** (System & Scale): Scalability, idiomaticity, simplicity, safety
 - **Maintainer Lens** (Future & Team): Readability, code style, no zombies
 
-For detailed criteria, see `workflow-default` skill.
+For detailed criteria, see `applying-workflow` skill.
 
 ---
 
@@ -90,7 +90,7 @@ Additional focus points for complex changes:
 
 ## Step 5: Solution Search (Optional)
 
-For significant changes, consider `/tree-search` to find alternative solutions.
+For significant changes, consider `/searching-solutions` to find alternative solutions.
 
 If search identifies a better solution than current implementation, apply it.
 

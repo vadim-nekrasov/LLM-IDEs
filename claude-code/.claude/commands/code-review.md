@@ -1,5 +1,6 @@
 ---
 description: Review code changes using Three Lenses analysis and code style verification
+allowed-tools: Read, Grep, Glob, Skill
 ---
 
 # Code Review
@@ -28,8 +29,8 @@ Verify code follows patterns from relevant language/framework skills:
 - React/JSX/TSX → `writing-react` skill
 - JavaScript → `writing-ecmascript` skill
 - Lua → `writing-lua` skill
-- State management → `state-review` skill
-- API/HTTP clients → `api-review` skill
+- State management → `reviewing-state` skill
+- API/HTTP clients → `reviewing-apis` skill
 
 ### Documentation Updates
 

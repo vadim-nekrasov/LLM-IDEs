@@ -1,5 +1,5 @@
 ---
-name: tree-search
+name: searching-solutions
 description: >-
   Explores solution tree for finding optimal technical solutions.
   Use PROACTIVELY when user semantically requests tree-based solution search
@@ -56,7 +56,7 @@ Understand intent in any language, declension, or phrasing.
 
 **Rules**:
 - If user specifies a number near a concept — map it to the corresponding parameter.
-- **Fallback**: A bare number without semantic context (e.g., `/tree-search 5`) defaults to `{num_promising}`.
+- **Fallback**: A bare number without semantic context (e.g., `/searching-solutions 5`) defaults to `{num_promising}`.
 
 ---
 

@@ -1,6 +1,7 @@
 ---
 description: Generate technical documentation for a folder
 argument-hint: [folder-path]
+allowed-tools: Read, Glob, Grep, Write
 ---
 
 # Generate Technical Documentation for Folder

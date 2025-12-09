@@ -1,5 +1,5 @@
 ---
-name: workflow-default
+name: applying-workflow
 description: Applies structured development workflow with docs-first discovery, Three Lenses analysis, Context7 verification, and final checking. Use PROACTIVELY when editing code files, implementing features, fixing bugs, or making any code changes. Triggers on TypeScript, JavaScript, React, Python, Go, Rust development tasks.
 ---
 
@@ -55,6 +55,6 @@ Before writing code:
 
 ## Phase 5: Verification
 
-Upon completing code edits, invoke `final-check` skill.
+Upon completing code edits, invoke `final-checking` skill.
 
 **Skip only if**: changes were exclusively non-logic (comments, logs, typos).

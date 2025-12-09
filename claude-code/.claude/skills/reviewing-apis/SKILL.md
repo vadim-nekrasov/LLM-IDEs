@@ -1,5 +1,5 @@
 ---
-name: api-review
+name: reviewing-apis
 description: Provides HTTP client and API service patterns checklist. Use PROACTIVELY when editing files with fetch, axios, React Query, SWR, API calls, or data fetching hooks. Triggers on *Api.ts, *Service.ts, *.api.ts patterns.
 ---
 

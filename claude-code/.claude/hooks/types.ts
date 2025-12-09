@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync } from "node:fs";
 
 /** Input passed to all hooks via stdin as JSON */
 export interface HookInput {
@@ -37,10 +37,20 @@ export interface TranscriptData {
   hasFinalCheck: boolean;
 }
 
-const FORMATTABLE = new Set(['.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.scss']);
+const FORMATTABLE = new Set([
+  ".ts",
+  ".tsx",
+  ".js",
+  ".jsx",
+  ".json",
+  ".css",
+  ".scss",
+]);
 
 /** Parse transcript and extract all relevant data in one pass */
-export async function parseTranscript(path: string | undefined): Promise<TranscriptData> {
+export async function parseTranscript(
+  path: string | undefined,
+): Promise<TranscriptData> {
   const result: TranscriptData = {
     editedFiles: [],
     skills: new Map(),
@@ -53,18 +63,18 @@ export async function parseTranscript(path: string | undefined): Promise<Transcr
     const content = await Bun.file(path).text();
     const seenFiles = new Set<string>();
 
-    for (const line of content.split('\n')) {
+    for (const line of content.split("\n")) {
       if (!line.trim()) continue;
       try {
         const entry: TranscriptEntry = JSON.parse(line);
         for (const item of entry.message?.content ?? []) {
-          if (item.type !== 'tool_use') continue;
+          if (item.type !== "tool_use") continue;
 
           // Track edited files
-          if (item.name === 'Edit' || item.name === 'Write') {
+          if (item.name === "Edit" || item.name === "Write") {
             const filePath = item.input?.file_path;
             if (filePath && !seenFiles.has(filePath)) {
-              const ext = filePath.slice(filePath.lastIndexOf('.'));
+              const ext = filePath.slice(filePath.lastIndexOf("."));
               if (FORMATTABLE.has(ext) && existsSync(filePath)) {
                 result.editedFiles.push(filePath);
                 seenFiles.add(filePath);
@@ -73,11 +83,11 @@ export async function parseTranscript(path: string | undefined): Promise<Transcr
           }
 
           // Track skills
-          if (item.name === 'Skill') {
+          if (item.name === "Skill") {
             const skill = item.input?.skill;
             if (skill) {
               result.skills.set(skill, (result.skills.get(skill) ?? 0) + 1);
-              if (skill.includes('final-check')) {
+              if (skill.includes("final-checking")) {
                 result.hasFinalCheck = true;
               }
             }

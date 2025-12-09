@@ -35,4 +35,4 @@ Universal instructions for Claude Code.
 
 ## Quality Gate
 
-Upon completing code edits, invoke `final-check` skill.
+Upon completing code edits, invoke `final-checking` skill.

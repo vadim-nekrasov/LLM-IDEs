@@ -1,6 +1,10 @@
 {
   "name": "cursor-ide-config",
   "private": true,
+  "scripts": {
+    "format": "bunx prettier --write \"**/*.{ts,js,json}\"",
+    "format:check": "bunx prettier --check \"**/*.{ts,js,json}\""
+  },
   "devDependencies": {
     "@types/bun": "latest"
   }

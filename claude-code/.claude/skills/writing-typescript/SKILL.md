@@ -10,7 +10,7 @@ description: Provides TypeScript code patterns and best practices for type defin
 - `any` → use concrete types or generics
 - `unknown` → use type guards for narrowing
 - `enum` → prefer `const` objects or union types
-- Avoid type assertions (`as`, `!`) - use type guards instead
+- Avoid type assertions — use type guards instead of `as` or non-null assertion `!`
 - Use `import type` for type-only imports
 - Use utility types: `Partial`, `Pick`, `Omit`, `Record`, `Readonly`
 - Infer interfaces from Zod schemas when possible

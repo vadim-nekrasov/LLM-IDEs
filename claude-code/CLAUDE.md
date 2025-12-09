@@ -17,14 +17,15 @@ Universal instructions for Claude Code.
 
 ## CRITICAL: Skill Invocation
 
-**STOP** before editing any code file. Invoke the relevant skill FIRST:
+**STOP** before editing any code file. Invoke skills in order:
 
-| File Pattern | Required Skills |
-|--------------|-----------------|
-| `.js`  | `writing-ecmascript` |
-| `.ts, .tsx`  | `writing-ecmascript` + `writing-typescript` |
-| `.jsx, .tsx` | `writing-ecmascript` + `writing-react` |
-| `.lua`       | `writing-lua` |
+| Order | Skill | When                                                |
+|-------|-------|-----------------------------------------------------|
+| 1 | `applying-workflow` | Always for code changes (loads docs-first workflow) |
+| 2 | `writing-ecmascript` | .js, .jsx, .ts, .tsx files                          |
+| 3 | `writing-typescript` | .ts, .tsx files                                     |
+| 4 | `writing-react` | .jsx, .tsx files                                    |
+| 5 | `writing-lua` | .lua files                                          |
 
 This is NOT optional. Failure to invoke skills before editing is a violation.
 
@@ -41,6 +42,15 @@ Upon completing code edits, invoke `final-checking` skill.
 #### Frontend 
 - Pay attention to package versions in package.json
 - Respect settings in tsconfig.json, eslint.config.*, vite.config.*
+
+## Docs-First Discovery (MANDATORY)
+
+**Before ANY code edit**, locate and read:
+1. `docs/index.md` — from edited file path up to project root
+2. `README.md` — project overview
+3. Related component docs (if editing components)
+
+**NO EXCEPTIONS** — even for "simple" fixes. Understanding context prevents bugs.
 
 ## Critical Restrictions
 

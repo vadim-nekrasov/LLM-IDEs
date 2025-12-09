@@ -18,15 +18,16 @@ description: Applies structured development workflow with docs-first discovery, 
 
 Invoke the skill(s) FIRST. This loads code patterns into context before you write code.
 
-## Phase 1: Docs-First Discovery
+## Phase 1: Docs-First Discovery (MANDATORY)
 
-Before writing code:
+Before writing ANY code:
 1. Locate all `docs/` folders on the path from edited files to project root
-2. Read `README.md` for project overview and structure
-3. Check `package.json` (or equivalent) for available scripts and dependencies
-4. Extract 3-5 key invariants/contracts from docs
+2. **READ** `docs/index.md` at each level found
+3. Read `README.md` for project overview and structure
+4. Check `package.json` for scripts and dependencies
+5. Extract 3-5 key invariants/contracts from docs
 
-**Skip only if**: atomic fix within one file AND doesn't affect contracts.
+**This phase is NOT optional.** Understanding context prevents regressions.
 
 ## Phase 2: Analysis & Three Lenses
 

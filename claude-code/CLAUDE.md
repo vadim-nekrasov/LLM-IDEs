@@ -55,6 +55,7 @@ Upon completing code edits, invoke `final-checking` skill.
 ## Critical Restrictions
 
 - **NEVER** edit files inside `node_modules/`
+- **NEVER** run `git commit` or `git push` — user handles version control
 - **Respect Configs**: don't change `package.json`, `tsconfig.json`, `eslint.config.*`, `vite.config.*` unless required
 - **Update Docs** if you change architecture, API, or config
 

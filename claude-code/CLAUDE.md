@@ -36,3 +36,14 @@ Universal instructions for Claude Code.
 ## Quality Gate
 
 Upon completing code edits, invoke `final-checking` skill.
+
+## Session Summary (MANDATORY)
+
+**CRITICAL**: Before stopping, you MUST provide a session summary:
+
+### Skills used
+List ALL skills invoked during the session:
+- Format: `skill-name` (count) — e.g., `final-checking` (1), `writing-typescript` (2)
+- If no skills were used, state: "No skills used in this session"
+
+This is NOT optional. Failing to include this summary is a violation of instructions.

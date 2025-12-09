@@ -99,3 +99,11 @@ If search identifies a better solution than current implementation, apply it.
 ## Step 6: Cleanup
 
 Remove all console logs added during this task (unless explicitly needed for debugging).
+
+---
+
+## Step 7: Session Summary
+
+Before stopping, output the **Session Summary** as required by CLAUDE.md:
+- List all skills used in this session with counts
+- This step is MANDATORY — do not skip it

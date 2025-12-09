@@ -20,14 +20,18 @@ Invoke the skill(s) FIRST. This loads code patterns into context before you writ
 
 ## Phase 1: Docs-First Discovery (MANDATORY)
 
-Before writing ANY code:
-1. Locate all `docs/` folders on the path from edited files to project root
-2. **READ** `docs/index.md` at each level found
-3. Read `README.md` for project overview and structure
-4. Check `package.json` for scripts and dependencies
-5. Extract 3-5 key invariants/contracts from docs
+**⛔ BLOCK YOURSELF** until ALL steps are completed:
 
-**This phase is NOT optional.** Understanding context prevents regressions.
+### Checklist (complete BEFORE any code)
+- [ ] Traverse from edited file up to project root
+- [ ] For each `docs/index.md` found → **READ** it with Read tool
+- [ ] Read `README.md` in project root
+- [ ] Check `package.json` for scripts and dependencies
+- [ ] Record 3-5 invariants that must NOT be violated
+
+### Why This Is Critical
+Skipping documentation → regressions → wasted time on fixes.
+This is a **workflow requirement**, not a suggestion.
 
 ## Phase 2: Analysis & Three Lenses
 

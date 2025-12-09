@@ -41,6 +41,5 @@ export interface TranscriptData {
   skills: Map<string, number>;
   hasFinalCheck: boolean;
   hasApplyingWorkflow: boolean;
-  docsRead: Set<string>;
   requiredSkillsUsed: RequiredSkillsUsed;
 }

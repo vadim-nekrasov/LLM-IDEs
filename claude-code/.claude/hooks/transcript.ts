@@ -20,7 +20,6 @@ export async function parseTranscript(
     skills: new Map(),
     hasFinalCheck: false,
     hasApplyingWorkflow: false,
-    docsRead: new Set(),
     requiredSkillsUsed: {
       ecmascript: false,
       typescript: false,
@@ -50,13 +49,6 @@ export async function parseTranscript(
                 result.editedFiles.push(filePath);
                 seenFiles.add(filePath);
               }
-            }
-          }
-
-          if (item.name === "Read") {
-            const filePath = item.input?.file_path;
-            if (filePath?.endsWith("docs/index.md")) {
-              result.docsRead.add(filePath);
             }
           }
 

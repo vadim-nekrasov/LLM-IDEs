@@ -15,6 +15,22 @@ Universal instructions for Claude Code.
   - **Always** use Context7 automatically when generating code with third-party libraries
   - Do NOT guess API signatures — verify via Context7
 
+## CRITICAL: Skill Invocation
+
+**STOP** before editing any code file. Invoke the relevant skill FIRST:
+
+| File Pattern | Required Skills |
+|--------------|-----------------|
+| `.ts`                  | `writing-typescript`                   |
+| `.tsx`                 | `writing-typescript` + `writing-react` |
+| `.jsx, .tsx`           | `writing-react`                        |
+| `.js, .jsx, .ts, .tsx` | `writing-ecmascript` + `writing-typescript` + `writing-react`                |
+| `.lua` | `writing-lua` |
+
+This is NOT optional. Failure to invoke skills before editing is a violation.
+
+Upon completing code edits, invoke `final-checking` skill.
+
 ## Code Style
 
 ### Comments
@@ -32,10 +48,6 @@ Universal instructions for Claude Code.
 - **NEVER** edit files inside `node_modules/`
 - **Respect Configs**: don't change `package.json`, `tsconfig.json`, `eslint.config.*`, `vite.config.*` unless required
 - **Update Docs** if you change architecture, API, or config
-
-## Quality Gate
-
-Upon completing code edits, invoke `final-checking` skill.
 
 ## Session Summary (MANDATORY)
 

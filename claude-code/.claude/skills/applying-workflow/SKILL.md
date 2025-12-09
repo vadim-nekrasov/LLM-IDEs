@@ -5,6 +5,20 @@ description: Applies structured development workflow with docs-first discovery, 
 
 # Development Workflow
 
+## Phase 0: Skill Activation (MANDATORY)
+
+**STOP** — before ANY code changes, invoke language-specific skills:
+
+| File Pattern | Required Skills |
+|--------------|-----------------|
+| `.ts`                  | `writing-typescript`                   |
+| `.tsx`                 | `writing-typescript` + `writing-react` |
+| `.jsx, .tsx`           | `writing-react`                        |
+| `.js, .jsx, .ts, .tsx` | `writing-ecmascript` + `writing-typescript` + `writing-react`                |
+| `.lua` | `writing-lua` |
+
+Invoke the skill(s) FIRST. This loads code patterns into context before you write code.
+
 ## Phase 1: Docs-First Discovery
 
 Before writing code:
@@ -48,7 +62,8 @@ Before writing code:
 
 ## Phase 4: Implementation
 
-- Code style auto-loaded via other skills (writing-typescript, writing-react, etc.)
+### Code Guidelines
+
 - Sync comments with logic changes
 - No zombie code (commented-out code)
 - If bug cause unclear → add logs first, don't patch blindly

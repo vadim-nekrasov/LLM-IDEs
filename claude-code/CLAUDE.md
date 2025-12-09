@@ -21,11 +21,10 @@ Universal instructions for Claude Code.
 
 | File Pattern | Required Skills |
 |--------------|-----------------|
-| `.ts`                  | `writing-typescript`                   |
-| `.tsx`                 | `writing-typescript` + `writing-react` |
-| `.jsx, .tsx`           | `writing-react`                        |
-| `.js, .jsx, .ts, .tsx` | `writing-ecmascript` + `writing-typescript` + `writing-react`                |
-| `.lua` | `writing-lua` |
+| `.js`  | `writing-ecmascript` |
+| `.ts, .tsx`  | `writing-ecmascript` + `writing-typescript` |
+| `.jsx, .tsx` | `writing-ecmascript` + `writing-react` |
+| `.lua`       | `writing-lua` |
 
 This is NOT optional. Failure to invoke skills before editing is a violation.
 

@@ -11,11 +11,10 @@ description: Applies structured development workflow with docs-first discovery, 
 
 | File Pattern | Required Skills |
 |--------------|-----------------|
-| `.ts`                  | `writing-typescript`                   |
-| `.tsx`                 | `writing-typescript` + `writing-react` |
-| `.jsx, .tsx`           | `writing-react`                        |
-| `.js, .jsx, .ts, .tsx` | `writing-ecmascript` + `writing-typescript` + `writing-react`                |
-| `.lua` | `writing-lua` |
+| `.js`  | `writing-ecmascript` |
+| `.ts, .tsx`  | `writing-ecmascript` + `writing-typescript` |
+| `.jsx, .tsx` | `writing-ecmascript` + `writing-react` |
+| `.lua`       | `writing-lua` |
 
 Invoke the skill(s) FIRST. This loads code patterns into context before you write code.
 

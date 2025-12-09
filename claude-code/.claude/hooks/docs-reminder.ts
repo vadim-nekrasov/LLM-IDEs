@@ -2,26 +2,7 @@
 import { existsSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import type { HookInput } from "./types";
-
-const CODE_EXTENSIONS = new Set([
-  ".ts",
-  ".tsx",
-  ".js",
-  ".jsx",
-  ".mjs",
-  ".cjs",
-  ".py",
-  ".go",
-  ".rs",
-  ".java",
-  ".kt",
-  ".swift",
-  ".c",
-  ".cpp",
-  ".h",
-  ".hpp",
-  ".cs",
-]);
+import { CODE_EXTENSIONS } from "./constants";
 
 /** Check if file is a code file */
 const isCodeFile = (filePath: string): boolean => {

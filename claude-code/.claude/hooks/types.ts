@@ -42,4 +42,5 @@ export interface TranscriptData {
   hasFinalCheck: boolean;
   hasApplyingWorkflow: boolean;
   requiredSkillsUsed: RequiredSkillsUsed;
+  docsRead: Set<string>;
 }

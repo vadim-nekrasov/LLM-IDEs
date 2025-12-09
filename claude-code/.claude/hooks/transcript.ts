@@ -1,15 +1,10 @@
 import { existsSync } from "node:fs";
-import type { TranscriptEntry, TranscriptData } from "./types";
-
-const FORMATTABLE = new Set([
-  ".ts",
-  ".tsx",
-  ".js",
-  ".jsx",
-  ".json",
-  ".css",
-  ".scss",
-]);
+import type {
+  TranscriptEntry,
+  TranscriptData,
+  RequiredSkillsUsed,
+} from "./types";
+import { FORMATTABLE_EXTENSIONS, SKILL_NAMES } from "./constants";
 
 /** Parse transcript and extract all relevant data in one pass */
 export async function parseTranscript(
@@ -26,6 +21,7 @@ export async function parseTranscript(
       react: false,
       lua: false,
     },
+    docsRead: new Set(),
   };
 
   if (!path || !existsSync(path)) return result;
@@ -45,10 +41,17 @@ export async function parseTranscript(
             const filePath = item.input?.file_path;
             if (filePath && !seenFiles.has(filePath)) {
               const ext = filePath.slice(filePath.lastIndexOf("."));
-              if (FORMATTABLE.has(ext) && existsSync(filePath)) {
+              if (FORMATTABLE_EXTENSIONS.has(ext) && existsSync(filePath)) {
                 result.editedFiles.push(filePath);
                 seenFiles.add(filePath);
               }
+            }
+          }
+
+          if (item.name === "Read") {
+            const filePath = item.input?.file_path;
+            if (filePath) {
+              result.docsRead.add(filePath);
             }
           }
 
@@ -56,23 +59,19 @@ export async function parseTranscript(
             const skill = item.input?.skill;
             if (skill) {
               result.skills.set(skill, (result.skills.get(skill) ?? 0) + 1);
-              if (skill.includes("final-checking")) {
+
+              if (skill === SKILL_NAMES.final) {
                 result.hasFinalCheck = true;
               }
-              if (skill.includes("applying-workflow")) {
+              if (skill === SKILL_NAMES.workflow) {
                 result.hasApplyingWorkflow = true;
               }
-              if (skill.includes("writing-ecmascript")) {
-                result.requiredSkillsUsed.ecmascript = true;
-              }
-              if (skill.includes("writing-typescript")) {
-                result.requiredSkillsUsed.typescript = true;
-              }
-              if (skill.includes("writing-react")) {
-                result.requiredSkillsUsed.react = true;
-              }
-              if (skill.includes("writing-lua")) {
-                result.requiredSkillsUsed.lua = true;
+
+              for (const [key, name] of Object.entries(SKILL_NAMES.languages)) {
+                if (skill === name) {
+                  result.requiredSkillsUsed[key as keyof RequiredSkillsUsed] =
+                    true;
+                }
               }
             }
           }
@@ -82,7 +81,7 @@ export async function parseTranscript(
       }
     }
   } catch {
-    // ignore parse errors
+    // ignore file read errors
   }
 
   return result;

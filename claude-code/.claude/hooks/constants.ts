@@ -81,3 +81,10 @@ export const DOC_TRIGGER_PATTERNS = {
   slice: /(?:slice|store|reducer)\.(ts|js)$/,
   context: /(?:context|provider)\.(tsx|jsx)$/,
 } as const;
+
+/** Skills requiring docs-first (design/planning skills) */
+export const DOCS_REQUIRED_SKILLS = new Set([
+  "applying-workflow",
+  "searching-solutions",
+  "debugging",
+]);

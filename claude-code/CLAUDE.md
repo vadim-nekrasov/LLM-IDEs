@@ -57,7 +57,21 @@ Upon completing code edits, invoke `final-checking` skill.
 - **NEVER** edit files inside `node_modules/`
 - **NEVER** run `git commit` or `git push` — user handles version control
 - **Respect Configs**: don't change `package.json`, `tsconfig.json`, `eslint.config.*`, `vite.config.*` unless required
-- **Update Docs** if you change architecture, API, or config
+
+## Documentation Sync (MANDATORY)
+
+Keep documentation accurate. Update `docs/index.md` when:
+
+1. **After code changes** affecting public API, behavior, or architecture
+2. **If you discover inaccurate docs** during exploration → fix immediately
+3. **If you discover important undocumented aspects** → add them (within limits)
+
+**Triggers for mandatory doc update**:
+- Architecture or directory structure changes
+- Public exports (barrel files, entry points)
+- API contracts, URLs, CLI interfaces
+- Configuration or environment variables
+- Public names (hooks, components, slices, contexts)
 
 ## Session Summary (MANDATORY)
 

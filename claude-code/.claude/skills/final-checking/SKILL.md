@@ -66,8 +66,12 @@ For detailed criteria, see `applying-workflow` skill.
 
 ### Documentation & Context
 - [ ] Comments up-to-date, concise, English
-- [ ] If architecture/API/config changed → docs updated
 - [ ] External APIs verified via Context7 (Zero Hallucination)
+
+### Documentation Sync
+- [ ] If public API/behavior/architecture changed → `docs/index.md` updated
+- [ ] If found inaccurate docs during exploration → corrected them
+- [ ] If discovered important undocumented aspects → added (within limits)
 
 ### Critical Restrictions
 - [ ] No edits to `node_modules/`

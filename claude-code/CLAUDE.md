@@ -77,6 +77,14 @@ Keep documentation accurate. Update `docs/index.md` when:
 
 **CRITICAL**: Before stopping, you MUST provide a session summary:
 
+### Docs read
+List documentation files read during the session (`.md` files and `/docs/` paths).
+
+### Docs update
+State whether documentation update was required and why:
+- **Triggers**: barrel files, API contracts, configs, hooks, components, slices, contexts
+- Format: "Yes/No" with brief reason if Yes
+
 ### Skills used
 List ALL skills invoked during the session:
 - Format: `skill-name` (count) — e.g., `final-checking` (1), `writing-typescript` (2)

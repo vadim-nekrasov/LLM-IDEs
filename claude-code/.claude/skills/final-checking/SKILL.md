@@ -109,5 +109,8 @@ Remove all console logs added during this task (unless explicitly needed for deb
 ## Step 7: Session Summary
 
 Before stopping, output the **Session Summary** as required by CLAUDE.md:
-- List all skills used in this session with counts
-- This step is MANDATORY — do not skip it
+- **Docs read**: List documentation files read (`.md` and `/docs/` paths)
+- **Docs update**: State if documentation update needed (Yes/No + reason)
+- **Skills used**: List all skills with counts
+
+This step is MANDATORY — do not skip it

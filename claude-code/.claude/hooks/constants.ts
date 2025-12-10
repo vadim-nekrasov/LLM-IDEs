@@ -70,3 +70,14 @@ export const EXTENSION_TO_SKILLS: Record<
   ".tsx": ["ecmascript", "typescript", "react"],
   ".lua": ["lua"],
 };
+
+/** Patterns that trigger documentation update requirement (from CLAUDE.md) */
+export const DOC_TRIGGER_PATTERNS = {
+  barrel: /(?:index|mod)\.(ts|js|tsx|jsx)$/,
+  api: /(?:api|service|client|endpoint|route)\./i,
+  config: /(?:config|\.env|settings)\./i,
+  hook: /\/hooks\/.*\.(ts|tsx)$/,
+  component: /\/components\/.*\.(tsx|jsx)$/,
+  slice: /(?:slice|store|reducer)\.(ts|js)$/,
+  context: /(?:context|provider)\.(tsx|jsx)$/,
+} as const;

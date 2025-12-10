@@ -31,3 +31,8 @@ export function findDocsUp(startDir: string, projectRoot: string): string[] {
 
   return docs;
 }
+
+/** Check if file is documentation (.md or in /docs/) */
+export function isDocFile(path: string): boolean {
+  return path.endsWith(".md") || path.includes("/docs/");
+}

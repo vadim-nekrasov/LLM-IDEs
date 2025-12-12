@@ -43,9 +43,10 @@ This is a **workflow requirement**, not a suggestion.
 - Handle edge cases, errors, loading states
 
 **B. Architect Lens** (System & Scale)
-- SOLID, DRY, KISS, High Cohesion & Low Coupling
-- Idiomatic for this stack? Simple, not overengineered?
-- Safe? (Performance, memory leaks, security)
+- SOLID, GRASP, DRY, KISS
+- Idiomatic for this stack? Not overengineered?
+- Safe? (memory leaks, security)
+- Scalable and performant?
 
 **C. Maintainer Lens** (Future & Team)
 - Will a junior developer understand this in a month?

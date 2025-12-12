@@ -61,7 +61,8 @@ For detailed criteria, see `applying-workflow` skill.
 ### Code Quality & Style
 - [ ] Modern language features used (where appropriate)
 - [ ] Code complies with project code style
-- [ ] SOLID, DRY, KISS principles respected
+- [ ] SOLID, GRASP, DRY, KISS principles respected
+- [ ] Scalable, safe and performant
 - [ ] No dead code (commented code, unused imports removed)
 
 ### Documentation & Context

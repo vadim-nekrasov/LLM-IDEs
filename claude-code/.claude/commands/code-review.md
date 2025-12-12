@@ -19,7 +19,7 @@ Review code changes:
 
 ### Three Lenses
 - **Product**: Real problem solved? Regressions? Edge cases?
-- **Architect**: SOLID, DRY, KISS? Scalable? Safe?
+- **Architect**: SOLID, GRASP, DRY, KISS? Scalable? Safe? Performant?
 - **Maintainer**: Readable? No dead code? Clean?
 
 ### Code Style Compliance

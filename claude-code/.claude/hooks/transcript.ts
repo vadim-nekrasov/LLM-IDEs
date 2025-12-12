@@ -4,7 +4,11 @@ import type {
   TranscriptData,
   RequiredSkillsUsed,
 } from "./types";
-import { FORMATTABLE_EXTENSIONS, SKILL_NAMES } from "./constants";
+import {
+  CODE_EXTENSIONS,
+  FORMATTABLE_EXTENSIONS,
+  SKILL_NAMES,
+} from "./constants";
 
 /** Parse transcript and extract all relevant data in one pass */
 export async function parseTranscript(
@@ -12,6 +16,7 @@ export async function parseTranscript(
 ): Promise<TranscriptData> {
   const result: TranscriptData = {
     editedFiles: [],
+    hasCodeEdits: false,
     skills: new Map(),
     hasFinalCheck: false,
     hasApplyingWorkflow: false,
@@ -20,6 +25,8 @@ export async function parseTranscript(
       typescript: false,
       react: false,
       lua: false,
+      rust: false,
+      wgsl: false,
     },
     docsRead: new Set(),
   };
@@ -41,10 +48,15 @@ export async function parseTranscript(
             const filePath = item.input?.file_path;
             if (filePath && !seenFiles.has(filePath)) {
               const ext = filePath.slice(filePath.lastIndexOf("."));
+              // Track if any code file was edited
+              if (CODE_EXTENSIONS.has(ext)) {
+                result.hasCodeEdits = true;
+              }
+              // Track formattable files for auto-formatting
               if (FORMATTABLE_EXTENSIONS.has(ext) && existsSync(filePath)) {
                 result.editedFiles.push(filePath);
-                seenFiles.add(filePath);
               }
+              seenFiles.add(filePath);
             }
           }
 

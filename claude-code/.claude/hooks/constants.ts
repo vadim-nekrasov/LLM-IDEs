@@ -32,9 +32,10 @@ export const CODE_EXTENSIONS = new Set([
   ".h",
   ".hpp",
   ".cs",
+  ".wgsl",
 ]);
 
-/** Files that can be formatted by prettier */
+/** Files that can be auto-formatted (prettier or language-specific tools) */
 export const FORMATTABLE_EXTENSIONS = new Set([
   ".ts",
   ".tsx",
@@ -43,6 +44,7 @@ export const FORMATTABLE_EXTENSIONS = new Set([
   ".json",
   ".css",
   ".scss",
+  ".rs",
 ]);
 
 /** Skill name constants */
@@ -54,6 +56,8 @@ export const SKILL_NAMES = {
     typescript: "writing-typescript",
     react: "writing-react",
     lua: "writing-lua",
+    rust: "writing-rust",
+    wgsl: "writing-wgsl",
   },
 } as const;
 
@@ -69,6 +73,8 @@ export const EXTENSION_TO_SKILLS: Record<
   ".ts": ["ecmascript", "typescript"],
   ".tsx": ["ecmascript", "typescript", "react"],
   ".lua": ["lua"],
+  ".rs": ["rust"],
+  ".wgsl": ["wgsl"],
 };
 
 /** Patterns that trigger documentation update requirement (from CLAUDE.md) */
@@ -80,6 +86,7 @@ export const DOC_TRIGGER_PATTERNS = {
   component: /\/components\/.*\.(tsx|jsx)$/,
   slice: /(?:slice|store|reducer)\.(ts|js)$/,
   context: /(?:context|provider)\.(tsx|jsx)$/,
+  rustMod: /(?:mod|lib)\.rs$/,
 } as const;
 
 /** Skills requiring docs-first (design/planning skills) */

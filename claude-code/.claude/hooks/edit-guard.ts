@@ -8,7 +8,7 @@ import {
   SKILL_NAMES,
   isReactHookFile,
 } from "./constants";
-import { isNodeModulesPath, findDocsUp } from "./utils";
+import { isNodeModulesPath, isTargetPath, findDocsUp } from "./utils";
 
 const isCodeFile = (filePath: string): boolean => {
   const ext = filePath.slice(filePath.lastIndexOf("."));
@@ -23,6 +23,15 @@ if (isNodeModulesPath(filePath)) {
   console.error(
     "BLOCKED: Cannot edit files in node_modules/\n" +
       "This is a protected directory.",
+  );
+  process.exit(2);
+}
+
+// Check 1b: Block target/ (Rust build directory)
+if (isTargetPath(filePath)) {
+  console.error(
+    "BLOCKED: Cannot edit files in target/\n" +
+      "This is a Rust build directory.",
   );
   process.exit(2);
 }

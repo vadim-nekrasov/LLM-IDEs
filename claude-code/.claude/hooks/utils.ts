@@ -10,6 +10,14 @@ export function isNodeModulesPath(filePath: string): boolean {
 }
 
 /**
+ * Check if path contains target directory segment (Rust build directory).
+ * Works on both Unix and Windows paths.
+ */
+export function isTargetPath(filePath: string): boolean {
+  return filePath.split(/[/\\]/).includes("target");
+}
+
+/**
  * Find all docs/index.md files from startDir up to projectRoot.
  * Returns array of found doc paths, ordered from closest to farthest.
  */

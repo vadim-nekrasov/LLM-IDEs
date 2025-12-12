@@ -34,10 +34,13 @@ export interface RequiredSkillsUsed {
   typescript: boolean;
   react: boolean;
   lua: boolean;
+  rust: boolean;
+  wgsl: boolean;
 }
 
 export interface TranscriptData {
   editedFiles: string[];
+  hasCodeEdits: boolean;
   skills: Map<string, number>;
   hasFinalCheck: boolean;
   hasApplyingWorkflow: boolean;

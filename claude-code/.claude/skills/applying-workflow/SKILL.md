@@ -1,6 +1,6 @@
 ---
 name: applying-workflow
-description: Applies structured development workflow with docs-first discovery, Three Lenses analysis, Context7 verification, and final checking. Use PROACTIVELY when editing code files, implementing features, fixing bugs, or making any code changes. Triggers on TypeScript, JavaScript, React, Python, Go, Rust development tasks.
+description: Applies structured development workflow with docs-first discovery, Three Lenses analysis, Context7 verification, and final checking. Use PROACTIVELY when editing code files, implementing features, fixing bugs, or making any code changes. Triggers on TypeScript, JavaScript, React, Python, Go, Rust, WGSL development tasks.
 ---
 
 # Development Workflow
@@ -11,10 +11,12 @@ description: Applies structured development workflow with docs-first discovery, 
 
 | File Pattern | Required Skills |
 |--------------|-----------------|
-| `.js`  | `writing-ecmascript` |
+| `.js`        | `writing-ecmascript` |
 | `.ts, .tsx`  | `writing-ecmascript` + `writing-typescript` |
 | `.jsx, .tsx` | `writing-ecmascript` + `writing-react` |
 | `.lua`       | `writing-lua` |
+| `.rs`        | `writing-rust` |
+| `.wgsl`      | `writing-wgsl` |
 
 Invoke the skill(s) FIRST. This loads code patterns into context before you write code.
 

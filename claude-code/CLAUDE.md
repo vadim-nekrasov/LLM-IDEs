@@ -26,6 +26,8 @@ Universal instructions for Claude Code.
 | 3 | `writing-typescript` | .ts, .tsx files                                     |
 | 4 | `writing-react` | .jsx, .tsx files                                    |
 | 5 | `writing-lua` | .lua files                                          |
+| 6 | `writing-rust` | .rs files                                           |
+| 7 | `writing-wgsl` | .wgsl files                                         |
 
 This is NOT optional. Failure to invoke skills before editing is a violation.
 
@@ -39,9 +41,14 @@ Upon completing code edits, invoke `final-checking` skill.
 
 ### Package Awareness
 
-#### Frontend 
+#### Frontend
 - Pay attention to package versions in package.json
 - Respect settings in tsconfig.json, eslint.config.*, vite.config.*
+
+#### Rust & GPU
+- Check `Cargo.toml` for dependencies and features
+- Respect `clippy.toml`, `.cargo/config.toml` for linting settings
+- Check `rust-toolchain.toml` for required Rust version
 
 ## Docs-First Discovery (MANDATORY)
 
@@ -54,9 +61,9 @@ Upon completing code edits, invoke `final-checking` skill.
 
 ## Critical Restrictions
 
-- **NEVER** edit files inside `node_modules/`
+- **NEVER** edit files inside `node_modules/` or `target/` (Rust build directory)
 - **NEVER** run `git commit` or `git push` — user handles version control
-- **Respect Configs**: don't change `package.json`, `tsconfig.json`, `eslint.config.*`, `vite.config.*` unless required
+- **Respect Configs**: don't change `package.json`, `tsconfig.json`, `eslint.config.*`, `vite.config.*`, `Cargo.toml` unless required
 
 ## Documentation Sync (MANDATORY)
 

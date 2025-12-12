@@ -26,7 +26,8 @@ Check project config for available scripts:
 - JS/TS: `package.json` → `lint`, `build`, `typecheck`
 - Python: `pyproject.toml` → `ruff`, `mypy`, `pytest`
 - Go: `go build`, `go vet`, `golangci-lint`
-- Rust: `cargo check`, `cargo clippy`
+- Rust: `cargo check`, `cargo clippy`, `cargo test`
+- WGSL: validated at shader compilation (use wgsl_analyzer if available)
 
 **Goal**: 0 errors, 0 warnings in modified files.
 
@@ -75,7 +76,7 @@ For detailed criteria, see `applying-workflow` skill.
 - [ ] If discovered important undocumented aspects → added (within limits)
 
 ### Critical Restrictions
-- [ ] No edits to `node_modules/`
+- [ ] No edits to `node_modules/` or `target/`
 - [ ] Config files unchanged unless required
 
 ---

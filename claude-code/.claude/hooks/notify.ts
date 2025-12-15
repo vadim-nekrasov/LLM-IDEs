@@ -1,6 +1,9 @@
 #!/usr/bin/env bun
 try {
   if (process.platform === "darwin") {
+    // Play Glass sound
+    Bun.spawnSync(["afplay", "/System/Library/Sounds/Ping.aiff"]);
+    // Show notification
     Bun.spawnSync([
       "osascript",
       "-e",

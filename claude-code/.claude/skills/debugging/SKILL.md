@@ -55,3 +55,8 @@ If user's prompt includes "Questions" / "Вопросы" / "Critical Questions":
 - Treat as canonical set of questions to answer
 - Every critical question must map to specific log outputs
 - Ensure logging strategy explicitly answers these questions
+
+## External Research (When Stuck)
+
+If local analysis insufficient, use **Perplexity MCP**.
+See **Research Hierarchy** in CLAUDE.md for guidance.

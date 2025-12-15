@@ -67,6 +67,13 @@ This is a **workflow requirement**, not a suggestion.
 - If not 100% sure of current version's API → use Context7 MCP
 - **Always** use Context7 for setup, configuration, complex API usages
 
+## Phase 3.5: Deep Research (If Needed)
+
+If task requires information beyond library docs, use **Perplexity MCP**.
+See **Research Hierarchy** in CLAUDE.md for when to use.
+
+Context7 remains primary for library API documentation.
+
 ## Phase 4: Implementation
 
 ### Code Guidelines

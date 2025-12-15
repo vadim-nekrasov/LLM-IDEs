@@ -15,6 +15,24 @@ Universal instructions for Claude Code.
   - **Always** use Context7 automatically when generating code with third-party libraries
   - Do NOT guess API signatures — verify via Context7
 
+## Research Hierarchy
+
+When information is needed, follow this priority:
+
+| Priority | Source | When to Use |
+|----------|--------|-------------|
+| 1 | **Context7 MCP** | Third-party library APIs, code examples |
+| 2 | **Perplexity MCP** | Architecture, best practices, concepts, current events |
+| 3 | **WebSearch** | Fallback for general queries |
+
+### When to Use Perplexity (NOT Context7)
+- Architectural patterns and design decisions
+- Best practices and industry standards
+- Technology comparisons (X vs Y)
+- Current trends, news, recent releases
+- Debugging strategies for obscure errors
+- Performance optimization techniques
+
 ## CRITICAL: Skill Invocation
 
 **STOP** before editing any code file. Invoke skills in order:

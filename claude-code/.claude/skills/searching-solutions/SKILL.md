@@ -78,6 +78,10 @@ Phases 1-3 are internal — do NOT output all variants to user.
 - Brief format (1-2 sentences per variant)
 - Filter out strict constraint violations
 
+#### External Inspiration (Optional)
+Before brainstorming, consider using **Perplexity MCP** to research existing solutions.
+See **Research Hierarchy** in CLAUDE.md.
+
 ### Phase 2: Filter Promising Candidates
 - Select top `{num_promising}` variants
 - Evaluate against Search Criteria

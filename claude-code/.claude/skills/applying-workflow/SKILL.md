@@ -45,7 +45,7 @@ This is a **workflow requirement**, not a suggestion.
 - Handle edge cases, errors, loading states
 
 **B. Architect Lens** (System & Scale)
-- SOLID, GRASP, DRY, KISS
+- Design Principles (per CLAUDE.md)
 - Idiomatic for this stack? Not overengineered?
 - Safe? (memory leaks, security)
 - Scalable and performant?

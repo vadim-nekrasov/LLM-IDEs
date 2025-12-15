@@ -15,6 +15,13 @@ Universal instructions for Claude Code.
   - **Always** use Context7 automatically when generating code with third-party libraries
   - Do NOT guess API signatures — verify via Context7
 
+### Design Principles (Architect Lens)
+- **SOLID**: Single Responsibility, Open/Closed, Liskov, Interface Segregation, Dependency Inversion
+- **GRASP**
+- **DRY**: Don't Repeat Yourself
+- **KISS**: Keep It Simple, Stupid
+- **YAGNI**: You Aren't Gonna Need It
+
 ## Research Hierarchy
 
 When information is needed, follow this priority:

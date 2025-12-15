@@ -63,8 +63,7 @@ Solutions violating these are **immediately discarded**.
 
 ### Search Criteria (Default - Three Lenses)
 1. **Correctness & Safety**: Functionally correct, respects invariants, no regressions
-2. **Architecture & Idiomaticity**: Scalable, pattern-consistent, fits stack. SOLID, GRASP, DRY, KISS principles
-   respected. Not overengineered.
+2. **Architecture & Idiomaticity**: Scalable, pattern-consistent, fits stack. Design Principles respected (per CLAUDE.md). Not overengineered.
 3. **Simplicity & Elegance**: Readable, debuggable, minimal complexity, clean design
 
 ---

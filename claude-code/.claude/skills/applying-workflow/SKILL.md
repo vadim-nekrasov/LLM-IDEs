@@ -25,10 +25,10 @@ Invoke the skill(s) FIRST. This loads code patterns into context before you writ
 **⛔ BLOCK YOURSELF** until ALL steps are completed:
 
 ### Checklist (complete BEFORE any code)
-- [ ] Traverse from edited file up to project root
-- [ ] For each `docs/index.md` found → **READ** it with Read tool
 - [ ] Read `README.md` in project root
 - [ ] Check `package.json` for scripts and dependencies
+- [ ] Find ALL `docs/index.md` files from project root to edited file
+- [ ] **READ** each found `docs/index.md` with Read tool
 - [ ] Record 3-5 invariants that must NOT be violated
 
 ### Why This Is Critical

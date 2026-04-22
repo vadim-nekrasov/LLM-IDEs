@@ -47,8 +47,9 @@ This is a **workflow requirement**, not a suggestion.
 **B. Architect Lens** (System & Scale)
 - Design Principles (SOLID, GRASP, DRY, KISS, YAGNI)
 - Idiomatic for this stack? Not overengineered?
-- Safe? (memory leaks, security)
-- Scalable and performant?
+- Safe? (memory leaks, security, race conditions)
+- Scalable?
+- Performant?
 
 **C. Maintainer Lens** (Future & Team)
 - Will a junior developer understand this in a month?

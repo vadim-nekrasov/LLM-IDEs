@@ -27,7 +27,8 @@ Apply these three perspectives during **Planning** (Analysis) and **Verification
     - Is this scalable?
     - Is it idiomatic for this specific stack?
     - Is it simple? (Avoid overengineering).
-    - Is it safe? (Performance, memory leaks, security).
+    - Is it performant?
+    - Is it safe? (memory leaks, security, race conditions).
 
 ### C. Maintainer Lens (Future & Team)
 - **Focus**: Readability, Debuggability, Consistency.

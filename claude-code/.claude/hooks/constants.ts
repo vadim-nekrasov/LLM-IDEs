@@ -79,19 +79,13 @@ export const EXTENSION_TO_SKILLS: Record<
 
 /** Patterns that trigger documentation update requirement (from CLAUDE.md) */
 export const DOC_TRIGGER_PATTERNS = {
-  barrel: /(?:index|mod)\.(ts|js|tsx|jsx)$/,
-  api: /(?:api|service|client|endpoint|route)\./i,
-  config: /(?:config|\.env|settings)\./i,
-  hook: /\/hooks\/.*\.(ts|tsx)$/,
-  component: /\/components\/.*\.(tsx|jsx)$/,
-  slice: /(?:slice|store|reducer)\.(ts|js)$/,
-  context: /(?:context|provider)\.(tsx|jsx)$/,
-  rustMod: /(?:mod|lib)\.rs$/,
+  barrel: /(?:^|\/)(?:index|mod)\.(?:ts|js|tsx|jsx)$/,
+  api: /(?:^|\/)[\w-]*(?:api|service|client|endpoint|route)\.(?:ts|js|tsx|jsx)$/i,
+  config:
+    /(?:^|\/)(?:[\w.-]*\.)?(?:vite|eslint|prettier|stylelint|tsconfig|vitest|playwright)\.config\.(?:ts|js|mjs|cjs|json)$|(?:^|\/)\.env(?:\.\w+)?$|(?:^|\/)settings\.(?:ts|js|json)$/i,
+  hook: /\/hooks\/[\w-]+\.(?:ts|tsx)$/,
+  component: /\/components\/.*\.(?:tsx|jsx)$/,
+  slice: /(?:^|\/)[\w-]*(?:slice|store|reducer)\.(?:ts|js)$/,
+  context: /(?:^|\/)[\w-]*(?:context|provider)\.(?:tsx|jsx)$/,
+  rustMod: /(?:^|\/)(?:mod|lib)\.rs$/,
 } as const;
-
-/** Skills requiring docs-first (design/planning skills) */
-export const DOCS_REQUIRED_SKILLS = new Set([
-  "applying-workflow",
-  "searching-solutions",
-  "debugging",
-]);

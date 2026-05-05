@@ -1,6 +1,8 @@
 ---
 name: writing-rust
-description: Provides Rust code patterns including ownership, borrowing, error handling, traits, async, and idiomatic patterns. Use PROACTIVELY when editing .rs files, writing Rust modules, or implementing Rust code.
+description: Rust patterns — ownership, borrowing, error handling with thiserror, traits, async/await, idiomatic Rust. Triggers on edits to .rs files.
+paths:
+  - "**/*.rs"
 ---
 
 # Rust Code Style

@@ -1,9 +1,15 @@
-/** Input passed to all hooks via stdin as JSON */
+/**
+ * Input passed to hooks via stdin as JSON.
+ *
+ * Most fields are populated by Claude Code on every event, but session-start.ts
+ * uses a `{} as HookInput` fallback when stdin parsing fails — so cwd, session_id,
+ * and hook_event_name are typed optional to keep the contract honest.
+ */
 export interface HookInput {
-  session_id: string;
+  session_id?: string;
   transcript_path?: string;
-  cwd: string;
-  hook_event_name: string;
+  cwd?: string;
+  hook_event_name?: string;
   tool_name?: string;
   tool_input?: {
     file_path?: string;
@@ -11,6 +17,11 @@ export interface HookInput {
     command?: string;
     [key: string]: unknown;
   };
+  /** UserPromptSubmit only — the user's prompt text. */
+  prompt?: string;
+  stop_hook_active?: boolean;
+  permission_mode?: "default" | "plan" | "acceptEdits" | "bypassPermissions";
+  notification_type?: string;
 }
 
 export interface TranscriptContent {

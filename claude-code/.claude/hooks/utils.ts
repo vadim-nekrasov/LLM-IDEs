@@ -1,20 +1,18 @@
-import { existsSync, statSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { existsSync, mkdirSync, statSync } from "node:fs";
+import { homedir } from "node:os";
+import { dirname, extname, join } from "node:path";
 
-/**
- * Check if path contains node_modules directory segment.
- * Works on both Unix and Windows paths.
- */
 export function isNodeModulesPath(filePath: string): boolean {
   return filePath.split(/[/\\]/).includes("node_modules");
 }
 
-/**
- * Check if path contains target directory segment (Rust build directory).
- * Works on both Unix and Windows paths.
- */
 export function isTargetPath(filePath: string): boolean {
   return filePath.split(/[/\\]/).includes("target");
+}
+
+/** Safe extension extraction — handles dotfiles and missing extensions correctly. */
+export function getExt(filePath: string): string {
+  return extname(filePath).toLowerCase();
 }
 
 /**
@@ -43,4 +41,20 @@ export function findDocsUp(startDir: string, projectRoot: string): string[] {
 /** Check if file is documentation (.md or in /docs/) */
 export function isDocFile(path: string): boolean {
   return path.endsWith(".md") || path.includes("/docs/");
+}
+
+/** Ensure a directory exists (recursive mkdir, no-op if present). */
+export function ensureDir(dir: string): void {
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+}
+
+/**
+ * Resolve a hook cache directory under the user's home (~/.claude/cache/claude-code-hooks/<sub>/).
+ * Kept outside CLAUDE_PROJECT_DIR so cache files never end up in a project repo
+ * (the .claude/ directory in this setup is a symlink to a shared, git-tracked config repo).
+ */
+export function cacheDir(sub: string): string {
+  const dir = join(homedir(), ".claude", "cache", "claude-code-hooks", sub);
+  ensureDir(dir);
+  return dir;
 }

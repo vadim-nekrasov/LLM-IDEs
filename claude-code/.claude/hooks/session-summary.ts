@@ -5,9 +5,8 @@ import { analyzeDocUpdateNeed } from "./doc-analyzer";
 import { isDocFile } from "./utils";
 
 const input: HookInput = await Bun.stdin.json();
-const data = await parseTranscript(input.transcript_path);
+const data = await parseTranscript(input.transcript_path, input.session_id);
 
-// Filter docs at output time, NOT store separately (DRY!)
 const docsFiltered = [...data.docsRead].filter(isDocFile);
 
 const SEPARATOR = "━".repeat(42);
@@ -18,38 +17,47 @@ const hasOutput =
 
 if (!hasOutput) process.exit(0);
 
-console.log("\n" + SEPARATOR);
+const C = {
+  reset: "\x1b[0m",
+  bold: "\x1b[1m",
+  dim: "\x1b[2m",
+  cyan: "\x1b[36m",
+  yellow: "\x1b[33m",
+  green: "\x1b[32m",
+};
 
-// Section 1: Docs Read
+console.log("\n" + C.dim + SEPARATOR + C.reset);
+
 if (docsFiltered.length > 0) {
-  console.log("📚 Docs read:");
-  for (const doc of docsFiltered) {
-    console.log(`   • ${doc}`);
-  }
+  console.log(`${C.bold}📚 Docs read:${C.reset}`);
+  for (const doc of docsFiltered) console.log(`   • ${doc}`);
   console.log();
 }
 
-// Section 2: Docs Update Analysis
 if (data.editedFiles.length > 0) {
   const analysis = analyzeDocUpdateNeed(data.editedFiles);
-  console.log(`📝 Docs update: ${analysis.needed ? "Yes" : "No"}`);
+  console.log(
+    `${C.bold}📝 Docs update:${C.reset} ` +
+      (analysis.needed ? `${C.yellow}Yes${C.reset}` : `${C.green}No${C.reset}`),
+  );
   if (analysis.needed) {
-    for (const reason of analysis.reasons) {
-      console.log(`   → ${reason}`);
-    }
+    for (const reason of analysis.reasons) console.log(`   → ${reason}`);
   }
   console.log();
 }
 
-// Section 3: Skills
 if (data.skills.size > 0) {
   const sorted = [...data.skills.entries()].sort((a, b) => b[1] - a[1]);
-  console.log("📊 Skills used:");
+  console.log(`${C.bold}${C.cyan}🛠  Custom skills invoked:${C.reset}`);
   for (const [skill, count] of sorted) {
-    console.log(`   • ${skill} (${count})`);
+    console.log(
+      `   ${C.cyan}• ${skill}${C.reset} ${C.dim}(${count}×)${C.reset}`,
+    );
   }
-} else {
-  console.log("📊 No skills used");
+} else if (data.editedFiles.length > 0) {
+  console.log(
+    `${C.bold}${C.yellow}🛠  No custom skills invoked this session.${C.reset}`,
+  );
 }
 
-console.log(SEPARATOR);
+console.log(C.dim + SEPARATOR + C.reset);

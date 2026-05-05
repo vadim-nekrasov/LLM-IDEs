@@ -9,3 +9,8 @@ Desktop.ini
 /.claude
 /.codex
 node_modules/
+
+# Claude Code runtime artefacts that must never reach the shared config repo
+claude-code/.claude/cache/
+claude-code/.claude/scheduled_tasks.lock
+**/CLAUDE.local.md

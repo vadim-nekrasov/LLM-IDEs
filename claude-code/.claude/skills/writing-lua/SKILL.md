@@ -1,6 +1,8 @@
 ---
 name: writing-lua
-description: Provides Lua code patterns including metatables, coroutines, module patterns, and Neovim plugin development. Use PROACTIVELY when editing .lua files, writing Lua modules, or developing Neovim plugins.
+description: Lua patterns — metatables, coroutines, module pattern, Neovim plugin development. Triggers on edits to .lua files.
+paths:
+  - "**/*.lua"
 ---
 
 # Lua Code Style

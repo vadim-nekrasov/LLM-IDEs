@@ -1,6 +1,6 @@
 ---
 name: searching-solutions
-description: Explores solution tree for optimal technical solutions. Use PROACTIVELY when user requests "древовидный поиск", "tree search", "поиск решений", or "structured brainstorming".
+description: Tree-search methodology for finding optimal technical solutions through structured brainstorming, filtering, and recursive exploration. Triggers when the user asks for "tree search", "structured brainstorming", "древовидный поиск", "поиск решений".
 ---
 
 # Solution Tree Search

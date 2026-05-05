@@ -1,125 +1,60 @@
 # CLAUDE.md
 
-Universal instructions for Claude Code.
+Universal instructions shared across projects (this file is a symlinked overlay
+in each project that uses the same Claude Code config).
 
 ## Communication
 
-- **Response to user**: Russian
-- **Code and documentation**: English
+- Replies to user: Russian.
+- Code, identifiers, inline comments, commit messages: English.
 
-## Principles
+## Project-specific overrides
 
-- Apply **domain expertise** relevant to the task
-- Apply **Three Lenses**: Product, Architect, Maintainer
-- **Zero Hallucination Policy**: use Context7 MCP for external APIs
-  - **Always** use Context7 automatically when generating code with third-party libraries
-  - Do NOT guess API signatures — verify via Context7
-
-### Design Principles (Architect Lens)
-- **SOLID**: Single Responsibility, Open/Closed, Liskov, Interface Segregation, Dependency Inversion
-- **GRASP**
-- **DRY**: Don't Repeat Yourself
-- **KISS**: Keep It Simple, Stupid
-- **YAGNI**: You Aren't Gonna Need It
+Each project may add `${CLAUDE_PROJECT_DIR}/CLAUDE.local.md` with stack, layout,
+scripts, and conventions. Read it first when present — it's the authoritative
+overlay for that project. The shared file (this one) intentionally avoids
+project specifics.
 
 ## Research Hierarchy
 
-When information is needed, follow this priority:
+1. **Context7 MCP** — third-party library APIs (zero-hallucination policy: never
+   guess signatures; verify with the installed version).
+2. **Perplexity MCP** — architecture, best practices, comparisons, current
+   trends. Treat the output critically; don't act on a single citation.
+3. **WebSearch** — fallback for general queries.
 
-| Priority | Source | When to Use |
-|----------|--------|-------------|
-| 1 | **Context7 MCP** | Third-party library APIs, code examples |
-| 2 | **Perplexity MCP** | Architecture, best practices, concepts, current events |
-| 3 | **WebSearch** | Fallback for general queries |
+## Skills
 
-### When to Use Perplexity (NOT Context7)
-- Architectural patterns and design decisions
-- Best practices and industry standards
-- Technology comparisons (X vs Y)
-- Current trends, news, recent releases
-- Debugging strategies for obscure errors
-- Performance optimization techniques
+Skills load focused patterns into context. Use them when relevant — they aren't
+gates and shouldn't be invoked for trivial edits. Common ones:
+`applying-workflow`, `writing-typescript`, `writing-react`, `writing-ecmascript`,
+`writing-wgsl`, `writing-rust`, `final-checking`, `debugging`,
+`searching-solutions`, `reviewing-state`, `reviewing-apis`.
 
-## CRITICAL: Skill Invocation
+The `applying-workflow` skill is a router: it links to docs-first discovery,
+Three Lenses, and confidence-check patterns.
 
-**STOP** before editing any code file. Invoke skills in order:
+## Documentation
 
-| Order | Skill | When                                                |
-|-------|-------|-----------------------------------------------------|
-| 1 | `applying-workflow` | Always for code changes (loads docs-first workflow) |
-| 2 | `writing-ecmascript` | .js, .jsx, .ts, .tsx files                          |
-| 3 | `writing-typescript` | .ts, .tsx files                                     |
-| 4 | `writing-react` | .jsx, .tsx files                                    |
-| 5 | `writing-lua` | .lua files                                          |
-| 6 | `writing-rust` | .rs files                                           |
-| 7 | `writing-wgsl` | .wgsl files                                         |
-
-This is NOT optional. Failure to invoke skills before editing is a violation.
-
-Upon completing code edits, invoke `final-checking` skill.
-
-## Code Style
-
-### Comments
-- Avoid unnecessary comments
-- Keep comments concise (max one line)
-
-### Package Awareness
-
-#### Frontend
-- Pay attention to package versions in package.json
-- Respect settings in tsconfig.json, eslint.config.*, vite.config.*
-
-#### Rust & GPU
-- Check `Cargo.toml` for dependencies and features
-- Respect `clippy.toml`, `.cargo/config.toml` for linting settings
-- Check `rust-toolchain.toml` for required Rust version
-
-## Docs-First Discovery (MANDATORY)
-
-**Before ANY code edit**, locate and read:
-1. `docs/index.md` — from edited file path up to project root
-2. `README.md` — project overview
-3. Related component docs (if editing components)
-
-**NO EXCEPTIONS** — even for "simple" fixes. Understanding context prevents bugs.
+- Read every `docs/index.md` from the project root down to the file you intend
+  to edit. Adjacent component docs too, when present.
+- Update `docs/index.md` after changes to: public API contracts, barrel
+  exports, configuration / environment variables, hooks, components, slices,
+  contexts. The session-summary hook flags when an update is likely needed.
 
 ## Critical Restrictions
 
-- **NEVER** edit files inside `node_modules/` or `target/` (Rust build directory)
-- **NEVER** run `git commit` or `git push` — user handles version control
-- **Respect Configs**: don't change `package.json`, `tsconfig.json`, `eslint.config.*`, `vite.config.*`, `Cargo.toml` unless required
+- Don't edit `node_modules/`, `target/`, or anything inside `.claude/` unless
+  the task explicitly requires it (this directory is the shared config repo).
+- Don't run `git commit` or `git push` — the user handles version control.
+- Don't modify build/lint/format manifests (`package.json`, `tsconfig.json`,
+  `eslint.config.*`, `Cargo.toml`, etc.) unless required by the task.
 
-## Documentation Sync (MANDATORY)
+## After Code Edits
 
-Keep documentation accurate. Update `docs/index.md` when:
+Invoke the `final-checking` skill before stopping — it covers typecheck, lint,
+the Three Lenses pass, and a structured checklist. The Stop hook reminds you
+once if it's missing; on a second Stop it lets the session end (anti-loop).
 
-1. **After code changes** affecting public API, behavior, or architecture
-2. **If you discover inaccurate docs** during exploration → fix immediately
-3. **If you discover important undocumented aspects** → add them (within limits)
-
-**Triggers for mandatory doc update**:
-- Architecture or directory structure changes
-- Public exports (barrel files, entry points)
-- API contracts, URLs, CLI interfaces
-- Configuration or environment variables
-- Public names (hooks, components, slices, contexts)
-
-## Session Summary (MANDATORY)
-
-**CRITICAL**: Before stopping, you MUST provide a session summary:
-
-### Docs read
-List documentation files read during the session (`.md` files and `/docs/` paths).
-
-### Docs update
-State whether documentation update was required and why:
-- **Triggers**: barrel files, API contracts, configs, hooks, components, slices, contexts
-- Format: "Yes/No" with brief reason if Yes
-
-### Skills used
-List ALL skills invoked during the session:
-- Format: `skill-name` (count) — e.g., `final-checking` (1), `writing-typescript` (2)
-- If no skills were used, state: "No skills used in this session"
-
-This is NOT optional. Failing to include this summary is a violation of instructions.
+The `session-summary` hook prints docs read, doc-update verdict, and skills
+used automatically — no need to recreate that block in chat.

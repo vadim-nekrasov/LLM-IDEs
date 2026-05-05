@@ -8,103 +8,78 @@ import {
   SKILL_NAMES,
   isReactHookFile,
 } from "./constants";
-import { isNodeModulesPath, isTargetPath, findDocsUp } from "./utils";
-
-const isCodeFile = (filePath: string): boolean => {
-  const ext = filePath.slice(filePath.lastIndexOf("."));
-  return CODE_EXTENSIONS.has(ext);
-};
+import {
+  findDocsUp,
+  getExt,
+  isNodeModulesPath,
+  isTargetPath,
+} from "./utils";
 
 const input: HookInput = await Bun.stdin.json();
 const filePath = input.tool_input?.file_path ?? "";
 
-// Check 1: Block node_modules (using path segment check for security)
 if (isNodeModulesPath(filePath)) {
-  console.error(
-    "BLOCKED: Cannot edit files in node_modules/\n" +
-      "This is a protected directory.",
-  );
+  console.error("BLOCKED: Cannot edit files in node_modules/.");
   process.exit(2);
 }
-
-// Check 1b: Block target/ (Rust build directory)
 if (isTargetPath(filePath)) {
-  console.error(
-    "BLOCKED: Cannot edit files in target/\n" +
-      "This is a Rust build directory.",
-  );
+  console.error("BLOCKED: Cannot edit files in target/ (Rust build dir).");
   process.exit(2);
 }
 
-// Skip .claude/ directory (hooks config files)
-if (filePath.includes("/.claude/")) {
-  process.exit(0);
-}
+if (input.permission_mode === "plan") process.exit(0);
+if (filePath.includes("/.claude/")) process.exit(0);
 
-// Skip non-code files (allow editing configs, docs, etc.)
-if (!isCodeFile(filePath)) {
-  process.exit(0);
-}
+const ext = getExt(filePath);
+if (!CODE_EXTENSIONS.has(ext)) process.exit(0);
 
-const ext = filePath.slice(filePath.lastIndexOf("."));
 const projectRoot =
   process.env.CLAUDE_PROJECT_DIR || input.cwd || process.cwd();
-const data = await parseTranscript(input.transcript_path);
+const data = await parseTranscript(input.transcript_path, input.session_id);
 
-// Check 2: applying-workflow skill must be invoked before editing code
+const advisories: string[] = [];
+
 if (!data.hasApplyingWorkflow) {
-  console.error(
-    "BLOCKED: You must invoke 'applying-workflow' skill before editing code files.\n\n" +
-      "Required by CLAUDE.md → CRITICAL: Skill Invocation.\n\n" +
-      "Action: Use Skill tool with skill='applying-workflow'",
+  advisories.push(
+    `Consider invoking the \`applying-workflow\` skill — it loads docs-first discovery, Three Lenses, and Context7 verification patterns relevant to this edit.`,
   );
-  process.exit(2);
 }
 
-// Check 3: Required skills by file extension
 const requiredSkillKeys = [...(EXTENSION_TO_SKILLS[ext] ?? [])];
-
-// Add react skill for hook files (.ts/.js with use* name or in hooks/)
 if (!requiredSkillKeys.includes("react") && isReactHookFile(filePath)) {
   requiredSkillKeys.push("react");
 }
-
 const missingSkills: string[] = [];
-
 for (const key of requiredSkillKeys) {
   if (!data.requiredSkillsUsed[key]) {
     missingSkills.push(SKILL_NAMES.languages[key]);
   }
 }
-
 if (missingSkills.length > 0) {
-  console.error(
-    "BLOCKED: Missing required skills for this file type.\n\n" +
-      "Required skills: " +
-      missingSkills.join(", ") +
-      "\n\n" +
-      "Required by CLAUDE.md → CRITICAL: Skill Invocation.\n\n" +
-      "Action: Invoke these skills before editing",
+  advisories.push(
+    `Recommended language skills for \`${ext}\` files (load patterns into context): ${missingSkills.join(", ")}.`,
   );
-  process.exit(2);
 }
 
-// Check 4: docs/index.md must be read if it exists
 const fileDir = dirname(filePath);
 const requiredDocs = findDocsUp(fileDir, projectRoot);
 const missingDocs = requiredDocs.filter((doc) => !data.docsRead.has(doc));
-
 if (missingDocs.length > 0) {
-  console.error(
-    "BLOCKED: Docs-First Discovery not completed.\n\n" +
-      "You must read these docs before editing code:\n" +
-      missingDocs.map((d) => `  → ${d}`).join("\n") +
-      "\n\n" +
-      "Required by CLAUDE.md → Docs-First Discovery (MANDATORY).\n\n" +
-      "Action: Use Read tool on the listed docs/index.md files.",
+  advisories.push(
+    `Read these doc indexes before editing (Docs-First):\n  ${missingDocs.join("\n  ")}`,
   );
-  process.exit(2);
 }
 
-// All checks passed
+if (advisories.length > 0) {
+  const message = `📚 Edit advisories for \`${filePath}\`:\n\n${advisories.join("\n\n")}`;
+  console.log(
+    JSON.stringify({
+      hookSpecificOutput: {
+        hookEventName: "PreToolUse",
+        additionalContext: message,
+      },
+    }),
+  );
+}
+
 process.exit(0);

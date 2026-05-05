@@ -2,7 +2,7 @@
 // Status-line provider: receives session JSON on stdin, prints a single line.
 // Wired up via settings.json → statusLine.command.
 // See https://code.claude.com/docs/en/settings#status-line.
-export {};
+import { homedir } from "node:os";
 
 interface StatusInput {
   cwd?: string;
@@ -17,6 +17,13 @@ const input: StatusInput = await Bun.stdin
 
 const cwd = input.cwd || input.workspace?.current_dir || process.cwd();
 const model = input.model?.display_name ?? "Claude";
+
+function homeify(p: string): string {
+  const home = homedir();
+  if (p === home) return "~";
+  if (p.startsWith(home + "/")) return "~" + p.slice(home.length);
+  return p;
+}
 
 function git(args: string[]): string {
   try {
@@ -40,6 +47,7 @@ const dirty = branch
 
 const parts = [
   `🤖 ${model}`,
+  `📁 ${homeify(cwd)}`,
   branch ? `⎇ ${branch}${dirty > 0 ? ` *${dirty}` : ""}` : "",
 ].filter(Boolean);
 

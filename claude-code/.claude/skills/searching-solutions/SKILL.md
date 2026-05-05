@@ -4,6 +4,8 @@ description: Tree-search methodology for finding optimal technical solutions thr
 when_to_use: Triggers when the user asks for "tree search", "structured brainstorming", "древовидный поиск", "поиск решений". Almost always invoked manually — keep `disable-model-invocation: true` so Claude does not run tree search on its own.
 disable-model-invocation: true
 effort: high
+context: fork
+agent: general-purpose
 ---
 
 # Solution Tree Search

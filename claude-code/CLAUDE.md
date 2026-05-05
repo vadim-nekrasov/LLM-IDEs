@@ -25,14 +25,13 @@ project specifics.
 
 ## Skills
 
-Skills load focused patterns into context. Use them when relevant — they aren't
-gates and shouldn't be invoked for trivial edits. Common ones:
-`applying-workflow`, `writing-typescript`, `writing-react`, `writing-ecmascript`,
-`writing-wgsl`, `writing-rust`, `final-checking`, `debugging`,
-`searching-solutions`, `reviewing-state`, `reviewing-apis`.
+Skills load focused patterns into context — they aren't gates and shouldn't be
+invoked for trivial edits. Claude Code surfaces relevant skills by their
+frontmatter (`description`, `paths`); language and review skills auto-trigger
+on matching files.
 
-The `applying-workflow` skill is a router: it links to docs-first discovery,
-Three Lenses, and confidence-check patterns.
+`applying-workflow` is the router entry point: it links to docs-first discovery,
+Three Lenses, and confidence-check patterns. Start there for non-trivial work.
 
 ## Design Principles
 

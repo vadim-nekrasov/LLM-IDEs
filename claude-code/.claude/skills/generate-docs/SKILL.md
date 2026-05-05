@@ -1,4 +1,5 @@
 ---
+name: generate-docs
 description: Generate technical documentation for a folder
 argument-hint: <folder-path>
 arguments: [folder]

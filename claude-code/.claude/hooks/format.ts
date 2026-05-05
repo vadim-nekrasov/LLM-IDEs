@@ -21,6 +21,11 @@ if (!filePath || !existsSync(filePath)) process.exit(0);
 
 const ext = getExt(filePath);
 
+// Defence-in-depth: even though settings.json caps this hook at 30 s, we add
+// our own per-process timeout so a wedged formatter cannot consume the whole
+// budget and starve siblings.
+const FORMAT_TIMEOUT_MS = 20_000;
+
 if (FORMATTABLE_EXTENSIONS.has(ext) && ext !== ".rs") {
   const npmRoot = findRoot(filePath, "package.json");
   if (npmRoot) {
@@ -34,6 +39,7 @@ if (FORMATTABLE_EXTENSIONS.has(ext) && ext !== ".rs") {
         cwd: npmRoot,
         stdout: "ignore",
         stderr: "ignore",
+        timeout: FORMAT_TIMEOUT_MS,
       });
     } catch {
       // best-effort
@@ -50,6 +56,7 @@ if (ext === ".rs") {
         cwd: cargoRoot,
         stdout: "ignore",
         stderr: "ignore",
+        timeout: FORMAT_TIMEOUT_MS,
       });
     } catch {
       // best-effort

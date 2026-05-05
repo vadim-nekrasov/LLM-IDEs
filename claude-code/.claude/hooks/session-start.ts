@@ -39,7 +39,7 @@ function git(args: string[]): string {
 if (shouldCleanCache) {
   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
   const now = Date.now();
-  for (const sub of ["transcript", "upcontext"]) {
+  for (const sub of ["transcript", "upcontext", "permission-log"]) {
     const dir = cacheDir(sub);
     if (!existsSync(dir)) continue;
     for (const name of readdirSync(dir)) {
@@ -64,7 +64,19 @@ const overlayHint = existsSync(join(cwd, localOverlay))
   ? ` • Project overlay: \`${localOverlay}\``
   : "";
 
-const message = `Session started • Branch: \`${branch}\` • Dirty files: ${dirty}${overlayHint}`;
+// Diagnostic: warn if tools required by other hooks are missing in PATH.
+// `bun` is the runner for every hook in settings.json; if it's not on PATH
+// the rest of the hooks will fail silently. `git` is used by several hooks
+// for repo context and will degrade gracefully but it's worth surfacing.
+const missingTools: string[] = [];
+if (!Bun.which("bun")) missingTools.push("bun");
+if (!Bun.which("git")) missingTools.push("git");
+const toolsHint =
+  missingTools.length > 0
+    ? ` • ⚠️ Missing in PATH: ${missingTools.join(", ")}`
+    : "";
+
+const message = `Session started • Branch: \`${branch}\` • Dirty files: ${dirty}${overlayHint}${toolsHint}`;
 
 console.log(
   JSON.stringify({

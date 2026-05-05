@@ -2,6 +2,8 @@
 // Status-line provider: receives session JSON on stdin, prints a single line.
 // Wired up via settings.json → statusLine.command.
 // See https://code.claude.com/docs/en/settings#status-line.
+export {};
+
 interface StatusInput {
   cwd?: string;
   workspace?: { current_dir?: string };

@@ -1,12 +1,14 @@
 ---
 description: Generate technical documentation for a folder
 argument-hint: <folder-path>
+arguments: [folder]
+disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Write, Edit
 ---
 
 # Generate Technical Documentation for Folder
 
-Analyze code in specified folder and generate/update technical documentation.
+Analyze code in `$folder` and generate/update technical documentation.
 
 ## Usage
 
@@ -15,7 +17,7 @@ Analyze code in specified folder and generate/update technical documentation.
 /generate-docs packages/shared/ui
 ```
 
-**Argument**: Path to target folder (TARGET_DIR), relative to project root.
+**Argument** (`$folder`): Path to target folder (TARGET_DIR), relative to project root.
 
 ---
 

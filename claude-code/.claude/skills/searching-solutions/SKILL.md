@@ -1,6 +1,9 @@
 ---
 name: searching-solutions
-description: Tree-search methodology for finding optimal technical solutions through structured brainstorming, filtering, and recursive exploration. Triggers when the user asks for "tree search", "structured brainstorming", "древовидный поиск", "поиск решений".
+description: Tree-search methodology for finding optimal technical solutions through structured brainstorming, filtering, and recursive exploration.
+when_to_use: Triggers when the user asks for "tree search", "structured brainstorming", "древовидный поиск", "поиск решений". Almost always invoked manually — keep `disable-model-invocation: true` so Claude does not run tree search on its own.
+disable-model-invocation: true
+effort: high
 ---
 
 # Solution Tree Search

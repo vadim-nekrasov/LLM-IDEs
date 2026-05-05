@@ -1,6 +1,7 @@
 ---
 name: writing-lua
-description: Lua patterns — metatables, coroutines, module pattern, Neovim plugin development. Triggers on edits to .lua files.
+description: Lua patterns — metatables, coroutines, module pattern, Neovim plugin development, version differences (5.1/5.4/LuaJIT).
+when_to_use: Triggers on edits to .lua files.
 paths:
   - "**/*.lua"
 ---

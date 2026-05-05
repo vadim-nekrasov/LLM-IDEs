@@ -34,13 +34,23 @@ gates and shouldn't be invoked for trivial edits. Common ones:
 The `applying-workflow` skill is a router: it links to docs-first discovery,
 Three Lenses, and confidence-check patterns.
 
+## Design Principles
+
+Always evaluate proposed changes through SOLID, GRASP, DRY, KISS, YAGNI. The
+detailed Three Lenses pass lives in `skills/_shared/three-lenses.md`; this
+bullet exists so the principles stay in always-loaded context regardless of
+which skill is invoked.
+
 ## Documentation
 
 - Read every `docs/index.md` from the project root down to the file you intend
   to edit. Adjacent component docs too, when present.
-- Update `docs/index.md` after changes to: public API contracts, barrel
-  exports, configuration / environment variables, hooks, components, slices,
-  contexts. The session-summary hook flags when an update is likely needed.
+- A change requires a `docs/index.md` update when it touches: barrel
+  exports / entry points, public API contracts, CLI / URL surface,
+  configuration or environment variables, public hooks, components,
+  Redux slices, React contexts, or `mod.rs` / `lib.rs` boundaries. The
+  session-summary hook flags this post-factum, but the responsibility is on
+  the change author — don't wait for the hook.
 
 ## Critical Restrictions
 

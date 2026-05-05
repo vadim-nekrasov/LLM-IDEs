@@ -1,6 +1,19 @@
 {
   "permissions": {
-    "deny": ["Bash(git commit:*)", "Bash(git push:*)"]
+    "deny": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(//Users/*/.aws/credentials)",
+      "Read(//Users/*/.ssh/id_*)"
+    ]
+  },
+  "disableSkillShellExecution": true,
+  "statusLine": {
+    "type": "command",
+    "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/statusline.ts"
   },
   "hooks": {
     "PreToolUse": [
@@ -46,6 +59,7 @@
     ],
     "SessionStart": [
       {
+        "matcher": "startup",
         "hooks": [
           {
             "type": "command",
@@ -56,6 +70,7 @@
     ],
     "PreCompact": [
       {
+        "matcher": "manual|auto",
         "hooks": [
           {
             "type": "command",
@@ -80,6 +95,7 @@
     ],
     "Notification": [
       {
+        "matcher": "permission_prompt|idle_prompt",
         "hooks": [
           {
             "type": "command",

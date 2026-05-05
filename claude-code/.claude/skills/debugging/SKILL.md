@@ -1,6 +1,8 @@
 ---
 name: debugging
-description: Systematic debugging with hypothesis generation. Triggers when investigating bugs, error messages, stack traces, or unexpected behaviour, or when the user says "bug", "error", "broken", "не работает", "doesn't work".
+description: Systematic debugging routine with hypothesis generation (≥20 by default), evidence-based filtering, and targeted logging.
+when_to_use: Triggers when investigating bugs, error messages, stack traces, or unexpected behaviour, or when the user says "bug", "error", "broken", "не работает", "doesn't work".
+effort: xhigh
 ---
 
 # Debugging Router

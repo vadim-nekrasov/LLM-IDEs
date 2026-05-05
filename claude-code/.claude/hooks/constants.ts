@@ -1,4 +1,4 @@
-import { basename } from "node:path";
+import { basename, extname } from "node:path";
 
 /** Pattern for React hook file names (useAuth, UseModal, etc.) */
 const HOOK_NAME_PATTERN = /^use[A-Z]/i;
@@ -8,7 +8,10 @@ const HOOKS_DIR_PATTERN = /\/hooks\//;
 
 /** Check if file is a React hook based on name or location */
 export function isReactHookFile(filePath: string): boolean {
-  const name = basename(filePath, filePath.slice(filePath.lastIndexOf(".")));
+  // extname() returns "" for extension-less files; basename() then keeps the
+  // full filename. The previous lastIndexOf-based split silently chopped off
+  // the trailing character on names like "Makefile".
+  const name = basename(filePath, extname(filePath));
   return HOOK_NAME_PATTERN.test(name) || HOOKS_DIR_PATTERN.test(filePath);
 }
 

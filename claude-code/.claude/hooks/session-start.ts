@@ -4,8 +4,21 @@ import { join } from "node:path";
 import type { HookInput } from "./types";
 import { cacheDir } from "./utils";
 
-const input: HookInput = await Bun.stdin.json().catch(() => ({}) as HookInput);
+interface SessionStartInput extends HookInput {
+  source?: "startup" | "resume" | "clear" | "compact";
+}
+
+const input: SessionStartInput = await Bun.stdin
+  .json()
+  .catch(() => ({}) as SessionStartInput);
 const cwd = input.cwd || process.env.CLAUDE_PROJECT_DIR || process.cwd();
+
+// Cache cleanup is meaningful only on a fresh session boot. On `compact` we
+// just wrote a pre-compact snapshot and the transcript cache must stay; on
+// `clear` and `resume` the cleanup is unnecessary churn. The matcher in
+// settings.json restricts the hook to startup, but we keep this guard so the
+// script remains safe if invoked manually or with the matcher relaxed.
+const shouldCleanCache = !input.source || input.source === "startup";
 
 function git(args: string[]): string {
   try {
@@ -23,18 +36,20 @@ function git(args: string[]): string {
 
 // Cache hygiene: drop session-scoped caches older than 7 days.
 // `precompact` is intentionally excluded — those snapshots are archival.
-const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-const now = Date.now();
-for (const sub of ["transcript", "upcontext"]) {
-  const dir = cacheDir(sub);
-  if (!existsSync(dir)) continue;
-  for (const name of readdirSync(dir)) {
-    const p = join(dir, name);
-    try {
-      const s = statSync(p);
-      if (s.isFile() && now - s.mtimeMs > SEVEN_DAYS_MS) unlinkSync(p);
-    } catch {
-      // best-effort
+if (shouldCleanCache) {
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  for (const sub of ["transcript", "upcontext"]) {
+    const dir = cacheDir(sub);
+    if (!existsSync(dir)) continue;
+    for (const name of readdirSync(dir)) {
+      const p = join(dir, name);
+      try {
+        const s = statSync(p);
+        if (s.isFile() && now - s.mtimeMs > SEVEN_DAYS_MS) unlinkSync(p);
+      } catch {
+        // best-effort
+      }
     }
   }
 }

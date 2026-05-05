@@ -20,7 +20,13 @@ export interface HookInput {
   /** UserPromptSubmit only — the user's prompt text. */
   prompt?: string;
   stop_hook_active?: boolean;
-  permission_mode?: "default" | "plan" | "acceptEdits" | "bypassPermissions";
+  permission_mode?:
+    | "default"
+    | "plan"
+    | "acceptEdits"
+    | "auto"
+    | "dontAsk"
+    | "bypassPermissions";
   notification_type?: string;
 }
 

@@ -1,6 +1,7 @@
 ---
 name: writing-rust
-description: Rust patterns — ownership, borrowing, error handling with thiserror, traits, async/await, idiomatic Rust. Triggers on edits to .rs files.
+description: Rust patterns — ownership, borrowing, error handling with thiserror, traits, async/await, iterators, idiomatic Rust.
+when_to_use: Triggers on edits to .rs files.
 paths:
   - "**/*.rs"
 ---

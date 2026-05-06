@@ -33,6 +33,12 @@ on matching files.
 `applying-workflow` is the router entry point: it links to docs-first discovery,
 Three Lenses, and confidence-check patterns. Start there for non-trivial work.
 
+Shell injection inside skills (`` !`cmd` `` and ` ```! ` blocks) is disabled
+project-wide via `disableSkillShellExecution: true` in `settings.json`. To pull
+live data into context, use a hook (`UserPromptSubmit` is the typical place) or
+have the skill invoke the relevant tool explicitly. Bundled and managed skills
+are not affected by this flag.
+
 ## Design Principles
 
 Always evaluate proposed changes through SOLID, GRASP, DRY, KISS, YAGNI. The

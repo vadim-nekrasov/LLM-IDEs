@@ -26,6 +26,17 @@ const ext = getExt(filePath);
 // budget and starve siblings.
 const FORMAT_TIMEOUT_MS = 20_000;
 
+// Bun.spawnSync does not throw on non-zero exit codes (including SIGKILL from
+// `timeout`), so a silent failure looks identical to success unless we inspect
+// exitCode. Surface failures behind CLAUDE_HOOKS_DEBUG so the channel is
+// available without polluting normal sessions.
+const debug = !!process.env.CLAUDE_HOOKS_DEBUG;
+function reportFailure(label: string, exitCode: number | null): void {
+  if (debug && exitCode !== 0) {
+    console.error(`[format] ${label} exited with code ${exitCode}`);
+  }
+}
+
 if (FORMATTABLE_EXTENSIONS.has(ext) && ext !== ".rs") {
   const npmRoot = findRoot(filePath, "package.json");
   if (npmRoot) {
@@ -35,12 +46,13 @@ if (FORMATTABLE_EXTENSIONS.has(ext) && ext !== ".rs") {
       ? [prettierBin, "--write", filePath]
       : ["bunx", "prettier", "--write", filePath];
     try {
-      Bun.spawnSync(cmd, {
+      const r = Bun.spawnSync(cmd, {
         cwd: npmRoot,
         stdout: "ignore",
         stderr: "ignore",
         timeout: FORMAT_TIMEOUT_MS,
       });
+      reportFailure("prettier", r.exitCode);
     } catch {
       // best-effort
     }
@@ -52,12 +64,13 @@ if (ext === ".rs") {
   if (cargoRoot) {
     try {
       // cargo fmt formats the whole package using the edition declared in Cargo.toml.
-      Bun.spawnSync(["cargo", "fmt"], {
+      const r = Bun.spawnSync(["cargo", "fmt"], {
         cwd: cargoRoot,
         stdout: "ignore",
         stderr: "ignore",
         timeout: FORMAT_TIMEOUT_MS,
       });
+      reportFailure("cargo fmt", r.exitCode);
     } catch {
       // best-effort
     }

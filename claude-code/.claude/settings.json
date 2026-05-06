@@ -28,7 +28,6 @@
       "Bash(sudo:*)",
       "Bash(curl:*)",
       "Bash(wget:*)",
-      "Bash(eval:*)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)",
@@ -37,7 +36,10 @@
     ]
   },
   "effortLevel": "high",
-  "includeCoAuthoredBy": false,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "disableSkillShellExecution": true,
   "statusLine": {
     "type": "command",
@@ -91,7 +93,7 @@
     ],
     "SessionStart": [
       {
-        "matcher": "startup|resume|clear",
+        "matcher": "startup|resume|clear|compact",
         "hooks": [
           {
             "type": "command",
@@ -141,6 +143,7 @@
     ],
     "Notification": [
       {
+        "matcher": "permission_prompt|idle_prompt",
         "hooks": [
           {
             "type": "command",

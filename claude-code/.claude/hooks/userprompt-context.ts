@@ -2,7 +2,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { HookInput } from "./types";
-import { cacheDir } from "./utils";
+import { cacheDir, sanitizeSessionId } from "./utils";
 
 const input: HookInput = await Bun.stdin.json().catch(() => ({}) as HookInput);
 const cwd = input.cwd || process.env.CLAUDE_PROJECT_DIR || process.cwd();
@@ -48,7 +48,7 @@ const message = `Git: \`${branch}\`${aheadBehind} • Dirty files: ${dirty}`;
 // same line. Without this, slash commands (e.g. /effort) and the following
 // real prompt fire the hook twice with identical git state, and the model's
 // context shows two duplicate `Git: ...` advisories.
-const safeId = (input.session_id || "session").replace(/[^\w.-]+/g, "_");
+const safeId = sanitizeSessionId(input.session_id, "session");
 const cacheFile = join(cacheDir("upcontext"), `${safeId}.txt`);
 let last = "";
 try {

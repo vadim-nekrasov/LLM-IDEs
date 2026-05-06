@@ -2,7 +2,7 @@
 import { existsSync, unlinkSync } from "node:fs";
 import { join } from "node:path";
 import type { HookInput } from "./types";
-import { cacheDir } from "./utils";
+import { cacheDir, sanitizeSessionId } from "./utils";
 
 interface SessionEndInput extends HookInput {
   reason?: "exit" | "logout" | "prompt_input_exit" | "other";
@@ -16,7 +16,7 @@ const input: SessionEndInput = await Bun.stdin
 // session-start.ts. precompact snapshots are intentionally archival and stay.
 const sessionId = input.session_id;
 if (sessionId) {
-  const safeId = sessionId.replace(/[^\w.-]+/g, "_");
+  const safeId = sanitizeSessionId(sessionId);
   for (const sub of ["transcript", "upcontext"]) {
     const file = join(cacheDir(sub), `${safeId}.json`);
     if (existsSync(file)) {

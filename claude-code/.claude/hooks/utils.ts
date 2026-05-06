@@ -58,3 +58,16 @@ export function cacheDir(sub: string): string {
   ensureDir(dir);
   return dir;
 }
+
+/**
+ * Sanitize a session-id-like token for use as a filename.
+ * Replaces non-[\w.-] runs and any ".." sequence with "_" — the latter
+ * blocks path traversal even if Claude Code ever feeds an attacker-controlled
+ * id into a hook (today the runtime always supplies a UUID-shaped value).
+ */
+export function sanitizeSessionId(
+  id: string | undefined,
+  fallback = "_unknown",
+): string {
+  return (id || fallback).replace(/[^\w.-]+|\.{2,}/g, "_");
+}

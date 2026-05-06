@@ -3,12 +3,12 @@ import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { HookInput } from "./types";
 import { parseTranscript } from "./transcript";
-import { cacheDir } from "./utils";
+import { cacheDir, sanitizeSessionId } from "./utils";
 
 const input: HookInput = await Bun.stdin.json();
 const data = await parseTranscript(input.transcript_path, input.session_id);
 
-const safeId = (input.session_id || "session").replace(/[^\w.-]+/g, "_");
+const safeId = sanitizeSessionId(input.session_id, "session");
 const path = join(cacheDir("precompact"), `${safeId}.md`);
 
 const lines = [

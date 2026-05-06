@@ -19,7 +19,7 @@ import {
   FORMATTABLE_EXTENSIONS,
   SKILL_NAMES,
 } from "./constants";
-import { cacheDir, getExt } from "./utils";
+import { cacheDir, getExt, sanitizeSessionId } from "./utils";
 
 interface Cached {
   offset: number;
@@ -54,9 +54,10 @@ function emptyData(): TranscriptData {
 }
 
 function cachePath(transcriptPath: string, sessionId?: string): string {
-  // Sanitize session-id-like token for use as a filename.
-  const id = (sessionId || transcriptPath).replace(/[^\w.-]+/g, "_");
-  return join(cacheDir("transcript"), `${id}.json`);
+  return join(
+    cacheDir("transcript"),
+    `${sanitizeSessionId(sessionId, transcriptPath)}.json`,
+  );
 }
 
 function loadCache(path: string): Cached | null {

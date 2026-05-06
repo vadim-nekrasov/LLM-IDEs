@@ -18,10 +18,11 @@ if (data.hasCodeEdits && !data.hasApplyingWorkflow) {
 
 // Race-condition mitigation: if the final-checking Skill call is the very last
 // transcript entry, the JSONL line may not be flushed to disk yet when this
-// Stop hook fires. A brief retry avoids a false-positive block. Keep the
-// delay small — Stop hooks should not noticeably stall session exit.
-if (!data.hasFinalCheck) {
-  await Bun.sleep(200);
+// Stop hook fires. Two retries (200 ms then 500 ms) cover SSDs and slower
+// network/iCloud-synced filesystems without stalling session exit perceptibly.
+for (const delay of [200, 500]) {
+  if (data.hasFinalCheck) break;
+  await Bun.sleep(delay);
   data = await parseTranscript(input.transcript_path, input.session_id);
 }
 

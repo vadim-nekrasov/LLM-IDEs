@@ -8,23 +8,29 @@ import {
   SKILL_NAMES,
   isReactHookFile,
 } from "./constants";
-import {
-  findDocsUp,
-  getExt,
-  isNodeModulesPath,
-  isTargetPath,
-} from "./utils";
+import { findDocsUp, getExt, isNodeModulesPath, isTargetPath } from "./utils";
 
 const input: HookInput = await Bun.stdin.json();
 const filePath = input.tool_input?.file_path ?? "";
 
+function deny(reason: string): never {
+  console.log(
+    JSON.stringify({
+      hookSpecificOutput: {
+        hookEventName: "PreToolUse",
+        permissionDecision: "deny",
+        permissionDecisionReason: reason,
+      },
+    }),
+  );
+  process.exit(0);
+}
+
 if (isNodeModulesPath(filePath)) {
-  console.error("BLOCKED: Cannot edit files in node_modules/.");
-  process.exit(2);
+  deny("Cannot edit files in node_modules/.");
 }
 if (isTargetPath(filePath)) {
-  console.error("BLOCKED: Cannot edit files in target/ (Rust build dir).");
-  process.exit(2);
+  deny("Cannot edit files in target/ (Rust build dir).");
 }
 
 if (input.permission_mode === "plan") process.exit(0);

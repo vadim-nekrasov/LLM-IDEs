@@ -77,9 +77,32 @@ which skill is invoked.
 
 - Don't edit `node_modules/`, `target/`, or anything inside `.claude/` unless
   the task explicitly requires it (this directory is the shared config repo).
-- Don't run `git commit` or `git push` — the user handles version control.
+- Version control is the user's job — `git commit` / `git push` are blocked
+  by deny rules in `~/.claude/settings.json`, so don't try to bypass.
 - Don't modify build/lint/format manifests (`package.json`, `tsconfig.json`,
   `eslint.config.*`, `Cargo.toml`, etc.) unless required by the task.
+
+## Permission Modes
+
+Default mode is `default`: Read / Grep / Glob and read-only Bash
+(`ls`, `find`, `git status`, etc.) are auto-approved; Edit / Write and
+non-read-only Bash require an explicit prompt. The user toggles modes via
+`Shift+Tab` in the CLI:
+
+- `acceptEdits` — auto-approve file edits + safe filesystem commands
+  (`mkdir`, `mv`, `cp`, `sed`) inside the working directory; other Bash
+  still prompts. Use this for active development.
+- `plan` — read-only exploration; writes are blocked. Equivalent to the
+  `/plan` prefix or starting with `--permission-mode plan`.
+- `auto` — no prompts, with a background classifier as a safety net (Max /
+  Team / Enterprise plans only).
+- `bypassPermissions` — explicitly disabled by `disableBypassPermissionsMode:
+  "disable"`.
+
+Settings live in `~/.claude/settings.json` (user) and `<project>/.claude/
+settings.json` (project, plus `settings.local.json` for personal overrides).
+MCP server configuration lives in `~/.claude.json` (global) or `.mcp.json`
+(project), not in `settings.json`.
 
 ## Plugin Hooks & Behaviors
 
@@ -103,6 +126,9 @@ which skill is invoked.
 - **`code-modernization` is disabled globally** — it targets COBOL / Java /
   .NET legacy and isn't relevant to typical work here. Re-enable in
   `~/.claude/settings.json → enabledPlugins` if a legacy project shows up.
+- **Emergency hook kill-switch**: if `security-guidance` or any other hook
+  blocks a legitimate edit chain, set `"disableAllHooks": true` in
+  `settings.json` to silence every hook until restart. Re-enable when done.
 
 ## Review Hierarchy
 

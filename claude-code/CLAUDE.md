@@ -23,21 +23,37 @@ project specifics.
    trends. Treat the output critically; don't act on a single citation.
 3. **WebSearch** — fallback for general queries.
 
-## Skills
+## Skills & Plugin Commands
 
-Skills load focused patterns into context — they aren't gates and shouldn't be
-invoked for trivial edits. Claude Code surfaces relevant skills by their
-frontmatter (`description`, `paths`); language and review skills auto-trigger
-on matching files.
+Skills are context routers (`writing-*`, `applying-workflow`, `debugging`,
+`final-checking`, `reviewing-*`, `claude-md-improver`, `frontend-design`).
+They aren't gates; Claude Code surfaces them by frontmatter (`description`,
+`paths`). Language and review skills auto-trigger on matching files.
 
-`applying-workflow` is the router entry point: it links to docs-first discovery,
-Three Lenses, and confidence-check patterns. Start there for non-trivial work.
+`applying-workflow` is the router entry point for non-trivial edits
+(docs-first discovery → Three Lenses → Context7 verification →
+final-checking).
+
+Plugin commands (installed via `claude-plugins-official`) cover targeted
+scenarios — pick one when its scope matches:
+
+| Command | When to use |
+|---|---|
+| `/feature-dev:feature-dev` | New feature touching 3+ files and needing architectural decisions. Heavier than `applying-workflow`: 7 phases with code-explorer / code-architect / code-reviewer agents. |
+| `/pr-review-toolkit:review-pr` | Before committing a substantial change — 6 specialised agents (comments / tests / errors / types / code / simplify). |
+| `/code-review:code-review <PR#>` | Post a review comment on a GitHub PR via `gh pr comment` (requires `gh` CLI and PR access). |
+| `/revise-claude-md` | After a session, capture learnings into the project's `CLAUDE.md`. |
+| `claude-md-improver` skill | Full audit and update of `CLAUDE.md` — invoke manually for "clean up CLAUDE.md" requests. |
+| `frontend-design` skill | Build a distinctive UI from scratch (dashboard, landing, new page). For edits in an existing React codebase prefer `writing-react`. |
+| `/hookify:hookify [description]` | Generate a hook from a session pattern or explicit description. `/hookify:list`, `/hookify:configure` manage rules. |
 
 Shell injection inside skills (`` !`cmd` `` and ` ```! ` blocks) is disabled
-project-wide via `disableSkillShellExecution: true` in `settings.json`. To pull
-live data into context, use a hook (`UserPromptSubmit` is the typical place) or
-have the skill invoke the relevant tool explicitly. Bundled and managed skills
-are not affected by this flag.
+project-wide via `disableSkillShellExecution: true` in `settings.json`. This
+only affects user markdown skills; bundled and plugin skills (including
+`frontend-design`, `claude-md-improver`) call tools through normal tool
+invocations and are unaffected. To pull live data into context, use a hook
+(`UserPromptSubmit` is the typical place) or have the skill invoke the
+relevant tool explicitly.
 
 ## Design Principles
 
@@ -65,11 +81,48 @@ which skill is invoked.
 - Don't modify build/lint/format manifests (`package.json`, `tsconfig.json`,
   `eslint.config.*`, `Cargo.toml`, etc.) unless required by the task.
 
+## Plugin Hooks & Behaviors
+
+- **`security-guidance`** registers a `PreToolUse` hook on
+  `Edit|Write|MultiEdit` and **blocks** the edit (exit 2) the first time a
+  file matches one of its dangerous-pattern substrings. Categories: dynamic
+  JS code execution, child-process / system invocations, unsafe DOM
+  operations (innerHTML setter, React dangerously-set-html, document write),
+  Python serialization, and any change to `.github/workflows/*.yml`. Full
+  substring list lives in
+  `~/.claude/plugins/cache/claude-plugins-official/security-guidance/unknown/hooks/security_reminder_hook.py`
+  (`SECURITY_PATTERNS`). When the match is legitimate (a test for unsafe
+  behavior, security documentation, this very file), set
+  `ENABLE_SECURITY_REMINDER=0` in the env. Per-session warning state lives
+  in `~/.claude/security_warnings_state_<session>.json` — shown once per
+  `(file, rule)` pair, then suppressed.
+- **`hookify`** registers hooks on `PreToolUse / PostToolUse / Stop /
+  UserPromptSubmit` and reads rules from `.claude/hookify.*.local.md`. With
+  no rules configured the hooks no-op (small but non-zero latency). Manage
+  rules through `/hookify:hookify`, `/hookify:list`, `/hookify:configure`.
+- **`code-modernization` is disabled globally** — it targets COBOL / Java /
+  .NET legacy and isn't relevant to typical work here. Re-enable in
+  `~/.claude/settings.json → enabledPlugins` if a legacy project shows up.
+
+## Review Hierarchy
+
+| Scenario | Tool |
+|---|---|
+| After any code edit (typecheck + lint + Three Lenses) | `final-checking` skill (Stop hook reminds) |
+| Before committing a substantial change | `/pr-review-toolkit:review-pr` (6 agents) |
+| Post a review comment on an existing GitHub PR | `/code-review:code-review <PR#>` |
+| Hunt silent failures / wrong catch blocks specifically | `pr-review-toolkit:silent-failure-hunter` agent |
+
 ## After Code Edits
 
 Invoke the `final-checking` skill before stopping — it covers typecheck, lint,
 the Three Lenses pass, and a structured checklist. The Stop hook reminds you
 once if it's missing; on a second Stop it lets the session end (anti-loop).
+
+For substantial changes (a new feature, a refactor, > 3 files touched) also
+run `/pr-review-toolkit:review-pr` — it covers comments / tests / errors /
+types / code / simplify through specialised agents, complementing the
+lighter `final-checking` pass.
 
 The `session-summary` hook prints docs read, doc-update verdict, and skills
 used automatically — no need to recreate that block in chat.

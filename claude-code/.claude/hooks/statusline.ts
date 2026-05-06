@@ -9,6 +9,12 @@ interface StatusInput {
   workspace?: { current_dir?: string };
   model?: { display_name?: string };
   output_style?: { name?: string };
+  effort?: { level?: string };
+  context_window?: { used_percentage?: number | null };
+  rate_limits?: {
+    five_hour?: { used_percentage?: number | null };
+    seven_day?: { used_percentage?: number | null };
+  };
 }
 
 const input: StatusInput = await Bun.stdin
@@ -45,10 +51,33 @@ const dirty = branch
       .filter((l) => l.trim().length > 0).length
   : 0;
 
-const parts = [
+const line1 = [
   `🤖 ${model}`,
   `📁 ${homeify(cwd)}`,
   branch ? `⎇ ${branch}${dirty > 0 ? ` *${dirty}` : ""}` : "",
-].filter(Boolean);
+]
+  .filter(Boolean)
+  .join("  ");
 
-console.log(parts.join("  "));
+// Round to integer; null/undefined → null (skip the segment).
+function pct(v: number | null | undefined): number | null {
+  return typeof v === "number" && Number.isFinite(v) ? Math.round(v) : null;
+}
+
+const effort = input.effort?.level;
+const ctx = pct(input.context_window?.used_percentage);
+const fiveH = pct(input.rate_limits?.five_hour?.used_percentage);
+const sevenD = pct(input.rate_limits?.seven_day?.used_percentage);
+
+const line2Parts: string[] = [];
+if (effort) line2Parts.push(`🧠 ${effort}`);
+if (ctx !== null) line2Parts.push(`⏷ ${ctx}%`);
+if (fiveH !== null || sevenD !== null) {
+  const limits: string[] = [];
+  if (fiveH !== null) limits.push(`5h ${fiveH}%`);
+  if (sevenD !== null) limits.push(`7d ${sevenD}%`);
+  line2Parts.push(`📊 ${limits.join(" · ")}`);
+}
+
+console.log(line1);
+if (line2Parts.length > 0) console.log(line2Parts.join("  "));

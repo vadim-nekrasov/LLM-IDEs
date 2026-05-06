@@ -65,6 +65,16 @@
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format.ts"
           }
         ]
+      },
+      {
+        "matcher": "mcp__perplexity__|^Agent$",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 5,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/critical-eval-reminder.ts"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [

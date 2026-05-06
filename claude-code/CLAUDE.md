@@ -23,6 +23,14 @@ project specifics.
    trends. Treat the output critically; don't act on a single citation.
 3. **WebSearch** — fallback for general queries.
 
+**Auto-injected reminders.** Critical-evaluation caveats for `mcp__perplexity__*`
+outputs and the `claude-code-guide` subagent are appended automatically via the
+`critical-eval-reminder.ts` PostToolUse hook — no need to repeat them in
+prompts. claude-code-guide answers from pre-trained data and frequently lags
+current Claude Code releases (settings.json, hooks, skills, plugins, MCP,
+deprecation), so verify any factual claim against `code.claude.com/docs` or
+the plugin source before acting.
+
 ## Skills & Plugin Commands
 
 Skills are context routers (`writing-*`, `applying-workflow`, `debugging`,

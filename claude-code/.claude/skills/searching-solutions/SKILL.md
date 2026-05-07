@@ -109,14 +109,27 @@ Phases 1-3 are internal — do NOT output all variants to user.
 - Brief format (1-2 sentences per variant)
 - Filter out strict constraint violations
 
-#### External Inspiration (Optional)
-Before brainstorming, consider using **Perplexity MCP** to research existing solutions.
-See **Research Hierarchy** in CLAUDE.md.
+#### External Inspiration (Perplexity MCP)
+
+Before brainstorming, run a single Perplexity call **iff any one trigger fires AND no anti-trigger fires**. Decide from the task description alone — do not explore the codebase to decide.
+
+**Triggers (any one is sufficient):**
+- The prompt names ≥ 2 established techniques to compare (e.g. "CRDT vs OT", "token-bucket vs GCRA", "saga vs 2PC") — call `mcp__perplexity__reason` with the comparison.
+- The task maps to a textbook category with a known solution space (consensus, rate limiting, collab sync, caching strategy, migration pattern, retry/backoff, queueing, auth flow, schema evolution) and the prompt does NOT already enumerate the candidate set — call `mcp__perplexity__search` for "state-of-the-art approaches to X (2024-2026)".
+- Stakes are high (security, data integrity, correctness under concurrency, perf SLO) AND the decision is dominated by external prior art rather than codebase shape — call `mcp__perplexity__reason`.
+
+**Anti-triggers (any one skips Perplexity):**
+- Decision is bounded by in-codebase conventions / existing modules — first-principles + repo patterns suffice.
+- Question is "how do I call this library API?" — route to Context7 (`mcp__context7__resolve-library-id` → `query-docs`) instead, per Research Hierarchy.
+- Task is trivial wiring, CRUD, UI layout, or a refactor with all needed info already in the prompt.
+
+**Budget:** at most one Perplexity call in Phase 1; treat output critically (single citation ≠ truth) and feed findings into the brainstorm as additional candidates, not as the answer.
 
 ### Phase 2: Filter Promising Candidates
 - Select top `{num_promising}` variants
 - Evaluate against Search Criteria
 - **Late-Breaking Heuristic**: If ≥ 40 % of the top-`{num_promising}` candidates fall in the last third of the brainstorm list (ranked by Search Criteria), generate 5–10 MORE variants — the early ideas were anchoring you.
+  - **Always report the verdict explicitly in `Search Stats`** as `Late-Breaking Triggered: yes` (with count of extra variants generated and which positions in the original list triggered it) or `Late-Breaking Triggered: no` (with the actual fraction observed, e.g. "no — top-5 spread across positions 2/3/5/7/9, last-third would be ≥10/12"). This is non-negotiable — the verdict is part of the deliverable.
 
 ### Phase 3: Recursive Tree Exploration
 - Expand promising candidates into decision tree
@@ -145,10 +158,15 @@ See **Research Hierarchy** in CLAUDE.md.
 **Extension Points**: [1-2 bullets]
 **Blueprint**: [files to create/edit OR concrete next steps]
 
+## Critical Files for Implementation
+- [absolute/path/to/file.ts] — [role this file plays in the solution / what changes here]
+- [absolute/path/to/other.ts] — [...]
+
 ## Discarded Branches (3-5 nearest contenders)
 - [name] — Pruned at depth [X] because: [concrete reason — violated constraint, dominated by another, scaling concern, etc.]
 
 ## Search Stats
 - Tree Depth Reached: [X]
 - Total Successful Candidates Found: [Y]
+- Late-Breaking Triggered: [yes — generated +N extra variants because top-K positions {a, b, c} were in last third / no — top-K spread observed: {fractions}]
 ```

@@ -134,18 +134,43 @@
             "type": "command",
             "timeout": 5,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-summary.ts"
+          },
+          {
+            "type": "command",
+            "timeout": 3,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Turn complete\""
           }
         ]
       }
     ],
     "Notification": [
       {
-        "matcher": "permission_prompt|idle_prompt",
+        "matcher": "permission_prompt",
         "hooks": [
           {
             "type": "command",
             "timeout": 3,
-            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts"
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Permission requested\""
+          }
+        ]
+      },
+      {
+        "matcher": "idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 3,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Awaiting your input (idle)\""
+          }
+        ]
+      },
+      {
+        "matcher": "elicitation_dialog",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 3,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"MCP server requests input\""
           }
         ]
       }

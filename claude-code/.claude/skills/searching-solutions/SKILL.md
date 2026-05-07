@@ -2,10 +2,11 @@
 name: searching-solutions
 description: Tree-search methodology for finding optimal technical solutions through structured brainstorming, filtering, and recursive exploration.
 when_to_use: Triggers when the user asks for "tree search", "structured brainstorming", "древовидный поиск", "поиск решений". Almost always invoked manually — keep `disable-model-invocation: true` so Claude does not run tree search on its own.
+argument-hint: "[max_abstract_variants=N] [num_promising=K] [max_depth=D] [max_branching=B] [max_succeed=M] <task description>"
 disable-model-invocation: true
 effort: high
 context: fork
-agent: general-purpose
+agent: Plan
 ---
 
 # Solution Tree Search
@@ -15,6 +16,8 @@ Structured tree-based search methodology for identifying optimal technical solut
 ## Contents
 
 - [Mindset](#mindset)
+- [When to Use vs. Neighbouring Workflows](#when-to-use-vs-neighbouring-workflows)
+- [Forked Context — Important](#forked-context--important)
 - [Configuration (Defaults)](#configuration-defaults)
 - [Constraints & Criteria](#constraints--criteria)
 - [Execution (Internal Processing)](#execution-internal-processing)
@@ -26,6 +29,28 @@ Structured tree-based search methodology for identifying optimal technical solut
 - **Speculation**: Allowed, but flag it clearly ("Hypothetically...", "I suspect...")
 - **Authority**: Value good arguments over authorities. Logic is everything.
 - **Justify Selection**: Explain why chosen option wins over alternatives.
+
+---
+
+## When to Use vs. Neighbouring Workflows
+
+Pick this skill only when the task is "find the right approach for one decision point". For other shapes, prefer the matching workflow:
+
+| Task shape | Use this instead |
+|---|---|
+| Best architectural / algorithmic approach for a single decision | **`/searching-solutions`** (this skill) |
+| Full feature from requirements to merged code | `/feature-dev:feature-dev` |
+| Diagnosing a bug — generate hypotheses, filter by evidence | `debugging` skill |
+| Verifying a finished change (lint, types, Three Lenses) | `final-checking` skill |
+| Routing a non-trivial edit through docs-discovery → Three Lenses → Context7 | `applying-workflow` skill |
+
+If the task is really "design a new feature end-to-end", let `/feature-dev:feature-dev` orchestrate; this skill can be invoked from inside its architecture phase.
+
+---
+
+## Forked Context — Important
+
+This skill runs with `context: fork` and the read-only `Plan` agent. The forked agent has **no access to the conversation history**. Every constraint, stack detail, or prior discussion the search must honour MUST be in the prompt arguments. If relevant context was discussed earlier in the chat, restate it explicitly when invoking.
 
 ---
 
@@ -75,6 +100,8 @@ Solutions violating these are **immediately discarded**.
 
 ## Execution (Internal Processing)
 
+Use **ultrathink** for the brainstorm and pruning phases — depth of reasoning matters more than breadth here.
+
 Phases 1-3 are internal — do NOT output all variants to user.
 
 ### Phase 1: Abstract Brainstorming
@@ -89,7 +116,7 @@ See **Research Hierarchy** in CLAUDE.md.
 ### Phase 2: Filter Promising Candidates
 - Select top `{num_promising}` variants
 - Evaluate against Search Criteria
-- **Late-Breaking Heuristic**: If best ideas appear at END of list (last 3-5), generate 5-10 MORE
+- **Late-Breaking Heuristic**: If ≥ 40 % of the top-`{num_promising}` candidates fall in the last third of the brainstorm list (ranked by Search Criteria), generate 5–10 MORE variants — the early ideas were anchoring you.
 
 ### Phase 3: Recursive Tree Exploration
 - Expand promising candidates into decision tree
@@ -117,6 +144,9 @@ See **Research Hierarchy** in CLAUDE.md.
 **Data Flow**: [2-3 bullets]
 **Extension Points**: [1-2 bullets]
 **Blueprint**: [files to create/edit OR concrete next steps]
+
+## Discarded Branches (3-5 nearest contenders)
+- [name] — Pruned at depth [X] because: [concrete reason — violated constraint, dominated by another, scaling concern, etc.]
 
 ## Search Stats
 - Tree Depth Reached: [X]

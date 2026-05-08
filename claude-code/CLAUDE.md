@@ -89,6 +89,11 @@ which skill is invoked.
   by deny rules in `~/.claude/settings.json`, so don't try to bypass.
 - Don't modify build/lint/format manifests (`package.json`, `tsconfig.json`,
   `eslint.config.*`, `Cargo.toml`, etc.) unless required by the task.
+- For linting, invoke `npm run lint:js` (preferred) or `npm run lint` — raw
+  `npx`/`bunx`/`pnpm dlx`/`yarn dlx eslint` is blocked at the harness level
+  via deny rules in `settings.json` (the `package.json` script is the
+  audited entry point; raw `eslint` accepts arbitrary `--rulesdir`/`--config`
+  paths that execute JS).
 
 ## Permission Modes
 

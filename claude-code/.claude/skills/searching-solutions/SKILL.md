@@ -1,9 +1,8 @@
 ---
 name: searching-solutions
 description: Tree-search methodology for finding optimal technical solutions through structured brainstorming, filtering, and recursive exploration.
-when_to_use: Triggers when the user asks for "tree search", "structured brainstorming", "древовидный поиск", "поиск решений". Almost always invoked manually — keep `disable-model-invocation: true` so Claude does not run tree search on its own.
+when_to_use: Manual-only. Invoke ONLY when the user explicitly types `/searching-solutions` or asks for "tree search" / "structured brainstorming" / "древовидный поиск" / "поиск решений". Never auto-trigger from generic feature or bug prompts — this skill is expensive and must run on explicit request.
 argument-hint: "[max_abstract_variants=N] [num_promising=K] [max_depth=D] [max_branching=B] [max_succeed=M] <task description>"
-disable-model-invocation: true
 effort: high
 context: fork
 agent: Plan

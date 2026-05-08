@@ -9,6 +9,10 @@ paths:
 
 # TypeScript Code Style
 
+> For general JS/TS style (functional iterators, Set operations, immutable
+> array methods, Promise patterns) see `writing-ecmascript` — it now applies
+> to `.ts`/`.tsx` as well.
+
 ## Types
 
 - `any` → use concrete types or generics

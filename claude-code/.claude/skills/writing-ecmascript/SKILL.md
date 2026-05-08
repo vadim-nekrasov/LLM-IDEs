@@ -1,12 +1,14 @@
 ---
 name: writing-ecmascript
-description: Modern ECMAScript (ES2025) patterns and idioms.
-when_to_use: Triggers on edits to .js/.mjs/.cjs files or when writing async/iterator code. Covers Iterator Helpers, Set operations, Promise.withResolvers/try, immutable array methods, Object.groupBy, structuredClone.
+description: Modern ECMAScript (ES2025) patterns and idioms — applies to JavaScript and TypeScript.
+when_to_use: Triggers on edits to .js/.mjs/.cjs/.jsx/.ts/.tsx files or when writing async/iterator code. Covers Iterator Helpers, Set operations, Promise.withResolvers/try, immutable array methods, Object.groupBy, structuredClone.
 paths:
   - "**/*.js"
   - "**/*.mjs"
   - "**/*.cjs"
   - "**/*.jsx"
+  - "**/*.ts"
+  - "**/*.tsx"
 ---
 
 # ECMAScript Code Style (ES2025)

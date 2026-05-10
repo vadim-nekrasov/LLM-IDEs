@@ -9,11 +9,9 @@ paths:
 
 # TypeScript Code Style
 
-> **Lint hints (this project).** Patterns below are flagged by ESLint as warnings (never block CI). When editing a file you may see existing warnings from legacy code — **ignore them**, don't refactor them. Be responsible only for your own fresh diff.
+> **Working with linters in legacy codebases.** When editing a file you may see existing warnings from older code — **ignore them**, don't refactor them. Be responsible only for your own fresh diff.
 >
-> **Never run `eslint --fix .` or `eslint --fix src/`** — it would rewrite legacy files. Editor per-file autofix is fine.
->
-> Lint-flagged rule IDs (project-relevant subset): `@typescript-eslint/no-explicit-any`, `@typescript-eslint/no-non-null-assertion`, `@typescript-eslint/no-unnecessary-type-assertion`, `@typescript-eslint/no-floating-promises`, `@typescript-eslint/prefer-nullish-coalescing`, `@typescript-eslint/prefer-optional-chain`, `@typescript-eslint/prefer-as-const`, `@typescript-eslint/consistent-type-imports`, plus a project-specific enum ban via `no-restricted-syntax` on `TSEnumDeclaration`.
+> **Never run mass autofix** (`eslint --fix .` or `eslint --fix src/`) — it can rewrite many files at once and introduce regressions. Editor per-file autofix on the file you are currently editing is fine.
 
 > For general JS/TS style (functional iterators, Set operations, immutable
 > array methods, Promise patterns) see `writing-ecmascript` — it now applies
@@ -21,10 +19,10 @@ paths:
 
 ## Types
 
-- `any` → use concrete types or generics  `[lint: @typescript-eslint/no-explicit-any]`
+- `any` → use concrete types or generics
 - `unknown` → use type guards for narrowing
-- `enum` → prefer `const` objects or union types  `[lint: no-restricted-syntax (TSEnumDeclaration)]`
-- Avoid type assertions — use type guards instead of `as` or non-null assertion (!) operator  `[lint: @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-assertion]`
+- `enum` → prefer `const` objects or union types
+- Avoid type assertions — use type guards instead of `as` or non-null assertion (!) operator
 - Use `import type` for type-only imports
 - Use utility types: `Partial`, `Pick`, `Omit`, `Record`, `Readonly`
 - Infer interfaces from Zod schemas when possible
@@ -90,18 +88,11 @@ function process<T>(data: T) { ... } // T is too broad
 // ✅ Good
 function process<T extends BaseData>(data: T) { ... }
 
-// ❌ Bad - unnecessary type assertion  [lint: @typescript-eslint/no-unnecessary-type-assertion]
+// ❌ Bad - unnecessary type assertion
 const user = data as User;
 
 // ✅ Good - type guard
 if (isUser(data)) {
   // data is User here
 }
-
-// ❌ Bad - enum  [lint: no-restricted-syntax (TSEnumDeclaration)]
-enum Status { Active, Inactive }
-
-// ✅ Good - const object
-const Status = { Active: 'active', Inactive: 'inactive' } as const;
-type Status = (typeof Status)[keyof typeof Status];
 ```

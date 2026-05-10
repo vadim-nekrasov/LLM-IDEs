@@ -13,11 +13,9 @@ paths:
 
 # ECMAScript Code Style (ES2025)
 
-> **Lint hints (this project).** Several patterns below are flagged by ESLint as warnings. When editing a file you may see existing warnings from legacy code — **ignore them**, do not refactor them. Be responsible only for your own fresh diff: don't introduce new violations of the rules listed below.
+> **Working with linters in legacy codebases.** When editing a file you may see existing warnings from older code — **ignore them**, do not refactor them. Be responsible only for your own fresh diff: don't introduce new violations.
 >
-> **Never run `eslint --fix .` or `eslint --fix src/`** — it would rewrite hundreds of legacy files. Editor per-file autofix on the file you are editing is fine.
->
-> Lint-flagged rule IDs: `unicorn/prefer-structured-clone`, `@typescript-eslint/prefer-nullish-coalescing`, `@typescript-eslint/prefer-optional-chain`, `@typescript-eslint/no-floating-promises`.
+> **Never run mass autofix** (`eslint --fix .` or `eslint --fix src/`) — it can rewrite hundreds of files in one go and introduce regressions. Editor per-file autofix on the file you are currently editing is fine.
 
 Use modern language features where it improves readability and reduces boilerplate.
 
@@ -150,15 +148,6 @@ const pageItems = arr.slice(page * size, page * size + size);
 
 // ❌ Bad - O(n²) instead of Set
 const common = arrA.filter(x => arrB.includes(x));
-
-// ❌ Bad - mutates original
-nums.sort((a, b) => a - b);
-
-// ❌ Bad - breaks Date/Map/cycles  [lint: unicorn/prefer-structured-clone]
-const copy = JSON.parse(JSON.stringify(obj));
-
-// ❌ Bad - 0 and '' treated as empty  [lint: @typescript-eslint/prefer-nullish-coalescing]
-const limit = opts.limit || 20;
 
 // ❌ Bad - mixing logic and side effects
 connected &&= ping();

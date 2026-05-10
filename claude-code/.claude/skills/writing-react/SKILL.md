@@ -9,9 +9,9 @@ paths:
 
 # React Code Style
 
-> **Lint hints (this project).** Hooks rules and a11y basics are flagged by ESLint via `eslint-plugin-react-hooks` and `eslint-plugin-jsx-a11y`. `react-hooks/exhaustive-deps` is heuristic — has known false positives on stable refs/derived values; read warnings critically, do NOT blindly suppress. When editing a file you may see existing warnings from legacy code — ignore them, don't refactor them. Be responsible only for your own fresh diff.
+> **Working with linters in legacy codebases.** When editing a file you may see existing warnings from older code — ignore them, don't refactor them. Be responsible only for your own fresh diff. Some hooks/a11y warnings are heuristic and have known false positives on stable refs / derived values — read warnings critically, do NOT blindly suppress.
 >
-> **Never run `eslint --fix .` or `eslint --fix src/`** — `react/jsx-no-leaked-render` autofix has a known type-mismatch trap (`null` vs `undefined`) that breaks `boolean | undefined` props. Editor per-file autofix is fine.
+> **Never run mass autofix** (`eslint --fix .` or `eslint --fix src/`) — autofixers can have type-mismatch traps (e.g. `null` vs `undefined` in JSX boolean short-circuits) that break `boolean | undefined` props. Editor per-file autofix on the file you are currently editing is fine.
 
 ## Component Patterns
 ```tsx
@@ -74,12 +74,6 @@ useEffect(() => {
 const filteredItems = items.filter(x => x.active);
 // or
 const filteredItems = useMemo(() => items.filter(x => x.active), [items]);
-
-// ❌ Bad - renders 0 instead of nothing  [lint: react/jsx-no-leaked-render — fix manually, NOT via --fix]
-{some.length && <JSX />}
-
-// ✅ Good
-{some.length > 0 && <JSX />}
 
 // ❌ Bad - using index as key
 {items.map((item, i) => <Item key={i} />)}

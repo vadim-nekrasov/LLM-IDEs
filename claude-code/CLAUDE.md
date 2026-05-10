@@ -19,9 +19,14 @@ project specifics.
 
 1. **Context7 MCP** — third-party library APIs (zero-hallucination policy: never
    guess signatures; verify with the installed version).
-2. **Perplexity MCP** — architecture, best practices, comparisons, current
+2. **Official documentation** — first-party / primary source when Context7
+   lacks the library, the installed version is newer than the index, or the
+   topic is owned by the vendor itself (e.g. `code.claude.com/docs`,
+   `react.dev`, vendor SDK reference). Same zero-hallucination rule: read the
+   docs page for the version you're targeting.
+3. **Perplexity MCP** — architecture, best practices, comparisons, current
    trends. Treat the output critically; don't act on a single citation.
-3. **WebSearch** — fallback for general queries.
+4. **WebSearch** — fallback for general queries.
 
 **Auto-injected reminders.** Critical-evaluation caveats for `mcp__perplexity__*`
 outputs and the `claude-code-guide` subagent are appended automatically via the

@@ -9,6 +9,10 @@ paths:
 
 # React Code Style
 
+> **Lint hints (this project).** Hooks rules and a11y basics are flagged by ESLint via `eslint-plugin-react-hooks` and `eslint-plugin-jsx-a11y`. `react-hooks/exhaustive-deps` is heuristic — has known false positives on stable refs/derived values; read warnings critically, do NOT blindly suppress. When editing a file you may see existing warnings from legacy code — ignore them, don't refactor them. Be responsible only for your own fresh diff.
+>
+> **Never run `eslint --fix .` or `eslint --fix src/`** — `react/jsx-no-leaked-render` autofix has a known type-mismatch trap (`null` vs `undefined`) that breaks `boolean | undefined` props. Editor per-file autofix is fine.
+
 ## Component Patterns
 ```tsx
 const Comp: FC<Props> = ({ prop1, prop2 }) => …
@@ -71,7 +75,7 @@ const filteredItems = items.filter(x => x.active);
 // or
 const filteredItems = useMemo(() => items.filter(x => x.active), [items]);
 
-// ❌ Bad - renders 0 instead of nothing
+// ❌ Bad - renders 0 instead of nothing  [lint: react/jsx-no-leaked-render — fix manually, NOT via --fix]
 {some.length && <JSX />}
 
 // ✅ Good

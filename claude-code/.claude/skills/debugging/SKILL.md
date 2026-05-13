@@ -19,4 +19,4 @@ effort: xhigh
 4. **Run, observe, narrow.** Iterate until resolved.
 
 ## When to bring external research
-If local analysis is insufficient, use Perplexity MCP — see `../_shared/research-hierarchy.md`. Verify Perplexity output critically.
+If local analysis is insufficient, use Perplexity MCP — see `../researching/SKILL.md`. Verify Perplexity output critically.

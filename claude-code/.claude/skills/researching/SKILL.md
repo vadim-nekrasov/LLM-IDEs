@@ -4,22 +4,31 @@ description: Research hierarchy for external info — Context7 MCP for library A
 when_to_use: Manual-only. Invoke when looking up third-party library APIs, framework docs, or architecture/best-practices comparisons, or when the user types `/researching` or asks for "research hierarchy" / "иерархия поиска" / "как искать инфу" / "where to look up X".
 ---
 
-# Researching External Information
+# Research Hierarchy
 
-Use this skill to decide *where* to look up something outside the project
-codebase. The hierarchy enforces a zero-hallucination policy: prefer primary
-sources (Context7, official docs) over synthesised summaries (Perplexity,
-WebSearch).
+When you need external information (library APIs, docs, architecture guidance,
+general queries), follow this order of preference. Each level has a
+zero-hallucination expectation: never guess signatures or quote settings that
+weren't verified against a primary source.
 
-## Quick reference
-
-1. **Context7 MCP** — library APIs, SDK reference (against installed version).
-2. **Official documentation** — vendor pages (e.g. `code.claude.com/docs`,
-   `react.dev`) when Context7 doesn't cover the topic.
-3. **Perplexity MCP** — architecture, best practices, comparisons. Treat
-   single citations critically.
+1. **Context7 MCP** — third-party library APIs. Zero-hallucination policy:
+   never guess signatures; verify with the installed version
+   (`mcp__context7__resolve-library-id` → `mcp__context7__query-docs`).
+2. **Official documentation** — first-party / primary source when Context7
+   lacks the library, the installed version is newer than the index, or the
+   topic is owned by the vendor itself (e.g. `code.claude.com/docs`,
+   `react.dev`, vendor SDK reference). Same zero-hallucination rule: read the
+   docs page for the version you're targeting.
+3. **Perplexity MCP** — architecture, best practices, comparisons, current
+   trends. Treat the output critically; don't act on a single citation.
 4. **WebSearch** — fallback for general queries.
 
-See `../_shared/research-hierarchy.md` for the full rules, including the
-auto-injected critical-evaluation reminders for `mcp__perplexity__*` and the
-`claude-code-guide` subagent.
+## Auto-injected reminders
+
+Critical-evaluation caveats for `mcp__perplexity__*` outputs and the
+`claude-code-guide` subagent are appended automatically via the
+`critical-eval-reminder.ts` PostToolUse hook — no need to repeat them in
+prompts. `claude-code-guide` answers from pre-trained data and frequently lags
+current Claude Code releases (settings.json, hooks, skills, plugins, MCP,
+deprecation), so verify any factual claim against `code.claude.com/docs` or
+the plugin source before acting.

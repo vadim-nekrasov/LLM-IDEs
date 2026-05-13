@@ -17,10 +17,9 @@ project specifics.
 
 ## Research Hierarchy
 
-Context7 MCP → official docs → Perplexity MCP → WebSearch. Zero-hallucination
-policy on library APIs: verify against the installed version, never guess
-signatures. Full rules live in `skills/_shared/research-hierarchy.md`;
-triggerable via the `researching` skill (`/researching` or "иерархия поиска").
+External info hierarchy and zero-hallucination policy live in the
+`researching` skill (`skills/researching/SKILL.md`); invoke via `/researching`
+or "иерархия поиска".
 
 Critical-evaluation reminders for `mcp__perplexity__*` and the
 `claude-code-guide` subagent are auto-appended by the

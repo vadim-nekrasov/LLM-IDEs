@@ -12,7 +12,11 @@
 ## Code Quality
 - [ ] Modern language features used where appropriate.
 - [ ] Code complies with project style.
-- [ ] Design Principles respected (per CLAUDE.md).
+- [ ] SRP — `../../_shared/solid-audit.md#srp` (single axis of change).
+- [ ] OCP — `../../_shared/solid-audit.md#ocp` (foreseeable extension does not edit existing logic).
+- [ ] LSP — `../../_shared/solid-audit.md#lsp` (no weakened guarantees in subtypes).
+- [ ] ISP — `../../_shared/solid-audit.md#isp` (no consumer has unused interface members).
+- [ ] DIP — `../../_shared/solid-audit.md#dip` (no high-level → concrete low-level import).
 - [ ] No dead code (commented blocks, unused imports).
 
 ## Documentation

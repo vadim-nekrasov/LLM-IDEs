@@ -59,10 +59,10 @@ relevant tool explicitly.
 
 ## Design Principles
 
-Always evaluate proposed changes through SOLID, GRASP, DRY, KISS, YAGNI. The
-detailed Three Lenses pass lives in `skills/_shared/three-lenses.md`; this
-bullet exists so the principles stay in always-loaded context regardless of
-which skill is invoked.
+Design changes go through `skills/_shared/solid-audit.md` — a yes/no rubric
+with required YAML evidence per SOLID principle (apply/skip triggers live
+there). GRASP, DRY, KISS, YAGNI stay as Architect-Lens heuristics in
+`skills/_shared/three-lenses.md`.
 
 ## Documentation
 

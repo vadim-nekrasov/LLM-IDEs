@@ -92,7 +92,7 @@ Solutions violating these are **immediately discarded**.
 
 ### Search Criteria (Default - Three Lenses)
 1. **Correctness & Safety**: Functionally correct, respects invariants, no regressions
-2. **Architecture & Idiomaticity**: Scalable, pattern-consistent, fits stack. Design Principles respected (per CLAUDE.md). Not overengineered.
+2. **Architecture & Idiomaticity**: Scalable, pattern-consistent, fits stack. Design Principles audited via `../_shared/solid-audit.md` (Phase 2.5 gate, see below). Not overengineered.
 3. **Simplicity & Elegance**: Readable, debuggable, minimal complexity, clean design
 
 ---
@@ -130,6 +130,20 @@ Before brainstorming, run a single Perplexity call **iff any one trigger fires A
 - **Late-Breaking Heuristic**: If ≥ 40 % of the top-`{num_promising}` candidates fall in the last third of the brainstorm list (ranked by Search Criteria), generate 5–10 MORE variants — the early ideas were anchoring you.
   - **Always report the verdict explicitly in `Search Stats`** as `Late-Breaking Triggered: yes` (with count of extra variants generated and which positions in the original list triggered it) or `Late-Breaking Triggered: no` (with the actual fraction observed, e.g. "no — top-5 spread across positions 2/3/5/7/9, last-third would be ≥10/12"). This is non-negotiable — the verdict is part of the deliverable.
 
+### Phase 2.5: SOLID Audit Gate
+
+For each shortlist candidate produced in Phase 2, emit the evidence YAML
+defined in `../_shared/solid-audit.md` (one block per principle: `srp`,
+`ocp`, `lsp`, `isp`, `dip`). The forked agent loads that file alongside
+this skill — do not rely on conversation history. Discard candidates with
+any `pass: false` or any missing block (missing ≡ fail).
+
+If post-gate shortlist size drops below `{num_promising} / 2`, return to
+Phase 1 and add 5 fresh brainstorm variants, then re-run Phase 2 → 2.5.
+
+Record the gate verdict in `Search Stats` (see Output Format) as
+`SOLID Gate: passed=<N>, failed=<M>, principles_failed: [srp×K, isp×L, ...]`.
+
 ### Phase 3: Recursive Tree Exploration
 - Expand promising candidates into decision tree
 - At each node: identify key design decisions, create branches
@@ -157,6 +171,10 @@ Before brainstorming, run a single Perplexity call **iff any one trigger fires A
 **Extension Points**: [1-2 bullets]
 **Blueprint**: [files to create/edit OR concrete next steps]
 
+## SOLID Audit Evidence
+[Full evidence YAML for the selected candidate — one block per principle
+per `../_shared/solid-audit.md`. All five blocks required. All `pass: true`.]
+
 ## Critical Files for Implementation
 - [absolute/path/to/file.ts] — [role this file plays in the solution / what changes here]
 - [absolute/path/to/other.ts] — [...]
@@ -167,5 +185,6 @@ Before brainstorming, run a single Perplexity call **iff any one trigger fires A
 ## Search Stats
 - Tree Depth Reached: [X]
 - Total Successful Candidates Found: [Y]
+- SOLID Gate: passed=[N], failed=[M], principles_failed: [srp×K, ocp×L, lsp×P, isp×Q, dip×R]
 - Late-Breaking Triggered: [yes — generated +N extra variants because top-K positions {a, b, c} were in last third / no — top-K spread observed: {fractions}]
 ```

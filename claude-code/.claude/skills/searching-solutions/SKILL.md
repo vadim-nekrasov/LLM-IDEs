@@ -119,7 +119,7 @@ Before brainstorming, run a single Perplexity call **iff any one trigger fires A
 
 **Anti-triggers (any one skips Perplexity):**
 - Decision is bounded by in-codebase conventions / existing modules — first-principles + repo patterns suffice.
-- Question is "how do I call this library API?" — route to Context7 (`mcp__context7__resolve-library-id` → `query-docs`) instead, per Research Hierarchy.
+- Question is "how do I call this library API?" — route to Context7 (`mcp__context7__resolve-library-id` → `query-docs`) instead, per `../_shared/research-hierarchy.md`.
 - Task is trivial wiring, CRUD, UI layout, or a refactor with all needed info already in the prompt.
 
 **Budget:** at most one Perplexity call in Phase 1; treat output critically (single citation ≠ truth) and feed findings into the brainstorm as additional candidates, not as the answer.

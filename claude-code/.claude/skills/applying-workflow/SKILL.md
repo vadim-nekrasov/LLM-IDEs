@@ -14,6 +14,6 @@ Five phases. Open the linked file when the phase is relevant; trivial changes (t
 4. **Phase 3 — Implementation.** Sync comments with logic. No zombie code. Add logs first when bug cause is unclear; never patch blindly.
 5. **Phase 4 — Verification.** Invoke `final-checking` skill (typecheck + lint + Three Lenses).
 
-External knowledge: Context7 MCP for third-party APIs (zero-hallucination policy in `CLAUDE.md`). Perplexity MCP for architecture/best-practices — verify results critically.
+External knowledge: see `../_shared/research-hierarchy.md` (Context7 MCP → official docs → Perplexity MCP → WebSearch). Verify Perplexity output critically.
 
 Project-specific overrides (stack, scripts, conventions): see `${CLAUDE_PROJECT_DIR}/CLAUDE.local.md` if present.

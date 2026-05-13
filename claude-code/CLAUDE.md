@@ -17,24 +17,14 @@ project specifics.
 
 ## Research Hierarchy
 
-1. **Context7 MCP** — third-party library APIs (zero-hallucination policy: never
-   guess signatures; verify with the installed version).
-2. **Official documentation** — first-party / primary source when Context7
-   lacks the library, the installed version is newer than the index, or the
-   topic is owned by the vendor itself (e.g. `code.claude.com/docs`,
-   `react.dev`, vendor SDK reference). Same zero-hallucination rule: read the
-   docs page for the version you're targeting.
-3. **Perplexity MCP** — architecture, best practices, comparisons, current
-   trends. Treat the output critically; don't act on a single citation.
-4. **WebSearch** — fallback for general queries.
+Context7 MCP → official docs → Perplexity MCP → WebSearch. Zero-hallucination
+policy on library APIs: verify against the installed version, never guess
+signatures. Full rules live in `skills/_shared/research-hierarchy.md`;
+triggerable via the `researching` skill (`/researching` or "иерархия поиска").
 
-**Auto-injected reminders.** Critical-evaluation caveats for `mcp__perplexity__*`
-outputs and the `claude-code-guide` subagent are appended automatically via the
-`critical-eval-reminder.ts` PostToolUse hook — no need to repeat them in
-prompts. claude-code-guide answers from pre-trained data and frequently lags
-current Claude Code releases (settings.json, hooks, skills, plugins, MCP,
-deprecation), so verify any factual claim against `code.claude.com/docs` or
-the plugin source before acting.
+Critical-evaluation reminders for `mcp__perplexity__*` and the
+`claude-code-guide` subagent are auto-appended by the
+`critical-eval-reminder.ts` PostToolUse hook — no need to repeat in prompts.
 
 ## Skills & Plugin Commands
 

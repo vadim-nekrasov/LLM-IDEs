@@ -88,6 +88,11 @@ there). GRASP, DRY, KISS, YAGNI stay as Architect-Lens heuristics in
   via deny rules in `settings.json` (the `package.json` script is the
   audited entry point; raw `eslint` accepts arbitrary `--rulesdir`/`--config`
   paths that execute JS).
+- Don't prepend `cd <path> && ` to a `git` command, even when `<path>` is a
+  subdirectory of the current project — `git log`, `status`, `diff`, `show`,
+  `blame`, etc. already see the whole working tree regardless of cwd. When
+  a specific subdirectory really is required, use `git -C <path> <subcmd> …`
+  (one invocation, no `cd`, no permission prompt).
 
 ## Permission Modes
 

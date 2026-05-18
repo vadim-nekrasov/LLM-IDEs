@@ -24,7 +24,6 @@ const Comp: FC<Props> = ({ prop1, prop2 }) => …
 
 - Heavy calculations → `useMemo`
 - Stable callbacks → `useCallback`
-- List keys → stable IDs (not array index)
 - Wrap rarely changing components in `React.memo`
 - Use `Suspense` for loading states
 - Batch `setState` updates in async code
@@ -58,29 +57,11 @@ Use when they improve performance or clarity:
 ## Accessibility (a11y)
 
 - Use semantic HTML and `aria-*` attributes
-- `role="button"`, `tabIndex={0}`, `onKeyDown` for interactive elements
-- Support Enter and Space keys for buttons
 - Touch support is critical
 
 ## Anti-patterns
 
 ```tsx
-// ❌ Bad - useEffect for derived state
-useEffect(() => {
-  setFilteredItems(items.filter(x => x.active));
-}, [items]);
-
-// ✅ Good - simple variable or useMemo
-const filteredItems = items.filter(x => x.active);
-// or
-const filteredItems = useMemo(() => items.filter(x => x.active), [items]);
-
-// ❌ Bad - using index as key
-{items.map((item, i) => <Item key={i} />)}
-
-// ✅ Good - stable ID
-{items.map(item => <Item key={item.id} />)}
-
 // ❌ Bad - inline objects without memo
 <Child style={{ color: 'red' }} />
 

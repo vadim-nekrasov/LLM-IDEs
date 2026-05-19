@@ -146,6 +146,11 @@
           },
           {
             "type": "command",
+            "timeout": 30,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/lint-touched.ts"
+          },
+          {
+            "type": "command",
             "timeout": 5,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-summary.ts"
           },

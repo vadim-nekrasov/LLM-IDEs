@@ -38,12 +38,13 @@ Pick this skill only when the task is "find the right approach for one decision 
 | Task shape | Use this instead |
 |---|---|
 | Best architectural / algorithmic approach for a single decision | **`/searching-solutions`** (this skill) |
+| A sequence of coupled decision points, each needing its own tree search | `/searching-solutions-multi` skill |
 | Full feature from requirements to merged code | `/feature-dev:feature-dev` |
 | Diagnosing a bug — generate hypotheses, filter by evidence | `debugging` skill |
 | Verifying a finished change (lint, types, Three Lenses) | `final-checking` skill |
 | Routing a non-trivial edit through docs-discovery → Three Lenses → Context7 | `applying-workflow` skill |
 
-If the task is really "design a new feature end-to-end", let `/feature-dev:feature-dev` orchestrate; this skill can be invoked from inside its architecture phase.
+If the task is really "design a new feature end-to-end", let `/feature-dev:feature-dev` orchestrate; this skill can be invoked from inside its architecture phase. For several coupled decision points without code delivery, `/searching-solutions-multi` orchestrates one forked search per decision.
 
 ---
 

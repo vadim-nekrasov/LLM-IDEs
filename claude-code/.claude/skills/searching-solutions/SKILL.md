@@ -106,6 +106,7 @@ Phases 1-3 are internal — do NOT output all variants to user.
 ### Phase 1: Abstract Brainstorming
 - Generate at least `{max_abstract_variants}` high-level approaches
 - Brief format (1-2 sentences per variant)
+- Spread variants across orthogonal axes (core abstraction, data flow, failure strategy); discard near-duplicates that differ only cosmetically. Distinctness is bounded by viability — never pad to `{max_abstract_variants}` with absurd variants; that count is a floor on breadth, not a quota over quality. If genuinely distinct viable approaches are fewer than `{max_abstract_variants}`, produce only those as serious candidates and say the space is narrower than requested (narrowness is itself a useful signal); axes you explored and rejected belong in Discarded Branches, not padded into the serious set. Proactive complement to Phase 2's Late-Breaking anchoring check.
 - Filter out strict constraint violations
 
 #### External Inspiration (Perplexity MCP)
@@ -126,7 +127,7 @@ Before brainstorming, run a single Perplexity call **iff any one trigger fires A
 
 ### Phase 2: Filter Promising Candidates
 - Select top `{num_promising}` variants
-- Evaluate against Search Criteria
+- Narrow by **pairwise comparison** against the Search Criteria — relative judgment is more reliable for an LLM than absolute scoring — not by an absolute score alone.
 - **Late-Breaking Heuristic**: If ≥ 40 % of the top-`{num_promising}` candidates fall in the last third of the brainstorm list (ranked by Search Criteria), generate 5–10 MORE variants — the early ideas were anchoring you.
   - **Always report the verdict explicitly in `Search Stats`** as `Late-Breaking Triggered: yes` (with count of extra variants generated and which positions in the original list triggered it) or `Late-Breaking Triggered: no` (with the actual fraction observed, e.g. "no — top-5 spread across positions 2/3/5/7/9, last-third would be ≥10/12"). This is non-negotiable — the verdict is part of the deliverable.
 
@@ -152,7 +153,8 @@ Record the gate verdict in `Search Stats` (see Output Format) as
 
 ### Phase 4: Final Selection & Output
 - Review successful leaf nodes
-- Select **single best solution** based on criteria
+- Select the **single best solution** by pairwise comparison among surviving leaves (not absolute score).
+- Justify the winner with the strongest **counter-evidence** against it and a **calibrated confidence** (low/med/high) naming the single fact that would most change it; flag speculative claims per the Mindset rule (by reference, do not restate it).
 - Validate: Three Lenses check, docs compliance
 
 ---
@@ -170,6 +172,8 @@ Record the gate verdict in `Search Stats` (see Output Format) as
 **Data Flow**: [2-3 bullets]
 **Extension Points**: [1-2 bullets]
 **Blueprint**: [files to create/edit OR concrete next steps]
+**Counter-evidence**: [strongest argument against the choice]
+**Confidence**: [low | med | high — the pivotal unknown]
 
 ## SOLID Audit Evidence
 [Full evidence YAML for the selected candidate — one block per principle

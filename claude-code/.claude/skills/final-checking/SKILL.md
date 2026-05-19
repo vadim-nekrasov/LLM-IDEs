@@ -19,7 +19,9 @@ Skip this routine only when changes were exclusively non-logic (comments, consol
 Every file you create or modify this session must end it with **zero linter
 warnings attributable to that file** — whatever linter the stack uses (eslint,
 clippy, ruff, …), **including pre-existing warnings in a file you touched**,
-not only ones you introduced.
+not only ones you introduced. A large, deliberate pre-existing warning
+backlog is normal — it is precisely the signal-only part for *untouched*
+files and never exempts a file you touched.
 
 - **Overrides "signal-only".** A project framing warnings as advisory (config
   at `warn`, CI not failing on them, a `CLAUDE.local.md` note) applies *only

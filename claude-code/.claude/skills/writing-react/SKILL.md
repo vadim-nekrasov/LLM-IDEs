@@ -47,6 +47,8 @@ Use when they improve performance or clarity:
   ```
 - Avoid inline event handlers - extract to `handleX` functions
 - Minimize `useEffect` calls by combining logic
+- Layout spacing belongs to the parent: `gap`/`space-*` on the flex/grid parent, not `mt-*`/`mb-*` on each child — keeps
+  children self-contained and reusable
 
 ## Error Handling
 

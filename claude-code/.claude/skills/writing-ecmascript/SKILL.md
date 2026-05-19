@@ -156,6 +156,8 @@ connected &&= ping();
 connected = connected ? ping() : false;
 ```
 
+- **No single-source barrel re-exports**: don't add an `index.ts` whose only job is `export * from './x'` — inline the import, or only use a barrel to group several related modules.
+
 ## Advanced Iterator Patterns
 
 ### Window: skip N, take M from large source

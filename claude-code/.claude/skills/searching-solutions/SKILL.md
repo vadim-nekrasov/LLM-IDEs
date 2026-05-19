@@ -50,7 +50,12 @@ If the task is really "design a new feature end-to-end", let `/feature-dev:featu
 
 ## Forked Context — Important
 
-This skill runs with `context: fork` and the read-only `Plan` agent. The forked agent has **no access to the conversation history**. Every constraint, stack detail, or prior discussion the search must honour MUST be in the prompt arguments. If relevant context was discussed earlier in the chat, restate it explicitly when invoking.
+This skill runs with `context: fork` and the read-only `Plan` agent. The forked agent has **no access to the
+conversation history**. Every constraint, stack detail, or prior discussion the search must honour MUST be in the prompt
+arguments. If relevant context was discussed earlier in the chat, restate it explicitly when invoking. Do not pass a
+bare path/pointer to a repo doc (e.g. `README.md`, `CLAUDE.local.md`) expecting the search to chase it — this is a
+single-pass search over a curated brief, not a codebase-spelunking task. Inline the distilled,
+decision-relevant slice yourself; resolving doc pointers is `searching-solutions-multi`'s job, not this fork's.
 
 ---
 

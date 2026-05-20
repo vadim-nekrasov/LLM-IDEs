@@ -41,10 +41,13 @@ Use when they improve performance or clarity:
 
 ## Code Style
 
-- Use `classnames` library for conditional classes:
+- Use the project's `cn` helper from `@/utils` (built on `tailwind-merge` + `clsx`)
+  for all `className` composition:
   ```tsx
-  <div className={cx('my-class', { 'my-class--active': isActive })} />
+  import { cn } from '@/utils';
+  <div className={cn('my-class', isActive && 'my-class--active', className)} />
   ```
+  See the `writing-tailwind` skill for Tailwind v4 token rules and v4 syntax specifics.
 - Avoid inline event handlers - extract to `handleX` functions
 - Minimize `useEffect` calls by combining logic
 - Layout spacing belongs to the parent: `gap`/`space-*` on the flex/grid parent, not `mt-*`/`mb-*` on each child — keeps

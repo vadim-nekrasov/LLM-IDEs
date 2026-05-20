@@ -2,7 +2,7 @@
 name: searching-solutions-multi
 description: Main-context orchestrator that decomposes a task into one-decision-per-phase, then runs a separate forked /searching-solutions per phase with verbatim forward-propagation and a greedy≠global backward check.
 when_to_use: Manual-only. Invoke ONLY when the user explicitly types `/searching-solutions-multi` or asks for "multi-phase tree search" / "sequential decision search" / "многофазный поиск решений" / "поиск по фазам". Never auto-trigger — this fans out into N expensive forked `effort: high` searches. For ONE decision point use `/searching-solutions`; for full feature delivery (code written) use `/feature-dev:feature-dev`.
-argument-hint: "[seed=N] <task with global context and hard constraints>"
+argument-hint: "<task with global context and hard constraints>"
 effort: high
 ---
 
@@ -20,6 +20,27 @@ are owned there — reference, never restate them here).
 If only one genuine decision survives Step 2, abandon this skill and call
 `/searching-solutions` directly — do not pay the fan-out cost for one point.
 
+## Per-phase seed (proposal model)
+
+Each phase's child `/searching-solutions` call takes a single `seed=N`
+(its `max_abstract_variants` — the brainstorm floor; higher ⇒ wider,
+costlier). This orchestrator does NOT accept a top-level `seed` argument.
+In Step 2 you propose one value per phase, anchored at `12` with a
+deviation in `{0, ±2, ±4, ±6}` clamped to `[6, 20]`. Each proposal carries
+a ≤12-word rationale phrase naming the reason for the deviation (or
+`"default"`).
+
+Typical deviation reasons (non-binding, extend as needed):
+- `"high coupling — locks downstream"` (+)
+- `"foundational — lots to lock in"` (+)
+- `"high stakes — widen"` (+)
+- `"narrow constraint space"` (−)
+- `"easily reversible — narrow OK"` (−)
+- `"few candidate families exist"` (−)
+
+The user may override any subset in their HALT-gate reply via free-form
+text (e.g. `"phase 2 → 18, rest ok"`). Parse intent, not strict syntax.
+
 ## Procedure (strict order)
 
 1. **Research once (conditional).** If the overall task is dominated by
@@ -34,13 +55,18 @@ If only one genuine decision survives Step 2, abandon this skill and call
    is EXACTLY one decision point (several independent decisions in a phase
    ⇒ split further). Emit a numbered phase list (what each phase chooses)
    and an inter-phase dependency matrix (which phase constrains which).
-   **Stop and wait for the user to confirm the decomposition before any
-   search.** This gate is non-negotiable.
+   Render each phase line in the form
+   `Phase N: <decision> — proposed seed=<int>, rationale: "<≤12-word phrase>"`
+   per the *Per-phase seed* model above. **Stop and wait for the user to
+   confirm the decomposition before any search.** This gate is
+   non-negotiable; the user may accept all, or override any subset by
+   naming phases (parse intent, not syntax).
 
 3. **Per-phase search (dependency order).** For each confirmed phase, make
-   a SEPARATE `/searching-solutions seed=N` call (default `N=12`). The
-   forked agent sees nothing but the argument string, so embed a
-   self-contained brief:
+   a SEPARATE `/searching-solutions seed=N` call where `N` is the per-phase
+   value locked at the Step-2 HALT gate (anchor 12, see *Per-phase seed*
+   above). The forked agent sees nothing but the argument string, so embed
+   a self-contained brief:
    - **GLOBAL**: task summary + global context (stack/env/data) + hard
      constraints (violation ⇒ disqualify). Global context may be a
      repo-doc pointer (e.g. `React/src/README.md`, `CLAUDE.local.md`);

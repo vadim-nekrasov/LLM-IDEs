@@ -78,11 +78,6 @@
           {
             "type": "command",
             "timeout": 3,
-            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Waiting for your answer\""
-          },
-          {
-            "type": "command",
-            "timeout": 3,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/set-title.ts \"❓ Claude — your answer\""
           }
         ]
@@ -198,11 +193,6 @@
           {
             "type": "command",
             "timeout": 3,
-            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Permission requested\""
-          },
-          {
-            "type": "command",
-            "timeout": 3,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/set-title.ts \"🔐 Claude — permission\""
           }
         ]
@@ -240,6 +230,11 @@
             "type": "command",
             "timeout": 3,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/permission-request.ts"
+          },
+          {
+            "type": "command",
+            "timeout": 3,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Waiting for your input\""
           }
         ]
       }

@@ -25,7 +25,10 @@
       "Bash(npm run lint:*)",
       "WebFetch(domain:docs.claude.com)",
       "WebFetch(domain:code.claude.com)",
-      "WebFetch(domain:docs.anthropic.com)"
+      "WebFetch(domain:docs.anthropic.com)",
+      "Skill(searching-solutions)",
+      "Skill(searching-solutions-multi)",
+      "Skill(researching)"
     ],
     "deny": [
       "Bash(git commit:*)",
@@ -65,6 +68,16 @@
             "type": "command",
             "timeout": 5,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/edit-guard.ts"
+          }
+        ]
+      },
+      {
+        "matcher": "AskUserQuestion|ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 3,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Waiting for your answer\""
           }
         ]
       }

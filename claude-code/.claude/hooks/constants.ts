@@ -54,6 +54,7 @@ export const FORMATTABLE_EXTENSIONS = new Set([
 export const SKILL_NAMES = {
   workflow: "applying-workflow",
   final: "final-checking",
+  docs: "writing-docs",
   languages: {
     ecmascript: "writing-ecmascript",
     typescript: "writing-typescript",

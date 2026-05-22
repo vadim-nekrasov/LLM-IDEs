@@ -8,7 +8,13 @@ import {
   SKILL_NAMES,
   isReactHookFile,
 } from "./constants";
-import { findDocsUp, getExt, isNodeModulesPath, isTargetPath } from "./utils";
+import {
+  findDocsUp,
+  getExt,
+  isNodeModulesPath,
+  isProjectDocFile,
+  isTargetPath,
+} from "./utils";
 
 const input: HookInput = await Bun.stdin.json();
 const filePath = input.tool_input?.file_path ?? "";
@@ -37,7 +43,9 @@ if (input.permission_mode === "plan") process.exit(0);
 if (filePath.includes("/.claude/")) process.exit(0);
 
 const ext = getExt(filePath);
-if (!CODE_EXTENSIONS.has(ext)) process.exit(0);
+const isCode = CODE_EXTENSIONS.has(ext);
+const isDoc = isProjectDocFile(filePath);
+if (!isCode && !isDoc) process.exit(0);
 
 const projectRoot =
   process.env.CLAUDE_PROJECT_DIR || input.cwd || process.cwd();
@@ -45,25 +53,35 @@ const data = await parseTranscript(input.transcript_path, input.session_id);
 
 const advisories: string[] = [];
 
-if (!data.hasApplyingWorkflow) {
+if (isCode && !data.hasApplyingWorkflow) {
   advisories.push(
     `Consider invoking the \`applying-workflow\` skill — it loads docs-first discovery, Three Lenses, and Context7 verification patterns relevant to this edit.`,
   );
 }
 
-const requiredSkillKeys = [...(EXTENSION_TO_SKILLS[ext] ?? [])];
-if (!requiredSkillKeys.includes("react") && isReactHookFile(filePath)) {
-  requiredSkillKeys.push("react");
-}
-const missingSkills: string[] = [];
-for (const key of requiredSkillKeys) {
-  if (!data.requiredSkillsUsed[key]) {
-    missingSkills.push(SKILL_NAMES.languages[key]);
+if (isCode) {
+  const requiredSkillKeys = [...(EXTENSION_TO_SKILLS[ext] ?? [])];
+  if (!requiredSkillKeys.includes("react") && isReactHookFile(filePath)) {
+    requiredSkillKeys.push("react");
+  }
+  const missingSkills: string[] = [];
+  for (const key of requiredSkillKeys) {
+    if (!data.requiredSkillsUsed[key]) {
+      missingSkills.push(SKILL_NAMES.languages[key]);
+    }
+  }
+  if (missingSkills.length > 0) {
+    advisories.push(
+      `Recommended language skills for \`${ext}\` files (load patterns into context): ${missingSkills.join(", ")}.`,
+    );
   }
 }
-if (missingSkills.length > 0) {
+
+// Single consumer → read data.skills directly; a dedicated flag (cf.
+// hasApplyingWorkflow) only earns its keep with multiple cross-hook readers.
+if (isDoc && !data.skills.has(SKILL_NAMES.docs)) {
   advisories.push(
-    `Recommended language skills for \`${ext}\` files (load patterns into context): ${missingSkills.join(", ")}.`,
+    `Recommended: invoke the \`writing-docs\` skill — it loads the lean Markdown-doc rubric (include/exclude, size budget, code-vs-doc authority) from _shared/markdown-doc-principles.md.`,
   );
 }
 

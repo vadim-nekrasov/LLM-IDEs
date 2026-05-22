@@ -43,6 +43,21 @@ export function isDocFile(path: string): boolean {
   return path.endsWith(".md") || path.includes("/docs/");
 }
 
+const PROJECT_DOC_RE = /(?:^|\/)docs\/.+\.md$/i; // docs/**/*.md
+const ROOT_README_RE = /(?:^|\/)README[^/]*\.md$/i; // README.md, README.en.md
+const DOC_EXCLUDE_RE = /(?:^|\/)(?:CLAUDE(?:\.local)?|CHANGELOG)\.md$/i;
+
+/**
+ * Genuine project documentation worth the writing-docs advisory.
+ * Narrower than isDocFile(): only docs/**\/*.md and README*.md (any level), and never
+ * CLAUDE.md / CLAUDE.local.md / CHANGELOG.md. Files under .claude/ (plans,
+ * hookify rules, skills) are already filtered by edit-guard's early exit.
+ */
+export function isProjectDocFile(filePath: string): boolean {
+  if (DOC_EXCLUDE_RE.test(filePath)) return false;
+  return PROJECT_DOC_RE.test(filePath) || ROOT_README_RE.test(filePath);
+}
+
 /** Ensure a directory exists (recursive mkdir, no-op if present). */
 export function ensureDir(dir: string): void {
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });

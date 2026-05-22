@@ -103,6 +103,16 @@
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/critical-eval-reminder.ts"
           }
         ]
+      },
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|NotebookEdit|WebFetch|WebSearch|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 3,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/set-title.ts \"⚙️ Claude — working\""
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -188,16 +198,6 @@
     ],
     "Notification": [
       {
-        "matcher": "permission_prompt",
-        "hooks": [
-          {
-            "type": "command",
-            "timeout": 3,
-            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/set-title.ts \"🔐 Claude — permission\""
-          }
-        ]
-      },
-      {
         "matcher": "elicitation_dialog",
         "hooks": [
           {
@@ -235,6 +235,11 @@
             "type": "command",
             "timeout": 3,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Waiting for your input\""
+          },
+          {
+            "type": "command",
+            "timeout": 3,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/set-title.ts \"🔐 Claude — permission\""
           }
         ]
       }

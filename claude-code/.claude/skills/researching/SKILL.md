@@ -1,7 +1,7 @@
 ---
 name: researching
 description: Research hierarchy for external info — Context7 MCP for library APIs, official docs, Perplexity MCP for architecture and best practices, WebSearch as fallback.
-when_to_use: Manual-only. Invoke when looking up third-party library APIs, framework docs, or architecture/best-practices comparisons, or when the user types `/researching` or asks for "research hierarchy" / "иерархия поиска" / "как искать инфу" / "where to look up X".
+when_to_use: Auto-trigger only when the task genuinely needs external information — third-party library APIs, framework docs, or architecture/best-practices comparisons. Also invoke on an explicit request: the user types `/researching` or asks for the hierarchy itself ("иерархия поиска" / "как искать инфу" / "where to look up X"). A bare name-drop inside a conditional clause (e.g. "ресерч если надо, через researching" / "use researching if needed") is NOT an invocation on its own — skip it unless external info is actually required for the task at hand.
 ---
 
 # Research Hierarchy

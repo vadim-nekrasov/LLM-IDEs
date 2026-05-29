@@ -33,7 +33,7 @@ paths:
 | Layer | Owns | Examples |
 |---|---|---|
 | **Principle** | compile-time grammar/type/identifier → validator; runtime correctness, GPU portability, performance → skill; numerical/visual/architectural judgment → human review | — |
-| `glslangValidator` | syntax, type checking, undeclared identifiers, precision-qualifier syntax, illegal control-flow constructs, ESSL grammar, `#version` validation | `texture2D` in `#version 300 es` → caught; missing `;` → caught; redeclared variable → caught |
+| `glslangValidator` + project `lint:glsl` | syntax, type checking, undeclared identifiers, precision-qualifier syntax, illegal control-flow, ESSL grammar, `#version` validation, **legacy ESSL 1.00 constructs** (text-grep, post-glslang) | grammar/types → glslang; `texture2D` / `gl_FragColor` / `attribute` / `varying` / `#extension GL_EXT_draw_buffers` → project `lint:glsl` (set `MIGRATE_STRICT=1` to enforce) |
 | This skill | runtime UB, GPU portability, shader-state semantics, perf anti-patterns | uninitialized var (UB); `mediump int` range overflow; divergent branching; sampler completeness; non-uniform sampler-array indexing |
 | Human review | numerical stability, visual correctness, perf-vs-quality trade-offs | banding, filter quality, algorithmic choice, sample count |
 
@@ -45,19 +45,7 @@ Use this section when porting an existing GLSL ES 1.00 shader to 3.00, or when r
 
 ### Cheat Sheet
 
-| Old (GLSL ES 1.00) | New (GLSL ES 3.00) | Note |
-|---|---|---|
-| _(no version directive)_ | `#version 300 es` (line 1) | Mandatory; must be first non-comment line. |
-| `attribute vec3 a_pos;` | `in vec3 a_pos;` | Vertex shader inputs. |
-| `varying vec2 v_uv;` (VS) | `out vec2 v_uv;` | Vertex shader outputs. |
-| `varying vec2 v_uv;` (FS) | `in vec2 v_uv;` | Fragment shader inputs. |
-| `texture2D(s, uv)` / `textureCube(s, dir)` | `texture(s, uv)` | One overloaded `texture()`. |
-| `texture2DLod(s, uv, lod)` | `textureLod(s, uv, lod)` | Same for `Grad` / `Offset`. |
-| `gl_FragColor = …` | user-declared `out vec4` | See Gotchas. |
-| `gl_FragData[N] = …` | `layout(location=N) out vec4 …` | See Gotchas (MRT). |
-| Constant loop bounds required | Dynamic loop bounds allowed | Drop legacy unroll workarounds. |
-| Implicit `int` ↔ `float` mixing | Explicit casts | See Gotchas (precision). |
-| `#extension GL_EXT_draw_buffers : require` | _(core)_ | MRT is in core ESSL 3.00. |
+The mechanical 1.00 → 3.00 renames (`texture2D` → `texture`, `attribute` / `varying` → `in` / `out`, `gl_FragColor` → `layout(location = 0) out vec4`, `gl_FragData[]` → explicit MRT outputs, dropping `#extension` directives that are now core, etc.) are reported per-line by `npm run lint:glsl` with the new spelling in the message. Set `MIGRATE_STRICT=1` once migration completes to convert warnings to errors. The semantic shifts that aren't mechanical are in [Gotchas](#gotchas) below.
 
 ### Gotchas
 

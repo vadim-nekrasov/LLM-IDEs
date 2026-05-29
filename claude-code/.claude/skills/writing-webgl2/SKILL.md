@@ -34,7 +34,7 @@ paths:
 | Layer | Owns | Examples |
 |---|---|---|
 | **Principle** | static type/syntax → tsc + ESLint; runtime API misuse, state-machine bugs, perf → skill; UX / visual / architectural judgment → human review | — |
-| ESLint + tsc | type errors, unused imports, unsafe `any`, missing-await, no-floating-promises | wrong arg type to `gl.bufferData` → tsc; un-awaited `clientWaitSync` polling promise → ESLint |
+| ESLint + tsc | type errors, unused imports, unsafe `any`, missing-await, no-floating-promises, **legacy WebGL1 API calls** | wrong arg type to `gl.bufferData` → tsc; `getContext('webgl')` / `getExtension('OES_vertex_array_object'\|'ANGLE_instanced_arrays'\|…)` → ESLint `no-restricted-syntax` |
 | This skill | WebGL state-machine bugs, sync-stall pitfalls, lifecycle, extension feature-detect, perf anti-patterns | sync `readPixels`, hot-path `getError`, mid-render compile, uniform-location at draw time, VAO state leak |
 | Browser runtime | context-lost, `INVALID_OPERATION`, link failures, `FRAMEBUFFER_INCOMPLETE_*` | observed via `webglcontextlost`, `getError` at init, `KHR_parallel_shader_compile` polling, `checkFramebufferStatus` |
 | Human review | architectural choice (immutable FBO vs. mutate), quality/perf trade | sRGB vs linear, MSAA sample count, instancing batch size |
@@ -47,20 +47,7 @@ Use this section when porting an existing WebGL1 host file to WebGL2, or when re
 
 ### Cheat Sheet
 
-| Old (WebGL1 + extension) | New (WebGL2 core) | Note |
-|---|---|---|
-| `canvas.getContext('webgl')` | `canvas.getContext('webgl2')` | First step; type is `WebGL2RenderingContext`. |
-| `OES_vertex_array_object` | `gl.createVertexArray()` / `bindVertexArray()` | Native VAOs. |
-| `OES_element_index_uint` | `gl.UNSIGNED_INT` index buffers | No extension needed. |
-| `ANGLE_instanced_arrays` | `gl.drawArraysInstanced()` / `drawElementsInstanced()` / `vertexAttribDivisor()` | Native. |
-| `EXT_blend_minmax` | `gl.MIN` / `gl.MAX` blend equations | Core. |
-| `WEBGL_draw_buffers` | `gl.drawBuffers([gl.COLOR_ATTACHMENT0, …])` | Core MRT. |
-| `OES_texture_float` / `_half_float` | `gl.texStorage2D(t, l, gl.RGBA16F, w, h)` | Sized internal formats; immutable storage. |
-| `EXT_frag_depth` | `gl_FragDepth` in shader | Core. |
-| `EXT_shader_texture_lod` | `textureLod()` in shader | Core. |
-| `gl.texImage2D` mutable | `gl.texStorage2D` + `gl.texSubImage2D` | Prefer immutable storage. |
-| _(no UBO support)_ | `gl.bindBufferBase(gl.UNIFORM_BUFFER, …)` | New; replaces per-uniform `gl.uniform*` for hot-path uniform blocks. |
-| Synchronous `gl.readPixels` to TypedArray | PBO + `gl.fenceSync` async readback | See Gotchas. |
+The mechanical WebGL1 → WebGL2 calls — `getContext('webgl')` → `'webgl2'`, every `getExtension('OES_…' | 'ANGLE_…' | 'WEBGL_…')` whose target is now core (`OES_vertex_array_object`, `OES_element_index_uint`, `ANGLE_instanced_arrays`, `EXT_blend_minmax`, `WEBGL_draw_buffers`, `OES_texture_float`/`_half_float`, `EXT_frag_depth`, `EXT_shader_texture_lod`) — are caught by ESLint's `no-restricted-syntax` rules in `eslint.config.mjs` with a per-call message pointing at the new core API. New WebGL2-only additions worth knowing about: `gl.texStorage2D` + `texSubImage2D` (immutable storage) replaces mutable `texImage2D`; `gl.bindBufferBase(gl.UNIFORM_BUFFER, …)` introduces UBOs for hot-path uniform blocks. The semantic shifts (float-render-target feature-detect, PBO + `fenceSync` async readback, VAO state stickiness) that aren't mechanical are in [Gotchas](#gotchas) below.
 
 ### Gotchas
 

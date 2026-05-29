@@ -1,4 +1,5 @@
 import { basename, extname } from "node:path";
+import { isProjectDocFile } from "./utils";
 
 /** Pattern for React hook file names (useAuth, UseModal, etc.) */
 const HOOK_NAME_PATTERN = /^use[A-Z]/i;
@@ -93,3 +94,27 @@ export const DOC_TRIGGER_PATTERNS = {
   context: /(?:^|\/)[\w-]*(?:context|provider)\.(?:tsx|jsx)$/,
   rustMod: /(?:^|\/)(?:mod|lib)\.rs$/,
 } as const;
+
+/**
+ * Auto-injection registry: for each entry, when an Edit/Write touches a path
+ * matching `predicate` AND the session has not yet been seeded for `key`,
+ * `edit-guard.ts` reads the rubric file body and emits it as additionalContext.
+ * Subsequent edits within the same session emit only a short reminder.
+ * Adding a new rubric = author the `_shared/*-principles.md` file + add one row.
+ */
+export interface InjectableEntry {
+  /** Stable de-duplication key (per-session). Also surfaces in the reminder text. */
+  key: string;
+  /** Predicate over filePath — decides whether this entry triggers. */
+  predicate: (filePath: string) => boolean;
+  /** Rubric body file, resolved against CLAUDE_PROJECT_DIR. */
+  rubricRelPath: string;
+}
+
+export const INJECTABLES: ReadonlyArray<InjectableEntry> = [
+  {
+    key: "writing-docs",
+    predicate: isProjectDocFile,
+    rubricRelPath: ".claude/skills/_shared/markdown-doc-principles.md",
+  },
+];

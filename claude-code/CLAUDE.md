@@ -7,6 +7,9 @@ in each project that uses the same Claude Code config).
 
 - Replies to user: Russian.
 - Code, identifiers, inline comments, commit messages: English.
+- Inline code comments are ≤ 2 lines and explain only non-obvious "why"
+  (constraints, invariants, surprising behaviour). Markdown docs aren't bound
+  by this limit.
 
 ## Project-specific overrides
 
@@ -83,11 +86,13 @@ there). GRASP, DRY, KISS, YAGNI stay as Architect-Lens heuristics in
   by deny rules in `~/.claude/settings.json`, so don't try to bypass.
 - Don't modify build/lint/format manifests (`package.json`, `tsconfig.json`,
   `eslint.config.*`, `Cargo.toml`, etc.) unless required by the task.
-- For linting, invoke `npm run lint:js` (preferred) or `npm run lint` — raw
-  `npx`/`bunx`/`pnpm dlx`/`yarn dlx eslint` is blocked at the harness level
-  via deny rules in `settings.json` (the `package.json` script is the
-  audited entry point; raw `eslint` accepts arbitrary `--rulesdir`/`--config`
-  paths that execute JS).
+- For linting, default to `npm run lint:js` for JS/TS-only changes. When the
+  change touches non-JS lintable files (`.glsl`, `.scss`, `.css`, etc.), run
+  `npm run lint` so every `lint:*` subscript executes — `lint:js` alone misses
+  shader/style validators. Raw `npx`/`bunx`/`pnpm dlx`/`yarn dlx eslint` is
+  blocked at the harness level via deny rules in `settings.json` (the
+  `package.json` script is the audited entry point; raw `eslint` accepts
+  arbitrary `--rulesdir`/`--config` paths that execute JS).
 - Don't prepend `cd <path> && ` to a `git` command, even when `<path>` is a
   subdirectory of the current project — `git log`, `status`, `diff`, `show`,
   `blame`, etc. already see the whole working tree regardless of cwd. When

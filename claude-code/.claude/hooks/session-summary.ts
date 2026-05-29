@@ -42,6 +42,9 @@ if (data.editedFiles.length > 0) {
   );
   if (analysis.needed) {
     for (const reason of analysis.reasons) console.log(`   → ${reason}`);
+    console.log(
+      `   ${C.dim}→ Invoke \`writing-docs\` skill before editing the affected docs.${C.reset}`,
+    );
   }
   console.log();
 }

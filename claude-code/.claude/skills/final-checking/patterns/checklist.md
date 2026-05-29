@@ -22,8 +22,8 @@
 ## Documentation
 - [ ] Comments up-to-date, concise, English.
 - [ ] External APIs verified via Context7 (Zero Hallucination).
-- [ ] If public API/behaviour/architecture changed → `docs/index.md` updated.
-- [ ] If inaccurate docs were spotted during exploration → corrected.
+- [ ] If public API/behaviour/architecture changed → invoke `writing-docs` skill and update `docs/index.md`.
+- [ ] If inaccurate docs were spotted during exploration → invoke `writing-docs` skill and correct them.
 
 ## Critical Restrictions
 - [ ] No edits to `node_modules/` or `target/`.

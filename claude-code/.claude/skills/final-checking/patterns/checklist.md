@@ -20,7 +20,7 @@
 - [ ] No dead code (commented blocks, unused imports).
 
 ## Documentation
-- [ ] Comments up-to-date, concise, English.
+- [ ] Comments: each block ≤ 2 lines, justified by future-edit utility, English — see `../../_shared/three-lenses.md#c-maintainer-lens--future--team`.
 - [ ] External APIs verified via Context7 (Zero Hallucination).
 - [ ] If public API/behaviour/architecture changed → invoke `writing-docs` skill and update `docs/index.md`.
 - [ ] If inaccurate docs were spotted during exploration → invoke `writing-docs` skill and correct them.

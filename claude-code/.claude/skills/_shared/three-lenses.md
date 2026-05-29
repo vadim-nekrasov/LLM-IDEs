@@ -20,5 +20,8 @@ Apply each lens to the proposed change before writing code.
 
 - Will a junior developer understand this in a month?
 - No commented-out code, no unused imports.
-- Don't add comments to code you didn't write; avoid trivial comments.
+- Comments policy (Claude is the sole editor of this codebase):
+  - Write a comment ONLY if it will help a future Claude edit — hidden constraint, subtle invariant, non-obvious workaround, surprising behaviour. No WHAT-comments, no narration, no task/PR references.
+  - Hard cap: any single comment block ≤ 2 lines, including JSDoc / `/* */`. A 3+ line comment block is forbidden — split into code-level clarity instead.
+  - Don't add comments to code you didn't touch in this edit.
 - Names express intent; variables are scoped narrowly.

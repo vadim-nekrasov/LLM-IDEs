@@ -21,6 +21,11 @@ differs (README leans onboarding; `docs/index.md` leans orientation).
 - Target ~1–3k tokens per doc. Headings + bullets; prose only where a sentence
   is the clearest form.
 - Bias to delete: if code or config already states it, omit it here.
+- Treat the range as a soft target, not a ceiling: overshoot is justified
+  when every added line is a non-obvious invariant the code does not
+  state, never to restate code. Both undershoot (cut invariants to hit
+  the count) and bloat (pad to fill the page) are defects — the budget
+  is a lagging indicator of disciplined deletion.
 
 ## Include (earns its place)
 

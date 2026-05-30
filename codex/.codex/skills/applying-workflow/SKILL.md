@@ -45,11 +45,16 @@ This is a **workflow requirement**, not a suggestion.
 - Handle edge cases, errors, loading states
 
 **B. Architect Lens** (System & Scale)
-- Design Principles (SOLID, GRASP, DRY, KISS, YAGNI)
-- Idiomatic for this stack? Not overengineered?
-- Safe? (memory leaks, security, race conditions)
-- Scalable?
-- Performant?
+- [ ] Design Principles: 
+  - [ ] SOLID (if applicable here)
+  - [ ] GRASP (if applicable here)
+  - [ ] DRY 
+  - [ ] KISS 
+  - [ ] YAGNI 
+- [ ] Idiomatic for this stack? Not overengineered?
+- [ ] Safe? (memory leaks, security, race conditions)
+- [ ] Scalable?
+- [ ] Performant?
 
 **C. Maintainer Lens** (Future & Team)
 - Will a junior developer understand this in a month?

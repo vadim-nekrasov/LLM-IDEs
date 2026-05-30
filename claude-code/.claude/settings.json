@@ -46,6 +46,11 @@
     "pr": ""
   },
   "disableSkillShellExecution": true,
+  "skillListingBudgetFraction": 0.02,
+  "skillOverrides": {
+    "searching-solutions": "on",
+    "searching-solutions-multi": "on"
+  },
   "statusLine": {
     "type": "command",
     "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/statusline.ts"

@@ -1,11 +1,35 @@
 #!/usr/bin/env bun
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { HookInput } from "./types";
 import { cacheDir, sanitizeSessionId } from "./utils";
 
 const input: HookInput = await Bun.stdin.json().catch(() => ({}) as HookInput);
 const cwd = input.cwd || process.env.CLAUDE_PROJECT_DIR || process.cwd();
+
+// Slash-invocation advisory: detect `/<skill-name>` at prompt start and confirm
+// the SKILL.md exists on disk. Without this, a session-start available-skills
+// listing that drops (or never shows) the skill can cause Claude to misread its
+// own "invoke if in list OR user typed /<name>" rule and refuse the skill. The
+// advisory leaves no ambiguity: it quotes the resolved path and the exact Skill
+// tool call signature. Plugin-namespaced slashes (`/plugin:cmd`) are skipped —
+// those resolve via plugin manifests, not the shared skills directory.
+function slashAdvisory(): string | null {
+  const prompt = input.prompt;
+  if (!prompt) return null;
+  const m = prompt.match(/^\s*\/([a-z][a-z0-9-]*)(?!:)/);
+  if (!m) return null;
+  const name = m[1];
+  let skillsDir: string;
+  try {
+    skillsDir = realpathSync(join(cwd, ".claude", "skills"));
+  } catch {
+    return null;
+  }
+  const skillPath = join(skillsDir, name, "SKILL.md");
+  if (!existsSync(skillPath)) return null;
+  return `Slash-invocation detected: '/${name}' → ${skillPath} exists. Action: invoke the Skill tool with skill="${name}" immediately; this resolves from the filesystem regardless of the session-start available-skills listing.`;
+}
 
 // Single subprocess: branch header + ahead/behind + per-file change records.
 // Format reference: https://git-scm.com/docs/git-status#_porcelain_format_version_2
@@ -42,7 +66,8 @@ for (const line of stdout.split("\n")) {
 
 if (!branch) process.exit(0);
 
-const message = `Git: \`${branch}\`${aheadBehind} • Dirty files: ${dirty}`;
+const slash = slashAdvisory();
+const message = `Git: \`${branch}\`${aheadBehind} • Dirty files: ${dirty}${slash ? "\n" + slash : ""}`;
 
 // Dedup: skip if the previous UserPromptSubmit in this session emitted the
 // same line. Without this, slash commands (e.g. /effort) and the following

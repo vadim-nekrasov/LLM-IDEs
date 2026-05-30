@@ -16,7 +16,6 @@ paths:
 ## Contents
 
 - [Scope & Coordination](#scope--coordination)
-- [Migration from WebGL1](#migration-from-webgl1)
 - [Context & Lifecycle](#context--lifecycle)
 - [VAOs & Attribute State](#vaos--attribute-state)
 - [Programs & Uniform-location Caching](#programs--uniform-location-caching)
@@ -34,67 +33,12 @@ paths:
 | Layer | Owns | Examples |
 |---|---|---|
 | **Principle** | static type/syntax → tsc + ESLint; runtime API misuse, state-machine bugs, perf → skill; UX / visual / architectural judgment → human review | — |
-| ESLint + tsc | type errors, unused imports, unsafe `any`, missing-await, no-floating-promises, **legacy WebGL1 API calls** | wrong arg type to `gl.bufferData` → tsc; `getContext('webgl')` / `getExtension('OES_vertex_array_object'\|'ANGLE_instanced_arrays'\|…)` → ESLint `no-restricted-syntax` |
+| ESLint + tsc | type errors, unused imports, unsafe `any`, missing-await, no-floating-promises | wrong arg type to `gl.bufferData` → tsc; `getContext('webgl')` / `getExtension('OES_vertex_array_object'\|'ANGLE_instanced_arrays'\|…)` → ESLint `no-restricted-syntax` (install-free regression guard) |
 | This skill | WebGL state-machine bugs, sync-stall pitfalls, lifecycle, extension feature-detect, perf anti-patterns | sync `readPixels`, hot-path `getError`, mid-render compile, uniform-location at draw time, VAO state leak |
 | Browser runtime | context-lost, `INVALID_OPERATION`, link failures, `FRAMEBUFFER_INCOMPLETE_*` | observed via `webglcontextlost`, `getError` at init, `KHR_parallel_shader_compile` polling, `checkFramebufferStatus` |
 | Human review | architectural choice (immutable FBO vs. mutate), quality/perf trade | sRGB vs linear, MSAA sample count, instancing batch size |
 
-> Sibling skill for the GLSL **shader text** side of the migration: [`writing-glsl`](../writing-glsl/SKILL.md). Pure TypeScript idioms outside WebGL are owned by [`writing-typescript`](../writing-typescript/SKILL.md) / [`writing-ecmascript`](../writing-ecmascript/SKILL.md).
-
-## Migration from WebGL1
-
-Use this section when porting an existing WebGL1 host file to WebGL2, or when reading legacy WebGL1 code. Shader-language changes are covered in [`writing-glsl` Migration](../writing-glsl/SKILL.md#migration-from-glsl-es-100).
-
-### Cheat Sheet
-
-The mechanical WebGL1 → WebGL2 calls — `getContext('webgl')` → `'webgl2'`, every `getExtension('OES_…' | 'ANGLE_…' | 'WEBGL_…')` whose target is now core (`OES_vertex_array_object`, `OES_element_index_uint`, `ANGLE_instanced_arrays`, `EXT_blend_minmax`, `WEBGL_draw_buffers`, `OES_texture_float`/`_half_float`, `EXT_frag_depth`, `EXT_shader_texture_lod`) — are caught by ESLint's `no-restricted-syntax` rules in `eslint.config.mjs` with a per-call message pointing at the new core API. New WebGL2-only additions worth knowing about: `gl.texStorage2D` + `texSubImage2D` (immutable storage) replaces mutable `texImage2D`; `gl.bindBufferBase(gl.UNIFORM_BUFFER, …)` introduces UBOs for hot-path uniform blocks. The semantic shifts (float-render-target feature-detect, PBO + `fenceSync` async readback, VAO state stickiness) that aren't mechanical are in [Gotchas](#gotchas) below.
-
-### Gotchas
-
-**Float-render-target capability is NOT automatic** — `RGBA16F` / `RGBA32F` storage is core, but RENDERING into it still requires `EXT_color_buffer_float`. Without the extension, `checkFramebufferStatus` returns `FRAMEBUFFER_INCOMPLETE_ATTACHMENT`.
-```ts
-// ❌ Bad — FRAMEBUFFER_INCOMPLETE_ATTACHMENT on most GPUs
-const tex = gl.createTexture();
-gl.bindTexture(gl.TEXTURE_2D, tex);
-gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA16F, w, h);
-gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
-
-// ✅ Good — feature-detect first
-if (!gl.getExtension('EXT_color_buffer_float')) {
-  throw new Error('Float render targets unsupported on this device');
-}
-// …then create + attach as above.
-```
-
-**`readPixels` is the wrong tool for GPU→CPU readback** — it stalls the pipeline. Use a PBO + `fenceSync` (the pattern matches the host's `shadow-kernel` style).
-```ts
-// ❌ Bad — full pipeline stall, 5–20 ms frame-time spike
-const pixels = new Uint8Array(w * h * 4);
-gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-
-// ✅ Good — async via PBO + fence; resolves on a later RAF
-const pbo = gl.createBuffer();
-gl.bindBuffer(gl.PIXEL_PACK_BUFFER, pbo);
-gl.bufferData(gl.PIXEL_PACK_BUFFER, w * h * 4, gl.STREAM_READ);
-gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, 0);  // 0 = offset into PBO
-gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
-const sync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
-// On a later frame: poll until gl.clientWaitSync(sync, 0, 0) !== gl.TIMEOUT_EXPIRED,
-// then bindBuffer + getBufferSubData(PIXEL_PACK_BUFFER, 0, dst), then deleteSync + deleteBuffer.
-```
-
-**VAO state is sticky** — leaving a VAO bound across draw calls leaks its attrib bindings into the next call.
-```ts
-// ❌ Bad — next unrelated draw inherits this VAO's state
-gl.bindVertexArray(meshVAO);
-gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_INT, 0);
-// …other code runs, then a different draw uses leaked state
-
-// ✅ Good — unbind after each logical draw group
-gl.bindVertexArray(meshVAO);
-gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_INT, 0);
-gl.bindVertexArray(null);
-```
+> Sibling skill for the GLSL **shader text**: [`writing-glsl`](../writing-glsl/SKILL.md). Pure TypeScript idioms outside WebGL are owned by [`writing-typescript`](../writing-typescript/SKILL.md) / [`writing-ecmascript`](../writing-ecmascript/SKILL.md).
 
 ## Context & Lifecycle
 
@@ -149,10 +93,10 @@ gl.bindVertexArray(null);   // close the recording
 // Per-frame:
 gl.bindVertexArray(vao);
 gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_INT, 0);
-gl.bindVertexArray(null);   // unbind — see Migration Gotchas
+gl.bindVertexArray(null);   // unbind — leaks attrib state into the next draw otherwise
 ```
 
-One VAO per draw-call permutation; switching VAOs is cheap. Rebuilding attribute state on every draw (the WebGL1 pattern) is the single biggest CPU-side perf hit when porting.
+One VAO per draw-call permutation; switching VAOs is cheap. Rebuilding attribute state on every draw is the single biggest CPU-side perf hit; one VAO per permutation is the right shape.
 
 ## Programs & Uniform-location Caching
 
@@ -305,7 +249,7 @@ Pair with `layout(location=N) out vec4 …` in the fragment shader; slot N match
 
 ### sRGB framebuffers
 
-Render INTO `gl.SRGB8_ALPHA8`-storage textures and sampling automatically does the linear→sRGB conversion on write. Reading samples them back as linear. This is the correct way to do gamma — applying `pow(c, 2.2)` in the shader is the WebGL1 hack.
+Render INTO `gl.SRGB8_ALPHA8`-storage textures and sampling automatically does the linear→sRGB conversion on write. Reading samples them back as linear. This is the correct way to do gamma — applying `pow(c, 2.2)` in the shader is wrong (it overshoots the gamma curve and leaks linear-vs-sRGB into blending).
 
 ### Multisample renderbuffers
 
@@ -372,7 +316,7 @@ Capability detect at init, cache the result, never call `getExtension` per frame
 
 ### Synchronous `readPixels` in the render loop
 
-Already covered as a Migration gotcha — the right pattern is PBO + `fenceSync`.
+`gl.readPixels` blocks until the GPU finishes — 5–20 ms frame-time spike. The right pattern is PBO + `fenceSync` (full code in [§ Buffers (UBO, PBO, async readback)](#buffers-ubo-pbo-async-readback) above).
 
 ### `getError` in the hot path
 

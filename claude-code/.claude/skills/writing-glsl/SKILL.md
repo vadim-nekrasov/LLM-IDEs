@@ -1,7 +1,7 @@
 ---
 name: writing-glsl
-description: GLSL ES 3.00 (WebGL2 shader language) — ESSL 3.00 type system, in/out qualifiers, UBOs, integer samplers, MRT outputs, precision semantics, shader-side performance, WebGL1→WebGL2 shader migration.
-when_to_use: Triggers on edits to .glsl/.vert/.frag files. Covers ESSL 3.00 specifically; assumes `#version 300 es`. For WGSL (WebGPU) see writing-wgsl. Syntax/grammar/type/identifier checks belong to `glslangValidator` (e.g. via `scripts/validate-shaders.mjs`) — this skill covers semantics, GPU portability, runtime pitfalls, performance, and migration.
+description: GLSL ES 3.00 (WebGL2 shader language) — ESSL 3.00 type system, in/out qualifiers, UBOs, integer samplers, MRT outputs, precision semantics, shader-side performance.
+when_to_use: Triggers on edits to .glsl/.vert/.frag files. Covers ESSL 3.00 specifically; assumes `#version 300 es`. For WGSL (WebGPU) see writing-wgsl. Syntax/grammar/type/identifier checks belong to `glslangValidator` (e.g. via `scripts/validate-shaders.mjs`) — this skill covers semantics, GPU portability, runtime pitfalls, and performance.
 paths:
   - "**/*.glsl"
   - "**/*.vert"
@@ -15,7 +15,6 @@ paths:
 ## Contents
 
 - [Scope & Coordination](#scope--coordination)
-- [Migration from GLSL ES 1.00](#migration-from-glsl-es-100)
 - [Type System](#type-system)
 - [In/Out & Interpolation](#inout--interpolation)
 - [Sampling & Textures](#sampling--textures)
@@ -33,55 +32,11 @@ paths:
 | Layer | Owns | Examples |
 |---|---|---|
 | **Principle** | compile-time grammar/type/identifier → validator; runtime correctness, GPU portability, performance → skill; numerical/visual/architectural judgment → human review | — |
-| `glslangValidator` + project `lint:glsl` | syntax, type checking, undeclared identifiers, precision-qualifier syntax, illegal control-flow, ESSL grammar, `#version` validation, **legacy ESSL 1.00 constructs** (text-grep, post-glslang) | grammar/types → glslang; `texture2D` / `gl_FragColor` / `attribute` / `varying` / `#extension GL_EXT_draw_buffers` → project `lint:glsl` (set `MIGRATE_STRICT=1` to enforce) |
+| `glslangValidator` + project `lint:glsl` | syntax, type checking, undeclared identifiers, precision-qualifier syntax, illegal control-flow, ESSL grammar, `#version` validation | grammar/types → glslang; `texture2D` / `gl_FragColor` / `attribute` / `varying` / `#extension GL_EXT_draw_buffers` → project `lint:glsl` (install-free regression guard, hard error by default) |
 | This skill | runtime UB, GPU portability, shader-state semantics, perf anti-patterns | uninitialized var (UB); `mediump int` range overflow; divergent branching; sampler completeness; non-uniform sampler-array indexing |
 | Human review | numerical stability, visual correctness, perf-vs-quality trade-offs | banding, filter quality, algorithmic choice, sample count |
 
-> Sibling skill for the WebGL2 **host API** side of the migration: [`writing-webgl2`](../writing-webgl2/SKILL.md).
-
-## Migration from GLSL ES 1.00
-
-Use this section when porting an existing GLSL ES 1.00 shader to 3.00, or when reading legacy shader code. Host-side context changes are covered in [`writing-webgl2` Migration](../writing-webgl2/SKILL.md#migration-from-webgl1).
-
-### Cheat Sheet
-
-The mechanical 1.00 → 3.00 renames (`texture2D` → `texture`, `attribute` / `varying` → `in` / `out`, `gl_FragColor` → `layout(location = 0) out vec4`, `gl_FragData[]` → explicit MRT outputs, dropping `#extension` directives that are now core, etc.) are reported per-line by `npm run lint:glsl` with the new spelling in the message. Set `MIGRATE_STRICT=1` once migration completes to convert warnings to errors. The semantic shifts that aren't mechanical are in [Gotchas](#gotchas) below.
-
-### Gotchas
-
-**Fragment output declaration** — `gl_FragColor` and `gl_FragData[]` are gone; declare named outputs explicitly.
-```glsl
-// ❌ Bad (legacy ESSL 1.00)
-void main() {
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-}
-
-// ✅ Good (ESSL 3.00)
-#version 300 es
-precision highp float;
-layout(location = 0) out vec4 fragColor;
-void main() {
-    fragColor = vec4(1.0, 0.0, 0.0, 1.0);
-}
-```
-
-**Precision-qualifier semantics** — `mediump int` minimum range tightens to roughly `[-2^15, 2^15-1]`; legacy shaders that did index math at `mediump` will overflow on conforming mobile GPUs. Use `highp` for any index, address, or hash arithmetic.
-```glsl
-// ❌ Bad — silently overflows on mobile in 3.00
-mediump int index = int(uv.x * 65535.0);
-
-// ✅ Good
-highp int index = int(uv.x * 65535.0);
-```
-
-**Stricter implicit conversions** — ESSL 3.00 rejects mixed `int`/`float` arithmetic that 1.00 silently widened.
-```glsl
-// ❌ Bad — type-mismatch error in 3.00
-float t = 1 + 2.0;
-
-// ✅ Good
-float t = float(1) + 2.0;   // or just `1.0 + 2.0`
-```
+> Sibling skill for the WebGL2 **host API**: [`writing-webgl2`](../writing-webgl2/SKILL.md).
 
 ## Type System
 
@@ -175,7 +130,7 @@ uniform isampler2D uIdTex;
 ivec4 id = texelFetch(uIdTex, ivec2(gl_FragCoord.xy), 0);
 ```
 
-A `usampler2D` returning `uvec4` is the only correct way to read an `RGBA32UI` texture. Floating-point ID encoding (the WebGL1 workaround) is unnecessary.
+A `usampler2D` returning `uvec4` is the only correct way to read an `RGBA32UI` texture — no floating-point ID encoding tricks needed.
 
 ## UBOs & std140 Layout
 
@@ -237,7 +192,7 @@ precision mediump float;
 
 ### Loops
 
-ESSL 3.00 drops the WebGL1 constant-expression bound — dynamic loops compile.
+ESSL 3.00 allows dynamic loop bounds (no constant-expression requirement).
 
 ```glsl
 // ✅ Good — both compile in ESSL 3.00

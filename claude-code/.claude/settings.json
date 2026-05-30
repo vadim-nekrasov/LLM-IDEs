@@ -27,6 +27,7 @@
       "WebFetch(domain:code.claude.com)",
       "WebFetch(domain:docs.anthropic.com)",
       "Skill(final-checking)",
+      "Skill(writing-docs)",
       "Skill(searching-solutions)",
       "Skill(searching-solutions-multi)",
       "Skill(researching)"

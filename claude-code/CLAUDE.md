@@ -152,6 +152,7 @@ MCP server configuration lives in `~/.claude.json` (global) or `.mcp.json`
 | Scenario | Tool |
 |---|---|
 | After any code edit (typecheck + lint + Three Lenses) | `final-checking` skill (Stop hook reminds) |
+| After any project Markdown edit (README, docs/**/*.md) | `writing-docs` skill (Stop hook reminds — same gate as `final-checking`) |
 | Before committing a substantial change | `/pr-review-toolkit:review-pr` (6 agents) |
 | Post a review comment on an existing GitHub PR | `/code-review:code-review <PR#>` |
 | Hunt silent failures / wrong catch blocks specifically | `pr-review-toolkit:silent-failure-hunter` agent |

@@ -57,7 +57,7 @@ const data = await parseTranscript(input.transcript_path, input.session_id);
 
 const advisories: string[] = [];
 
-if (isCode && !data.hasApplyingWorkflow) {
+if (isCode && !data.skills.has(SKILL_NAMES.workflow)) {
   advisories.push(
     `Consider invoking the \`applying-workflow\` skill — it loads docs-first discovery, Three Lenses, and Context7 verification patterns relevant to this edit.`,
   );

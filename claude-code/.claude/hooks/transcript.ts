@@ -19,16 +19,15 @@ import {
   FORMATTABLE_EXTENSIONS,
   SKILL_NAMES,
 } from "./constants";
-import { cacheDir, getExt, sanitizeSessionId } from "./utils";
+import { cacheDir, getExt, isProjectDocFile, sanitizeSessionId } from "./utils";
 
 interface Cached {
   offset: number;
   size: number;
   editedFiles: string[];
   hasCodeEdits: boolean;
+  hasDocEdits: boolean;
   skillsEntries: [string, number][];
-  hasFinalCheck: boolean;
-  hasApplyingWorkflow: boolean;
   requiredSkillsUsed: RequiredSkillsUsed;
   docsRead: string[];
   seenFiles: string[];
@@ -38,9 +37,8 @@ function emptyData(): TranscriptData {
   return {
     editedFiles: [],
     hasCodeEdits: false,
+    hasDocEdits: false,
     skills: new Map(),
-    hasFinalCheck: false,
-    hasApplyingWorkflow: false,
     requiredSkillsUsed: {
       ecmascript: false,
       typescript: false,
@@ -114,6 +112,7 @@ function applyTranscriptLines(
         if (filePath && !seenFiles.has(filePath)) {
           const ext = getExt(filePath);
           if (CODE_EXTENSIONS.has(ext)) data.hasCodeEdits = true;
+          if (isProjectDocFile(filePath)) data.hasDocEdits = true;
           if (FORMATTABLE_EXTENSIONS.has(ext) && existsSync(filePath)) {
             data.editedFiles.push(filePath);
           }
@@ -130,8 +129,6 @@ function applyTranscriptLines(
         const skill = item.input?.skill;
         if (skill) {
           data.skills.set(skill, (data.skills.get(skill) ?? 0) + 1);
-          if (skill === SKILL_NAMES.final) data.hasFinalCheck = true;
-          if (skill === SKILL_NAMES.workflow) data.hasApplyingWorkflow = true;
           for (const [key, name] of Object.entries(SKILL_NAMES.languages)) {
             if (skill === name) {
               data.requiredSkillsUsed[key as keyof RequiredSkillsUsed] = true;
@@ -167,9 +164,8 @@ export async function parseTranscript(
     offset = cached.offset;
     data.editedFiles = [...cached.editedFiles];
     data.hasCodeEdits = cached.hasCodeEdits;
+    data.hasDocEdits = cached.hasDocEdits ?? false;
     data.skills = new Map(cached.skillsEntries);
-    data.hasFinalCheck = cached.hasFinalCheck;
-    data.hasApplyingWorkflow = cached.hasApplyingWorkflow;
     data.requiredSkillsUsed = { ...cached.requiredSkillsUsed };
     data.docsRead = new Set(cached.docsRead);
     for (const f of cached.seenFiles) seen.add(f);
@@ -188,9 +184,8 @@ export async function parseTranscript(
       size,
       editedFiles: data.editedFiles,
       hasCodeEdits: data.hasCodeEdits,
+      hasDocEdits: data.hasDocEdits,
       skillsEntries: [...data.skills.entries()],
-      hasFinalCheck: data.hasFinalCheck,
-      hasApplyingWorkflow: data.hasApplyingWorkflow,
       requiredSkillsUsed: data.requiredSkillsUsed,
       docsRead: [...data.docsRead],
       seenFiles: [...seen],

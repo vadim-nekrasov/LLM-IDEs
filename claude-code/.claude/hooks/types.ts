@@ -58,9 +58,8 @@ export interface RequiredSkillsUsed {
 export interface TranscriptData {
   editedFiles: string[];
   hasCodeEdits: boolean;
+  hasDocEdits: boolean;
   skills: Map<string, number>;
-  hasFinalCheck: boolean;
-  hasApplyingWorkflow: boolean;
   requiredSkillsUsed: RequiredSkillsUsed;
   docsRead: Set<string>;
 }

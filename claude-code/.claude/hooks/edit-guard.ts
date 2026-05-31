@@ -1,23 +1,19 @@
 #!/usr/bin/env bun
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname } from "node:path";
 import type { HookInput } from "./types";
 import { parseTranscript } from "./transcript";
 import {
   CODE_EXTENSIONS,
   EXTENSION_TO_SKILLS,
-  INJECTABLES,
   SKILL_NAMES,
   isReactHookFile,
 } from "./constants";
 import {
-  cacheDir,
   findDocsUp,
   getExt,
   isNodeModulesPath,
   isProjectDocFile,
   isTargetPath,
-  sanitizeSessionId,
 } from "./utils";
 
 const input: HookInput = await Bun.stdin.json();
@@ -81,28 +77,10 @@ if (isCode) {
   }
 }
 
-// Auto-injection registry — text advisories are scan-past'able; loading the rubric
-// body into additionalContext on first qualifying edit per session makes the rules
-// live context, not a pointer. Subsequent edits emit a short reminder only.
-const sessionId = sanitizeSessionId(input.session_id ?? "");
-const injCacheDir = cacheDir("inject");
-mkdirSync(injCacheDir, { recursive: true });
-for (const entry of INJECTABLES) {
-  if (!entry.predicate(filePath)) continue;
-  const flagPath = join(injCacheDir, `${sessionId}-${entry.key}.flag`);
-  if (existsSync(flagPath)) {
-    advisories.push(
-      `📚 \`${entry.key}\` rubric is already in this session's context — apply it directly; no need to re-invoke Skill.`,
-    );
-    continue;
-  }
-  const rubricAbsPath = join(projectRoot, entry.rubricRelPath);
-  if (!existsSync(rubricAbsPath)) continue;
-  const body = readFileSync(rubricAbsPath, "utf8");
+if (isDoc && !data.skills.has(SKILL_NAMES.docs)) {
   advisories.push(
-    `📚 \`${entry.key}\` rubric auto-loaded (first qualifying edit this session — apply these rules directly; no need to call Skill(\`${entry.key}\`)):\n\n${body}`,
+    `Call the \`writing-docs\` skill before continuing — it loads the markdown-doc principles rubric and is required by the Stop-gate.`,
   );
-  writeFileSync(flagPath, "");
 }
 
 const fileDir = dirname(filePath);

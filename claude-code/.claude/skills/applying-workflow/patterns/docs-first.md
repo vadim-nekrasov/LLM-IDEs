@@ -21,3 +21,20 @@ Skipping documentation has a recurring failure mode: the change appears correct 
 - Mechanical lint-fix that doesn't change behaviour.
 
 For anything else, prefer reading.
+
+## Trust calibration
+
+Docs are NOT a source of truth — devs frequently forget to update them when
+code changes. Treat each doc claim as a *hint*, not a fact:
+
+- For any claim your edit depends on (file paths, function names, ordering
+  rules, lifecycle assumptions, persistence behaviour), verify against the
+  actual code before acting. The doc earns trust on cross-file *intent* and
+  *invariants*; the code is authoritative on *what currently happens*.
+- When you find a discrepancy, fix the doc in the same change (or, if out of
+  scope, leave a one-line TODO). Don't silently work around stale content —
+  the next agent will hit the same trap.
+- A doc that grows without paying its own way is itself a defect. If you
+  notice bloat (narrative prose, restated code, per-symbol code samples,
+  enumerations the source file already provides), trim while you're there
+  per [`../../_shared/markdown-doc-principles.md`](../../_shared/markdown-doc-principles.md).

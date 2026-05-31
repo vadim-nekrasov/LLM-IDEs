@@ -16,6 +16,20 @@ these rules elsewhere; link to this file.
 All doc types share the include/exclude rules and the budget; only emphasis
 differs (README leans onboarding; `docs/index.md` leans orientation).
 
+## Audience
+
+In repos where humans don't read `docs/index.md` (the agent is the only
+consumer), the budget is a hard reader-cost concern, not a style preference.
+Every line burns tokens on every future cold read, so bloat is multiplicative
+across sessions.
+
+How readers are expected to treat these docs — with skepticism, verifying
+against code before acting — lives in
+[`../applying-workflow/patterns/docs-first.md#trust-calibration`](../applying-workflow/patterns/docs-first.md#trust-calibration).
+Authoring decisions should anticipate that calibration: write claims that
+*will earn* trust (invariants, cross-file intent), not claims that demand it
+(restated current behaviour, which rots and gets distrusted).
+
 ## Budget
 
 - Target ~1–3k tokens per doc. Headings + bullets; prose only where a sentence
@@ -26,6 +40,10 @@ differs (README leans onboarding; `docs/index.md` leans orientation).
   state, never to restate code. Both undershoot (cut invariants to hit
   the count) and bloat (pad to fill the page) are defects — the budget
   is a lagging indicator of disciplined deletion.
+- **Before adding a line to an existing doc**, ask: can a future agent
+  recover this fact in < 30 s of grep + a single file read? If yes, omit.
+  Restoration via `git` is cheap; accumulated bloat compounds across every
+  cold read.
 
 ## Include (earns its place)
 

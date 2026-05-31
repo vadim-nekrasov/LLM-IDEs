@@ -248,9 +248,11 @@ export const compute = (input, { onCompute } = {}) =>
 
 ## Debugging
 
-When in doubt about bug cause, add working `console.log`:
-```js
-console.log('payload:', JSON.stringify(payload, null, 2));
-```
+When in doubt about a bug, add a working `console.log`. Inline values into the message — never pass a raw object/array/variable as a separate argument to `console.log` / `info` / `warn` / `debug`: DevTools' "Copy" action emits `msg {…}` instead of the values, so the copied diagnostic is useless for sharing.
 
-Log key input data and intermediate states. Logs can be removed later, but at diagnostic moment they must be **working**, not commented out.
+- Bad: `console.log('payload:', payload)` or `console.log('user', { id, role })`
+- Good: `` console.log(`payload: ${JSON.stringify(payload, null, 2)}`) `` or `` console.log(`id=${id} role=${role}`) ``
+
+Exception: `console.error('ctx:', errorInstance)` — DevTools serialises `Error` with full stack and the copy preserves it.
+
+Log key inputs and intermediate states. Logs can be removed later, but at the diagnostic moment they must be **working**, not commented out.

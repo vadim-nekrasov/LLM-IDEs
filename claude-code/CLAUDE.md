@@ -7,9 +7,13 @@ in each project that uses the same Claude Code config).
 
 - Replies to user: Russian.
 - Code, identifiers, inline comments, commit messages: English.
-- Inline code comments are ≤ 2 lines and explain only non-obvious "why"
-  (constraints, invariants, surprising behaviour). Markdown docs aren't bound
-  by this limit.
+
+## Drafting Rules
+
+Recurrent drafting rules (inline comments, minimal diffs, no `.claude/`
+config backups, English-only project docs) live in the auto-loaded
+`applying-rules-cluster` skill. Markdown docs aren't bound by the comment
+line-count cap.
 
 ## Project-specific overrides
 

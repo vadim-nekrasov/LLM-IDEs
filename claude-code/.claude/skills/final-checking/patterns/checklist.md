@@ -20,7 +20,8 @@
 - [ ] No dead code (commented blocks, unused imports).
 
 ## Documentation
-- [ ] Comments: each block ≤ 2 lines, justified by future-edit utility, English — see `../../_shared/three-lenses.md#c-maintainer-lens--future--team`.
+> Rule cluster (comments / DRY / config backups / project-docs language) is owned by the auto-loaded `applying-rules-cluster` skill.
+> If a violation surfaces here, the upstream channel failed — flag the miss and stop; do NOT rewrite.
 - [ ] External APIs verified via Context7 (Zero Hallucination).
 - [ ] If public API/behaviour/architecture changed → invoke `writing-docs` skill and update `docs/index.md`.
 - [ ] If inaccurate docs were spotted during exploration → invoke `writing-docs` skill and correct them.

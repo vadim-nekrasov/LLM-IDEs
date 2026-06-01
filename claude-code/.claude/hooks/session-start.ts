@@ -1,5 +1,11 @@
 #!/usr/bin/env bun
-import { existsSync, readdirSync, statSync, unlinkSync } from "node:fs";
+import {
+  existsSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+  unlinkSync,
+} from "node:fs";
 import { join } from "node:path";
 import type { HookInput } from "./types";
 import { cacheDir } from "./utils";
@@ -78,11 +84,29 @@ const toolsHint =
 
 const message = `Session started • Branch: \`${branch}\` • Dirty files: ${dirty}${overlayHint}${toolsHint}`;
 
+// Seed the recurrent-rules cluster from turn 1 so first-draft edits comply
+// before the auto-loaded skill body lands (race-condition safety net).
+let rulesBlock = "";
+try {
+  const skillPath = join(
+    cwd,
+    ".claude",
+    "skills",
+    "applying-rules-cluster",
+    "SKILL.md",
+  );
+  const raw = readFileSync(skillPath, "utf8");
+  const stripped = raw.replace(/^---[\s\S]*?\n---\s*\n/, "");
+  rulesBlock = `\n\n${stripped.trim()}`;
+} catch {
+  // best-effort — missing skill file degrades to status-only context
+}
+
 console.log(
   JSON.stringify({
     hookSpecificOutput: {
       hookEventName: "SessionStart",
-      additionalContext: message,
+      additionalContext: message + rulesBlock,
     },
   }),
 );

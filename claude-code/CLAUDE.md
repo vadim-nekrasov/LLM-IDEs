@@ -147,6 +147,13 @@ MCP server configuration lives in `~/.claude.json` (global) or `.mcp.json`
 - **`code-modernization` is disabled globally** — it targets COBOL / Java /
   .NET legacy and isn't relevant to typical work here. Re-enable in
   `~/.claude/settings.json → enabledPlugins` if a legacy project shows up.
+- **`edit-guard` writing-docs gate**: PreToolUse hook on
+  `Edit|Write|MultiEdit` **hard-blocks** edits to `docs/**/*.md` and
+  `README*.md` when the `writing-docs` skill has not been invoked in the
+  current session. Invoke it via the Skill tool before drafting doc edits
+  so the markdown-doc rubric is applied before, not after, the edit.
+  CLAUDE.md / CLAUDE.local.md / CHANGELOG.md and anything under `.claude/`
+  (plan, memory, hookify rules, skills) are excluded.
 - **Emergency hook kill-switch**: if `security-guidance` or any other hook
   blocks a legitimate edit chain, set `"disableAllHooks": true` in
   `settings.json` to silence every hook until restart. Re-enable when done.

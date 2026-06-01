@@ -100,8 +100,8 @@ if (isCode && EXTENSION_TO_SKILLS[ext]?.includes("ecmascript")) {
 }
 
 if (isDoc && !data.skills.has(SKILL_NAMES.docs)) {
-  advisories.push(
-    `Call the \`writing-docs\` skill before continuing — it loads the markdown-doc principles rubric and is required by the Stop-gate.`,
+  deny(
+    "📚 Doc edit blocked: invoke the `writing-docs` skill via the Skill tool first. Applies to docs/**/*.md and README*.md.",
   );
 }
 

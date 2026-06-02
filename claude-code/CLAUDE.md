@@ -12,8 +12,9 @@ in each project that uses the same Claude Code config).
 
 Recurrent drafting rules (inline comments, minimal diffs, no `.claude/`
 config backups, English-only project docs) live in the auto-loaded
-`applying-rules-cluster` skill. Markdown docs aren't bound by the comment
-line-count cap.
+`applying-rules-cluster` skill. The 2-line comment-block cap is
+hard-enforced by the `edit-guard.ts` PreToolUse hook. Markdown docs
+aren't bound by the comment line-count cap.
 
 ## Project-specific overrides
 

@@ -13,10 +13,27 @@ user-invocable: false
 
 Default: write no comment.
 
+**Hard cap: any single comment block ≤ 2 lines (JSDoc, `/* */`, `//`-run, `#`-run all included). 3+ lines forbidden — split into code-level clarity instead.** Enforced by `edit-guard.ts` PreToolUse hook — the edit will be denied before it lands on disk.
+
 - Opt in only for non-obvious "why": hidden constraint, subtle invariant, surprising workaround.
-- Hard cap: any single comment block ≤ 2 lines (JSDoc and `/* */` included). 3+ lines forbidden — split into code-level clarity instead.
 - Touch only comments on code you edited in this diff; do not retouch comments on lines you did not modify.
 - Don't write: `// iterate over users` · `// now we save` · `// TODO(ABC-123)` · `// existing behaviour preserved` · `// added for issue #42`.
+
+Bad (4 lines — denied):
+
+```ts
+// Canonical colour per PopupType for the radial-disambiguation sectors and the
+// StackItemRow accent strip. Paint-backed types reuse the layer's constant from
+// the leaf (so menu colour follows on-map paint automatically); icon-only and
+// heatmap types take a UI-only literal.
+```
+
+Good (≤ 2 lines, same intent — passes):
+
+```ts
+// POPUP_TYPE_COLOR mirrors layer paint for paint-backed types; icon/heatmap
+// types use literals.
+```
 
 ## When extending a diff
 

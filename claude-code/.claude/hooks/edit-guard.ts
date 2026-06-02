@@ -32,6 +32,79 @@ function deny(reason: string): never {
   process.exit(0);
 }
 
+function collectEditTexts(input: HookInput): string[] {
+  const inp = input.tool_input ?? {};
+  const out: string[] = [];
+  if (typeof inp.new_string === "string") out.push(inp.new_string);
+  if (typeof inp.content === "string") out.push(inp.content);
+  if (Array.isArray(inp.edits)) {
+    for (const e of inp.edits as Array<{ new_string?: unknown }>) {
+      if (typeof e?.new_string === "string") out.push(e.new_string);
+    }
+  }
+  return out;
+}
+
+function detectLineRun(
+  lines: string[],
+  start: number,
+  lineRe: RegExp,
+  skipFirst?: (i: number, line: string) => boolean,
+): number {
+  let j = start;
+  while (
+    j < lines.length &&
+    lineRe.test(lines[j] ?? "") &&
+    !(skipFirst?.(j, lines[j] ?? "") ?? false)
+  )
+    j++;
+  return j;
+}
+
+function detectLongCommentBlock(
+  text: string,
+  ext: string,
+): { hit: false } | { hit: true; reason: string } {
+  const lines = text.split("\n");
+  const isPython = ext === ".py";
+  const shebangSkip = (i: number, line: string) =>
+    i === 0 && line.startsWith("#!");
+
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i] ?? "";
+
+    if (/^\s*\/\//.test(line)) {
+      const j = detectLineRun(lines, i, /^\s*\/\//);
+      const run = j - i;
+      if (run > 2) return { hit: true, reason: `// run of ${run} lines` };
+      i = j;
+      continue;
+    }
+
+    if (/^\s*\/\*/.test(line)) {
+      let k = i;
+      while (k < lines.length && !(lines[k] ?? "").includes("*/")) k++;
+      const span = k < lines.length ? k - i + 1 : lines.length - i;
+      if (span > 2)
+        return { hit: true, reason: `/* */ block spanning ${span} lines` };
+      i = k + 1;
+      continue;
+    }
+
+    if (isPython && /^\s*#/.test(line) && !shebangSkip(i, line)) {
+      const j = detectLineRun(lines, i, /^\s*#/, shebangSkip);
+      const run = j - i;
+      if (run > 2) return { hit: true, reason: `# run of ${run} lines` };
+      i = j;
+      continue;
+    }
+
+    i++;
+  }
+  return { hit: false };
+}
+
 if (isNodeModulesPath(filePath)) {
   deny("Cannot edit files in node_modules/.");
 }
@@ -83,19 +156,22 @@ const CONSOLE_RAW_OBJ_RE =
   /console\.(?:log|warn|error)\s*\(\s*[^,)\n]*,\s*(?!(?:JSON\.stringify|String|Number|Boolean)\b|['"`]|-?\d|(?:true|false|null|undefined)\b)[A-Za-z_$][\w$]*(?:\s*\.\s*[A-Za-z_$][\w$]*)*/;
 
 if (isCode && EXTENSION_TO_SKILLS[ext]?.includes("ecmascript")) {
-  const inp = input.tool_input ?? {};
-  const sources: unknown[] = [inp.new_string, inp.content];
-  if (Array.isArray(inp.edits)) {
-    for (const e of inp.edits as Array<{ new_string?: unknown }>)
-      sources.push(e?.new_string);
-  }
-  if (
-    sources.some((s) => typeof s === "string" && CONSOLE_RAW_OBJ_RE.test(s))
-  ) {
+  if (collectEditTexts(input).some((s) => CONSOLE_RAW_OBJ_RE.test(s))) {
     advisories.push(
       `Edit adds \`console.log/warn/error\` with a raw object as 2nd arg. ` +
         `Wrap with \`JSON.stringify(obj, null, 2)\` — see \`.claude/skills/debugging/patterns/logging.md\`.`,
     );
+  }
+}
+
+if (isCode) {
+  for (const text of collectEditTexts(input)) {
+    const result = detectLongCommentBlock(text, ext);
+    if (result.hit) {
+      deny(
+        `Comment block ≤ 2 lines — see applying-rules-cluster skill. Detected ${result.reason}. Split into code-level clarity (named identifiers / extracted helpers / single-line trailing note).`,
+      );
+    }
   }
 }
 

@@ -150,12 +150,23 @@ if (isCode) {
   }
 }
 
+// Object-literal 2nd-arg-of-console — HARD BLOCK (see .claude/skills/debugging/patterns/logging.md).
+// `[^)]*?` stays inside a single call while tolerating newlines/whitespace in the arg list.
+const CONSOLE_OBJ_LITERAL_RE =
+  /console\.(?:log|warn|error)\s*\(\s*[^)]*?,\s*\{/;
+
 // Raw-object 2nd-arg-of-console anti-pattern (see .claude/skills/debugging/patterns/logging.md).
 // Skips JSON.stringify(...)/String/Number/Boolean wrappers, string/template/numeric/boolean/null literals.
 const CONSOLE_RAW_OBJ_RE =
   /console\.(?:log|warn|error)\s*\(\s*[^,)\n]*,\s*(?!(?:JSON\.stringify|String|Number|Boolean)\b|['"`]|-?\d|(?:true|false|null|undefined)\b)[A-Za-z_$][\w$]*(?:\s*\.\s*[A-Za-z_$][\w$]*)*/;
 
 if (isCode && EXTENSION_TO_SKILLS[ext]?.includes("ecmascript")) {
+  if (collectEditTexts(input).some((s) => CONSOLE_OBJ_LITERAL_RE.test(s))) {
+    deny(
+      `\`console.(log|warn|error)\` with an object literal as 2nd arg truncates in DevTools when copied. ` +
+        `Wrap with \`JSON.stringify(obj, null, 2)\` — see \`.claude/skills/debugging/patterns/logging.md\`.`,
+    );
+  }
   if (collectEditTexts(input).some((s) => CONSOLE_RAW_OBJ_RE.test(s))) {
     advisories.push(
       `Edit adds \`console.log/warn/error\` with a raw object as 2nd arg. ` +

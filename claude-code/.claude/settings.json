@@ -41,7 +41,6 @@
       "Bash(yarn dlx eslint:*)"
     ]
   },
-  "effortLevel": "high",
   "attribution": {
     "commit": "",
     "pr": ""
@@ -96,6 +95,7 @@
           {
             "type": "command",
             "timeout": 30,
+            "async": true,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format.ts"
           }
         ]
@@ -111,7 +111,7 @@
         ]
       },
       {
-        "matcher": "Bash|Edit|Write|MultiEdit|NotebookEdit|WebFetch|WebSearch|mcp__.*",
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
         "hooks": [
           {
             "type": "command",

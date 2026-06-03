@@ -1,7 +1,6 @@
 ---
 name: writing-webgl2
-description: WebGL2 host JS/TS API — context creation, shader/program lifecycle, VAO/VBO/UBO, FBO/MRT/sRGB renderbuffers, texture upload, uniforms, draw calls, transform feedback, instanced rendering, async PBO readback, GPU-resource cleanup.
-when_to_use: Triggers on edits to .ts/.js/.mjs/.cjs files that touch WebGL2 host APIs — WebGL2RenderingContext, getContext('webgl2'), gl.createShader/createProgram/compileShader/linkProgram, gl.createBuffer/bindBuffer/bufferData, gl.createVertexArray/bindVertexArray, gl.createFramebuffer/framebufferTexture2D, gl.createTexture/texImage2D/texStorage2D, gl.uniform*/getUniformLocation, gl.drawArrays/drawElements/drawArraysInstanced, gl.beginTransformFeedback, gl.fenceSync, gl.deleteProgram/deleteBuffer/deleteTexture cleanup. Skip on non-WebGL TS/JS edits — React components, Redux slices, plain utility modules. For the shader language see writing-glsl; for the WebGPU equivalent see writing-wgsl.
+description: WebGL2 host JS/TS API — context creation, shader/program lifecycle, VAO/VBO/UBO, FBO/MRT/sRGB renderbuffers, texture upload, uniforms, draw calls, transform feedback, instanced rendering, async PBO readback, GPU-resource cleanup. Auto-trigger on .ts/.js/.mjs/.cjs edits touching WebGL2 host APIs (WebGL2RenderingContext, gl.createShader/Program/Buffer/VertexArray/Framebuffer/Texture, gl.uniform*, gl.drawArrays/Elements, gl.beginTransformFeedback, gl.fenceSync, gl.delete*). Skip on non-WebGL edits. For shader language → writing-glsl; for WebGPU equivalent → writing-wgsl.
 paths:
   - "**/*.ts"
   - "**/*.js"

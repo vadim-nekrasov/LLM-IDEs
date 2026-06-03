@@ -1,7 +1,6 @@
 ---
 name: reviewing-apis
-description: HTTP client and API service patterns — fetch, axios, React Query, SWR, AbortController, error transformation, security, cancellation.
-when_to_use: Triggers on edits to *Api.ts, *Service.ts, *.api.ts, *.service.ts, or files configuring HTTP interceptors / data-fetching hooks.
+description: HTTP client and API service patterns — fetch, axios, React Query, SWR, AbortController, error transformation, security, cancellation. Auto-trigger on *Api.ts/*Service.ts/*.api.ts/*.service.ts edits.
 paths:
   - "**/*Api.ts"
   - "**/*Service.ts"

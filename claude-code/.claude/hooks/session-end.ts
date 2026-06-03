@@ -14,8 +14,9 @@ const input: SessionEndInput = await Bun.stdin
 
 // Drop session-scoped caches now rather than waiting for the 7-day GC in
 // session-start.ts. precompact snapshots are intentionally archival and stay.
+// Preserve transcript cache for --resume; only purge on terminal session exit.
 const sessionId = input.session_id;
-if (sessionId) {
+if (sessionId && (input.reason === "exit" || input.reason === "logout")) {
   const safeId = sanitizeSessionId(sessionId);
   for (const sub of ["transcript", "upcontext"]) {
     const file = join(cacheDir(sub), `${safeId}.json`);

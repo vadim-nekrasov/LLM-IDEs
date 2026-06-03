@@ -1,7 +1,6 @@
 ---
 name: writing-tailwind
-description: Tailwind CSS v4 patterns — cn/clsx/tailwind-merge composition, mobile-first responsive, token-driven colors, anti-patterns. Skip exotic v4 syntax unless the user asks for it.
-when_to_use: Triggers on edits to .tsx/.jsx/.css files when Tailwind classes are touched. Covers cn import path, conditional class composition, mobile-first breakpoints, color/spacing token rules, layer ordering with non-Tailwind CSS.
+description: Tailwind CSS v4 patterns — cn/clsx/tailwind-merge composition, mobile-first responsive, token-driven colors, anti-patterns. Auto-trigger on .tsx/.jsx/.css edits when Tailwind classes touched. Skip exotic v4 syntax unless asked.
 paths:
   - "**/*.tsx"
   - "**/*.jsx"

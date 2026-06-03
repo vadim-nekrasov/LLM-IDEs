@@ -1,7 +1,6 @@
 ---
 name: writing-typescript
-description: TypeScript patterns — type definitions, generics, utility types, discriminated unions, type guards, satisfies/as const.
-when_to_use: Triggers on edits to .ts/.tsx files or when defining interfaces and types.
+description: TypeScript patterns — type definitions, generics, utility types, discriminated unions, type guards, satisfies/as const. Auto-trigger on .ts/.tsx edits.
 paths:
   - "**/*.ts"
   - "**/*.tsx"

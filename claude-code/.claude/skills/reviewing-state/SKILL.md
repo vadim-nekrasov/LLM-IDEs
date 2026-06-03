@@ -1,7 +1,6 @@
 ---
 name: reviewing-state
-description: State management checklist — Redux Toolkit, Zustand, MobX, Jotai/Recoil, Pinia/Vuex.
-when_to_use: Triggers on edits to *Store.ts, *Slice.ts, *Atom.ts, *.store.ts, *.slice.ts, *Reducer.ts, or files importing state libraries.
+description: State management checklist — Redux Toolkit, Zustand, MobX, Jotai/Recoil, Pinia/Vuex. Auto-trigger on *Store.ts/*Slice.ts/*Atom.ts/*Reducer.ts/*.store.ts/*.slice.ts edits.
 paths:
   - "**/*Store.ts"
   - "**/*Slice.ts"

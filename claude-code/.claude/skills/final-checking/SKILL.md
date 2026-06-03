@@ -1,7 +1,6 @@
 ---
 name: final-checking
-description: Final verification routine — linting, type checking, structured checklist, and Three Lenses pass.
-when_to_use: Triggers after completing any implementation, bug fix, or refactor before stopping the session.
+description: Final verification routine — linting, type checking, structured checklist, and Three Lenses pass. Invoke after completing implementation, bug fix, or refactor before stopping.
 ---
 
 # Final Verification Router

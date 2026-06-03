@@ -4,6 +4,7 @@ import { dirname, join, parse } from "node:path";
 import type { HookInput } from "./types";
 import { getExt } from "./utils";
 import { parseTranscript } from "./transcript";
+import { SKILL_NAMES } from "./constants";
 
 // Stop-time judge for the Linter Warnings Policy (final-checking SKILL.md):
 // every file edited this session must end with 0 linter warnings on the lines
@@ -112,11 +113,11 @@ function isError(m: EslintMessage): boolean {
 // (parseTranscript is incrementally cached → reused, not recomputed). The
 // session .jsonl is append-only; if a compaction ever truncates it, edits
 // before the truncation may be missed — an accepted thin edge.
-const { editedFiles } = await parseTranscript(
-  input.transcript_path,
-  input.session_id,
-);
-const touched = editedFiles.filter(
+const data = await parseTranscript(input.transcript_path, input.session_id);
+// Serialize with final-checks.ts: skip lint-block until final-checking has
+// been invoked so reasons aren't lost when both Stop hooks block in parallel.
+if (data.hasCodeEdits && !data.skills.has(SKILL_NAMES.final)) process.exit(0);
+const touched = data.editedFiles.filter(
   (f) => LINT_EXTENSIONS.has(getExt(f)) && existsSync(f),
 );
 

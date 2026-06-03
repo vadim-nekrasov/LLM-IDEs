@@ -1,7 +1,6 @@
 ---
 name: writing-glsl
-description: GLSL ES 3.00 (WebGL2 shader language) — ESSL 3.00 type system, in/out qualifiers, UBOs, integer samplers, MRT outputs, precision semantics, shader-side performance.
-when_to_use: Triggers on edits to .glsl/.vert/.frag files. Covers ESSL 3.00 specifically; assumes `#version 300 es`. For WGSL (WebGPU) see writing-wgsl. Syntax/grammar/type/identifier checks belong to `glslangValidator` (e.g. via `scripts/validate-shaders.mjs`) — this skill covers semantics, GPU portability, runtime pitfalls, and performance.
+description: GLSL ES 3.00 (WebGL2 shader language) — ESSL 3.00 type system, in/out qualifiers, UBOs, integer samplers, MRT outputs, precision semantics, shader-side performance. Auto-trigger on .glsl/.vert/.frag edits (assumes `#version 300 es`). For WGSL → writing-wgsl. Syntax/grammar checks belong to `glslangValidator`; this skill covers semantics, GPU portability, runtime pitfalls.
 paths:
   - "**/*.glsl"
   - "**/*.vert"

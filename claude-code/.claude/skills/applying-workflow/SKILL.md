@@ -1,7 +1,6 @@
 ---
 name: applying-workflow
-description: Structured development workflow router (docs-first discovery, Three Lenses analysis, Context7 verification, final checking).
-when_to_use: Triggers on edits to .ts/.tsx/.js/.jsx/.py/.go/.rs/.wgsl files, when implementing a feature, or fixing a non-trivial bug.
+description: Structured development workflow router (docs-first discovery, Three Lenses analysis, Context7 verification, final checking). Auto-trigger on .ts/.tsx/.js/.jsx/.py/.go/.rs/.wgsl edits.
 ---
 
 # Workflow Router

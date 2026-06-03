@@ -1,7 +1,6 @@
 ---
 name: writing-docs
-description: Lean Markdown documentation — what to include/exclude, size budget, code-vs-doc authority.
-when_to_use: Triggers when authoring or editing README.md, docs/index.md, ADRs, or other repo Markdown docs by hand.
+description: Lean Markdown documentation — what to include/exclude, size budget, code-vs-doc authority. Auto-trigger on README.md / docs/**/*.md edits.
 paths:
   - "**/README.md"
   - "**/docs/**/*.md"

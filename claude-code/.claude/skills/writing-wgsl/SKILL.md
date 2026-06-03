@@ -1,7 +1,6 @@
 ---
 name: writing-wgsl
-description: WGSL (WebGPU Shading Language) patterns — type system, vectors, matrices, shader entry points, compute kernels, memory alignment.
-when_to_use: Triggers on edits to .wgsl files.
+description: WGSL (WebGPU Shading Language) patterns — type system, vectors, matrices, shader entry points, compute kernels, memory alignment. Auto-trigger on .wgsl edits.
 paths:
   - "**/*.wgsl"
 ---

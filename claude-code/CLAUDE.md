@@ -85,100 +85,30 @@ there). GRASP, DRY, KISS, YAGNI stay as Architect-Lens heuristics in
 
 ## Critical Restrictions
 
-- Don't edit `node_modules/`, `target/`, or anything inside `.claude/` unless
-  the task explicitly requires it (this directory is the shared config repo).
-- Version control is the user's job — `git commit` / `git push` are blocked
-  by deny rules in `~/.claude/settings.json`, so don't try to bypass.
-- Don't modify build/lint/format manifests (`package.json`, `tsconfig.json`,
-  `eslint.config.*`, `Cargo.toml`, etc.) unless required by the task.
-- For linting, default to `npm run lint:js` for JS/TS-only changes. When the
-  change touches non-JS lintable files (`.glsl`, `.scss`, `.css`, etc.), run
-  `npm run lint` so every `lint:*` subscript executes — `lint:js` alone misses
-  shader/style validators. Raw `npx`/`bunx`/`pnpm dlx`/`yarn dlx eslint` is
-  blocked at the harness level via deny rules in `settings.json` (the
-  `package.json` script is the audited entry point; raw `eslint` accepts
-  arbitrary `--rulesdir`/`--config` paths that execute JS).
-- Don't prepend `cd <path> && ` to a `git` command, even when `<path>` is a
-  subdirectory of the current project — `git log`, `status`, `diff`, `show`,
-  `blame`, etc. already see the whole working tree regardless of cwd. When
-  a specific subdirectory really is required, use `git -C <path> <subcmd> …`
-  (one invocation, no `cd`, no permission prompt).
+- Don't edit `node_modules/`, `target/`, build/lint/format manifests, or `.claude/` unless required.
+- `git commit` / `git push` blocked at settings deny — don't bypass.
+- Lint: `npm run lint:js` for JS/TS-only; `npm run lint` when `.glsl`/`.scss`/`.css` touched (raw `eslint` blocked — accepts `--config` that executes JS).
+- Use `git -C <path> <subcmd>`; never `cd <path> && git …` (triggers permission prompts).
 
 ## Permission Modes
 
-Default mode is `default`: Read / Grep / Glob and read-only Bash
-(`ls`, `find`, `git status`, etc.) are auto-approved; Edit / Write and
-non-read-only Bash require an explicit prompt. The user toggles modes via
-`Shift+Tab` in the CLI:
+Default = `default`; `bypassPermissions` hard-disabled via `disableBypassPermissionsMode`.
+Cycle via `Shift+Tab`; semantics — https://docs.claude.com/en/docs/claude-code/settings.
+Hierarchy: User (`~/.claude/settings.json`) ← Project (`<project>/.claude/settings.json`)
+← Local (`settings.local.json`). MCP config — `~/.claude.json` or `.mcp.json`, not `settings.json`.
 
-- `acceptEdits` — auto-approve file edits + safe filesystem commands
-  (`mkdir`, `mv`, `cp`, `sed`) inside the working directory; other Bash
-  still prompts. Use this for active development.
-- `plan` — read-only exploration; writes are blocked. Equivalent to the
-  `/plan` prefix or starting with `--permission-mode plan`.
-- `auto` — no prompts, with a background classifier as a safety net (Max /
-  Team / Enterprise plans only).
-- `bypassPermissions` — explicitly disabled by `disableBypassPermissionsMode:
-  "disable"`.
+## Plugin Hooks
 
-Settings live in `~/.claude/settings.json` (user) and `<project>/.claude/
-settings.json` (project, plus `settings.local.json` for personal overrides).
-MCP server configuration lives in `~/.claude.json` (global) or `.mcp.json`
-(project), not in `settings.json`.
+- `security-guidance@2.0.2` — PostToolUse pattern warnings on `Edit|Write|MultiEdit|NotebookEdit` (non-blocking; findings attach via `hookSpecificOutput.additional_context`). PostToolUse[Bash] async-rewake on `git commit/push` and `gt create|modify|submit`; Stop async-rewake LLM-driven diff review. Kill: `SECURITY_GUIDANCE_DISABLE=1` / `ENABLE_PATTERN_RULES=0` / `ENABLE_STOP_REVIEW=0` / `ENABLE_COMMIT_REVIEW=0`.
+- `edit-guard` PreToolUse hard-blocks edits to `docs/**/*.md` and `README*.md` without an active `writing-docs` skill in the session. `.claude/**`, CLAUDE.md, CLAUDE.local.md, CHANGELOG.md exempt.
+- Emergency kill: `"disableAllHooks": true` in `settings.json` silences every hook until restart.
 
-## Plugin Hooks & Behaviors
+## After Code Edits & Reviews
 
-- **`security-guidance`** registers a `PreToolUse` hook on
-  `Edit|Write|MultiEdit` and **blocks** the edit (exit 2) the first time a
-  file matches one of its dangerous-pattern substrings. Categories: dynamic
-  JS code execution, child-process / system invocations, unsafe DOM
-  operations (innerHTML setter, React dangerously-set-html, document write),
-  Python serialization, and any change to `.github/workflows/*.yml`. Full
-  substring list lives in
-  `~/.claude/plugins/cache/claude-plugins-official/security-guidance/unknown/hooks/security_reminder_hook.py`
-  (`SECURITY_PATTERNS`). When the match is legitimate (a test for unsafe
-  behavior, security documentation, this very file), set
-  `ENABLE_SECURITY_REMINDER=0` in the env. Per-session warning state lives
-  in `~/.claude/security_warnings_state_<session>.json` — shown once per
-  `(file, rule)` pair, then suppressed.
-- **`hookify`** registers hooks on `PreToolUse / PostToolUse / Stop /
-  UserPromptSubmit` and reads rules from `.claude/hookify.*.local.md`. With
-  no rules configured the hooks no-op (small but non-zero latency). Manage
-  rules through `/hookify:hookify`, `/hookify:list`, `/hookify:configure`.
-- **`code-modernization` is disabled globally** — it targets COBOL / Java /
-  .NET legacy and isn't relevant to typical work here. Re-enable in
-  `~/.claude/settings.json → enabledPlugins` if a legacy project shows up.
-- **`edit-guard` writing-docs gate**: PreToolUse hook on
-  `Edit|Write|MultiEdit` **hard-blocks** edits to `docs/**/*.md` and
-  `README*.md` when the `writing-docs` skill has not been invoked in the
-  current session. Invoke it via the Skill tool before drafting doc edits
-  so the markdown-doc rubric is applied before, not after, the edit.
-  CLAUDE.md / CLAUDE.local.md / CHANGELOG.md and anything under `.claude/`
-  (plan, memory, hookify rules, skills) are excluded.
-- **Emergency hook kill-switch**: if `security-guidance` or any other hook
-  blocks a legitimate edit chain, set `"disableAllHooks": true` in
-  `settings.json` to silence every hook until restart. Re-enable when done.
+- After code edit: `final-checking` (typecheck + lint + Three Lenses). Stop hook reminds once; second Stop lets session end.
+- After Markdown edit (README, `docs/**/*.md`): `writing-docs`. Same Stop-gate.
+- Substantial change (> 3 files / new feature / refactor): `/pr-review-toolkit:review-pr`.
+- Post-review on GitHub PR: `/code-review:code-review <PR#>`.
+- Silent-failure hunt: `pr-review-toolkit:silent-failure-hunter` agent.
 
-## Review Hierarchy
-
-| Scenario | Tool |
-|---|---|
-| After any code edit (typecheck + lint + Three Lenses) | `final-checking` skill (Stop hook reminds) |
-| After any project Markdown edit (README, docs/**/*.md) | `writing-docs` skill (Stop hook reminds — same gate as `final-checking`) |
-| Before committing a substantial change | `/pr-review-toolkit:review-pr` (6 agents) |
-| Post a review comment on an existing GitHub PR | `/code-review:code-review <PR#>` |
-| Hunt silent failures / wrong catch blocks specifically | `pr-review-toolkit:silent-failure-hunter` agent |
-
-## After Code Edits
-
-Invoke the `final-checking` skill before stopping — it covers typecheck, lint,
-the Three Lenses pass, and a structured checklist. The Stop hook reminds you
-once if it's missing; on a second Stop it lets the session end (anti-loop).
-
-For substantial changes (a new feature, a refactor, > 3 files touched) also
-run `/pr-review-toolkit:review-pr` — it covers comments / tests / errors /
-types / code / simplify through specialised agents, complementing the
-lighter `final-checking` pass.
-
-The `session-summary` hook prints docs read, doc-update verdict, and skills
-used automatically — no need to recreate that block in chat.
+`session-summary` Stop hook prints docs read, doc-update verdict, and skills used — no need to recreate.

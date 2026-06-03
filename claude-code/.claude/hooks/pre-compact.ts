@@ -26,8 +26,10 @@ const lines = [
 
 try {
   writeFileSync(path, lines.join("\n"));
-} catch {
-  // best-effort; failure to snapshot must not block compaction
+} catch (e) {
+  if (process.env.CLAUDE_HOOKS_DEBUG) {
+    console.error(`[pre-compact] snapshot failed: ${e}`);
+  }
 }
 // PreCompact does not accept hookSpecificOutput per Anthropic hook docs.
 // The snapshot is for post-mortem audit; no model-facing output needed here.

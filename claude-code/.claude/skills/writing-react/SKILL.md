@@ -1,7 +1,6 @@
 ---
 name: writing-react
-description: React patterns — hooks, performance, accessibility, error handling, modern APIs.
-when_to_use: Triggers on edits to .tsx/.jsx files, components, or hook usage. Covers useState/useEffect/useMemo/useCallback, Suspense, useTransition, useDeferredValue, useOptimistic.
+description: React patterns — hooks, performance, accessibility, error handling, modern APIs. Auto-trigger on .tsx/.jsx edits.
 paths:
   - "**/*.tsx"
   - "**/*.jsx"

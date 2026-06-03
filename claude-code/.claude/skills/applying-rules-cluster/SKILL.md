@@ -1,10 +1,8 @@
 ---
 name: applying-rules-cluster
 description: Cross-cutting drafting rules for comments, diffs, .claude config, and project docs. Read the matching section before emitting any edit.
-when_to_use: Auto-loaded on every edit via `paths: ['**/*']`. Read the section matching your current action before drafting.
 paths:
   - "**/*"
-user-invocable: false
 ---
 
 # Drafting Rules — Read the Matching Section Before You Write

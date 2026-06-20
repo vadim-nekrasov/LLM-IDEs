@@ -47,13 +47,18 @@ text (e.g. `"phase 2 → 18, rest ok"`). Parse intent, not strict syntax.
 
 ## Procedure (strict order)
 
-1. **Research once (conditional).** If the overall task is dominated by
-   external prior art / a comparison of established techniques, invoke
-   `/researching` (see `../researching/SKILL.md`) exactly once and distil a
-   compact summary: what was compared, the conclusion, key constraints,
-   anti-patterns. Otherwise skip and state why. Do NOT re-instruct research
-   per phase — the forked `/searching-solutions` owns its own one-call
-   Perplexity gate; duplicating the instruction is harmful.
+1. **Research up front (conditional, bounded).** If the *overall* task hinges
+   on external information the decomposition itself depends on — a third-party
+   library's API, vendor/framework docs, or a comparison of established
+   techniques — run the research gate (the full hierarchy in
+   `../researching/SKILL.md`: Context7 for library APIs, official docs, then
+   Perplexity for comparisons) and distil a compact summary: what was looked
+   up / compared, the conclusion, key constraints, anti-patterns. Stay bounded
+   — only the cross-phase questions, the minimum sufficient to decompose, not a
+   per-phase deep dive. Otherwise skip and state why. Do NOT restate the
+   hierarchy here or in the phases — each forked `/searching-solutions` runs the
+   *same* gate (Context7 included) for its own phase-local needs; duplicating
+   the hierarchy text is what's harmful, not the per-phase research itself.
 
 2. **Decompose — then HALT.** Split the task into phases where each phase
    is EXACTLY one decision point (several independent decisions in a phase
@@ -86,8 +91,10 @@ text (e.g. `"phase 2 → 18, rest ok"`). Parse intent, not strict syntax.
      distilled slice — forked phases cannot follow pointers.
    - **LOCKED**: verbatim decisions of all prior phases + their pivotal
      unknowns.
-   - **RESEARCH**: only the slice of the Step-1 summary relevant to THIS
-     phase (omit if Step 1 was skipped).
+   - **RESEARCH**: the phase's external grounding — exactly one of: the slice of
+     the Step-1 summary relevant to THIS phase; or the marker `self-serve via
+     your own research gate`, letting the fork run the gate (multi-step where
+     needed) in its Phase 1. Omit only when the phase needs no external info.
    - **DECISION**: what to choose in this phase + the criteria the fork
      applies for its in-phase filtering (default Three Lenses) — the rubric
      the forked `/searching-solutions` uses inside its search, never a

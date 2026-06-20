@@ -115,7 +115,7 @@ Phases 1-3 are internal — do NOT output all variants to user.
 - Spread variants across orthogonal axes (core abstraction, data flow, failure strategy); discard near-duplicates that differ only cosmetically. Distinctness is bounded by viability — never pad to `{max_abstract_variants}` with absurd variants; that count is a floor on breadth, not a quota over quality. If genuinely distinct viable approaches are fewer than `{max_abstract_variants}`, produce only those as serious candidates and say the space is narrower than requested (narrowness is itself a useful signal); axes you explored and rejected belong in Discarded Branches, not padded into the serious set. Proactive complement to Phase 2's Late-Breaking anchoring check.
 - Filter out strict constraint violations
 
-#### External Inspiration (Perplexity MCP)
+#### External Inspiration (research gate)
 
 Before brainstorming, run a single Perplexity call **iff any one trigger fires AND no anti-trigger fires**. Decide from the task description alone — do not explore the codebase to decide.
 
@@ -129,7 +129,7 @@ Before brainstorming, run a single Perplexity call **iff any one trigger fires A
 - Question is "how do I call this library API?" — route to Context7 (`mcp__context7__resolve-library-id` → `query-docs`) instead, per `../researching/SKILL.md`.
 - Task is trivial wiring, CRUD, UI layout, or a refactor with all needed info already in the prompt.
 
-**Budget:** at most one Perplexity call in Phase 1; treat output critically (single citation ≠ truth) and feed findings into the brainstorm as additional candidates, not as the answer.
+**Budget:** at most one Perplexity call in Phase 1 — this is the Perplexity rung of the `../researching/SKILL.md` gate. Library-API questions instead take the Context7 rung (`resolve-library-id` → `query-docs`), which may run a few targeted queries — and read installed source — bounded by what is minimum-sufficient to ground the brainstorm, not one fixed call. If Context7 is insufficient (library absent, version newer than its index, or vendor-owned topic), continue down the gate's remaining rungs — official docs, then a WebSearch fallback — per `../researching/SKILL.md`. Treat Perplexity output critically (single citation ≠ truth) and feed findings into the brainstorm as additional candidates, not as the answer.
 
 ### Phase 2: Filter Promising Candidates
 - Select top `{num_promising}` variants

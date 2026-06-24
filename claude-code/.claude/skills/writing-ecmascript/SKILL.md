@@ -37,9 +37,10 @@ Use modern language features where it improves readability and reduces boilerpla
 - Use all modern Iterator APIs and language features
 
 ## General Style
-- **Functional style** preferred over imperative (when no performance penalty)
-- **Use `const`** instead of `let` wherever possible
-- Replace imperative loops with: Array methods, Iterator Helpers, Set operations
+
+- **Functional over imperative.** Prefer Array methods, Iterator Helpers, and Set operations; reach for a raw `for`/
+  `while` loop or a `let` only with a concrete reason (e.g. a measured performance need). The alternatives live
+  in [Modern Features](#modern-features) and [Advanced Iterator Patterns](#advanced-iterator-patterns).
 
 ## Modern Features
 
@@ -138,9 +139,6 @@ const price = fmt.format(value);
 ## Anti-patterns to Avoid
 
 ```js
-// ❌ Bad - manual loops when functional works
-for (const n of it) { if (n > 10) break; out.push(n * n); }
-
 // ❌ Bad - full materialization for early termination
 const arr = Array.from(iterable);
 const pageItems = arr.slice(page * size, page * size + size);

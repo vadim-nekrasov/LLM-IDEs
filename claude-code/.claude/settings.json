@@ -30,7 +30,8 @@
       "Skill(writing-docs)",
       "Skill(searching-solutions)",
       "Skill(searching-solutions-multi)",
-      "Skill(researching)"
+      "Skill(researching)",
+      "Skill(solving-and-reviewing)"
     ],
     "deny": [
       "Bash(git commit:*)",
@@ -49,7 +50,8 @@
   "skillListingBudgetFraction": 0.02,
   "skillOverrides": {
     "searching-solutions": "on",
-    "searching-solutions-multi": "on"
+    "searching-solutions-multi": "on",
+    "solving-and-reviewing": "on"
   },
   "statusLine": {
     "type": "command",

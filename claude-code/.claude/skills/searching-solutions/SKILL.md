@@ -33,18 +33,18 @@ Structured tree-based search methodology for identifying optimal technical solut
 
 ## When to Use vs. Neighbouring Workflows
 
-Pick this skill only when the task is "find the right approach for one decision point". For other shapes, prefer the matching workflow:
+Pick this skill only when the task is "find the right approach for one decision point — or one strongly-coupled cluster judged jointly". For other shapes, prefer the matching workflow:
 
 | Task shape | Use this instead |
 |---|---|
-| Best architectural / algorithmic approach for a single decision | **`/searching-solutions`** (this skill) |
-| A sequence of coupled decision points, each needing its own tree search | `/searching-solutions-multi` skill |
+| One decision point — or a small cluster of **strongly-coupled** decisions chosen **jointly** | **`/searching-solutions`** (this skill) |
+| Several **separable** decision points (independent, or cleanly ordered with only weak/forward coupling), each big enough for its own tree search | `/searching-solutions-multi` skill |
 | Full feature from requirements to merged code | `/feature-dev:feature-dev` |
 | Diagnosing a bug — generate hypotheses, filter by evidence | `debugging` skill |
 | Verifying a finished change (lint, types, Three Lenses) | `final-checking` skill |
 | Routing a non-trivial edit through docs-discovery → Three Lenses → Context7 | `applying-workflow` skill |
 
-If the task is really "design a new feature end-to-end", let `/feature-dev:feature-dev` orchestrate; this skill can be invoked from inside its architecture phase. For several coupled decision points without code delivery, `/searching-solutions-multi` orchestrates one forked search per decision.
+If the task is really "design a new feature end-to-end", let `/feature-dev:feature-dev` orchestrate; this skill can be invoked from inside its architecture phase. For several separable decision points without code delivery, `/searching-solutions-multi` orchestrates one forked search per decision; a strongly-coupled cluster stays here for one joint search rather than being split.
 
 ---
 

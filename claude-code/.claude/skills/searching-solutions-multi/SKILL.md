@@ -1,7 +1,7 @@
 ---
 name: searching-solutions-multi
-description: Main-context orchestrator that decomposes a task into one-decision-per-phase, then runs a separate forked /searching-solutions per phase with verbatim forward-propagation and a greedy≠global backward check.
-when_to_use: Manual-only: do not auto-trigger on generic prompts. Invoke when the user explicitly types `/searching-solutions-multi` or asks for "multi-phase tree search" / "sequential decision search" / "многофазный поиск решений" / "поиск по фазам". The fan-out into N forked `effort: high` searches is expensive — that cost is why this skill is manual, NOT a licence to skip a search the user explicitly invoked: on explicit invocation the cost is already accepted, so run it (never substitute a snap judgement). For ONE decision point use `/searching-solutions`; for full feature delivery (code written) use `/feature-dev:feature-dev`.
+description: Main-context orchestrator that decomposes a task into one separable decision per phase, then runs a separate forked /searching-solutions per phase with verbatim forward-propagation and a greedy≠global backward check.
+when_to_use: Manual-only: do not auto-trigger on generic prompts. Invoke when the user explicitly types `/searching-solutions-multi` or asks for "multi-phase tree search" / "sequential decision search" / "многофазный поиск решений" / "поиск по фазам". The fan-out into N forked `effort: high` searches is expensive — that cost is why this skill is manual, NOT a licence to skip a search the user explicitly invoked: on explicit invocation the cost is already accepted, so run it (never substitute a snap judgement). For ONE decision point — or a cluster of strongly-coupled decisions that must be optimized jointly (greedy phase-locking would lose the joint optimum) — use `/searching-solutions`; for full feature delivery (code written) use `/feature-dev:feature-dev`.
 argument-hint: "<task with global context and hard constraints>"
 effort: high
 ---
@@ -62,7 +62,11 @@ text (e.g. `"phase 2 → 18, rest ok"`). Parse intent, not strict syntax.
 
 2. **Decompose — then HALT.** Split the task into phases where each phase
    is EXACTLY one decision point (several independent decisions in a phase
-   ⇒ split further). Emit a numbered phase list (what each phase chooses)
+   ⇒ split further; and the converse — decisions too strongly coupled to lock
+   one before the other are NOT separate phases: fold the cluster into ONE
+   phase as a single joint search, or, if that collapses the task to a lone
+   cluster, take the single-decision exit to `/searching-solutions`). Emit a
+   numbered phase list (what each phase chooses)
    and an inter-phase dependency matrix (which phase constrains which).
    Render each phase line in the form
    `Phase N: <decision> — proposed seed=<int>, rationale: "<≤12-word phrase>"`

@@ -83,6 +83,11 @@
           {
             "type": "command",
             "timeout": 3,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Your answer needed\""
+          },
+          {
+            "type": "command",
+            "timeout": 3,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/set-title.ts \"❓ Claude — your answer\""
           }
         ]
@@ -192,11 +197,6 @@
           {
             "type": "command",
             "timeout": 3,
-            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Turn complete\""
-          },
-          {
-            "type": "command",
-            "timeout": 3,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/set-title.ts \"⏳ Claude — your turn\""
           }
         ]
@@ -224,7 +224,22 @@
           {
             "type": "command",
             "timeout": 3,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Task complete\""
+          },
+          {
+            "type": "command",
+            "timeout": 3,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/set-title.ts \"⏳ Claude — your turn\""
+          }
+        ]
+      },
+      {
+        "matcher": "permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 3,
+            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Waiting for your input\""
           }
         ]
       }
@@ -236,11 +251,6 @@
             "type": "command",
             "timeout": 3,
             "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/permission-request.ts"
-          },
-          {
-            "type": "command",
-            "timeout": 3,
-            "command": "bun \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/notify.ts \"Claude Code\" \"Waiting for your input\""
           },
           {
             "type": "command",

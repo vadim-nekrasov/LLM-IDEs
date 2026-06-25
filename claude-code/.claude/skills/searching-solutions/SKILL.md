@@ -160,7 +160,7 @@ Record the gate verdict in `Search Stats` (see Output Format) as
 ### Phase 4: Final Selection & Output
 - Review successful leaf nodes
 - Select the **single best solution** by pairwise comparison among surviving leaves (not absolute score).
-- Justify the winner with the strongest **counter-evidence** against it and a **calibrated confidence** (low/med/high) naming the single fact that would most change it; flag speculative claims per the Mindset rule (by reference, do not restate it).
+- Justify the winner with the strongest **counter-evidence** against it and a **calibrated confidence** (low/med/high) naming the single fact that would most change it — and if that fact is **externally verifiable** (library behaviour, API contract, perf number), run ONE pass of the `../researching/SKILL.md` gate to resolve it before settling for low confidence (surviving leaves only, never per-node); flag speculative claims per the Mindset rule (by reference, do not restate it).
 - Validate: Three Lenses check, docs compliance
 
 ---
@@ -197,4 +197,5 @@ per `../_shared/solid-audit.md`. All five blocks required. All `pass: true`.]
 - Total Successful Candidates Found: [Y]
 - SOLID Gate: passed=[N], failed=[M], principles_failed: [srp×K, ocp×L, lsp×P, isp×Q, dip×R]
 - Late-Breaking Triggered: [yes — generated +N extra variants because top-K positions {a, b, c} were in last third / no — top-K spread observed: {fractions}]
+- Pivotal-Unknown Research: [none — deciding unknown was internal / resolved "<fact>" via <Context7|docs|Perplexity|WebSearch> → <effect on pick or confidence> / attempted, unresolved "<fact>" — <why>]
 ```

@@ -8,9 +8,7 @@ paths:
 
 # TypeScript Code Style
 
-> **Working with linters in legacy codebases.** When editing a file you may see existing warnings from older code — **ignore them**, don't refactor them. Be responsible only for your own fresh diff.
->
-> **Never run mass autofix** (`eslint --fix .` or `eslint --fix src/`) — it can rewrite many files at once and introduce regressions. Editor per-file autofix on the file you are currently editing is fine.
+> **Linters:** see [`../_shared/linter-policy.md`](../_shared/linter-policy.md) — fresh-diff scope, never mass-autofix, fix in code not config.
 
 > For general JS/TS style (functional iterators, Set operations, immutable
 > array methods, Promise patterns) see `writing-ecmascript` — it now applies

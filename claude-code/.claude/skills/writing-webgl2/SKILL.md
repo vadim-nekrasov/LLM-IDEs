@@ -10,7 +10,7 @@ paths:
 
 # WebGL2 Host API Code Style
 
-> **Working with ESLint + tsc on host WebGL2 code.** When editing a WebGL bootstrap module you may see existing warnings from older code — ignore them, fix only your own diff. Never run mass autofix on `.ts` files that bind GL state; eslint autofix has rewritten `null` ↔ `undefined` in places that broke `gl.bufferData(target, null, …)` allocate-vs-upload overloads. Editor per-file autofix on the file you are currently editing is fine.
+> **Linters:** see [`../_shared/linter-policy.md`](../_shared/linter-policy.md). WebGL2-specific: never mass-autofix `.ts` that binds GL state — eslint has rewritten `null` ↔ `undefined` and broken `gl.bufferData(target, null, …)` allocate-vs-upload overloads.
 
 ## Contents
 

@@ -39,7 +39,8 @@
       "Bash(npx eslint:*)",
       "Bash(bunx eslint:*)",
       "Bash(pnpm dlx eslint:*)",
-      "Bash(yarn dlx eslint:*)"
+      "Bash(yarn dlx eslint:*)",
+      "Bash(eslint:*)"
     ]
   },
   "attribution": {

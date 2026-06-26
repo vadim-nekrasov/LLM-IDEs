@@ -8,9 +8,7 @@ paths:
 
 # React Code Style
 
-> **Working with linters in legacy codebases.** When editing a file you may see existing warnings from older code — ignore them, don't refactor them. Be responsible only for your own fresh diff. Some hooks/a11y warnings are heuristic and have known false positives on stable refs / derived values — read warnings critically, do NOT blindly suppress.
->
-> **Never run mass autofix** (`eslint --fix .` or `eslint --fix src/`) — autofixers can have type-mismatch traps (e.g. `null` vs `undefined` in JSX boolean short-circuits) that break `boolean | undefined` props. Editor per-file autofix on the file you are currently editing is fine.
+> **Linters:** see [`../_shared/linter-policy.md`](../_shared/linter-policy.md). React-specific: hooks/a11y warnings are heuristic with known false positives on stable refs / derived values — read critically, don't blindly suppress; autofix has `null` vs `undefined` traps in JSX short-circuits that break `boolean | undefined` props.
 
 ## Component Patterns
 ```tsx

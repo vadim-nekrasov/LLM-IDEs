@@ -87,7 +87,7 @@ there). GRASP, DRY, KISS, YAGNI stay as Architect-Lens heuristics in
 
 - Don't edit `node_modules/`, `target/`, build/lint/format manifests, or `.claude/` unless required.
 - `git commit` / `git push` blocked at settings deny — don't bypass.
-- Lint: `npm run lint:js` for JS/TS-only; `npm run lint` when `.glsl`/`.scss`/`.css` touched (raw `eslint` blocked — accepts `--config` that executes JS).
+- Lint: `npm run lint:js` for JS/TS-only; `npm run lint` when `.glsl`/`.scss`/`.css` touched (raw `eslint` blocked at the permission layer — eslint's `--config` can execute arbitrary JS).
 - Use `git -C <path> <subcmd>`; never `cd <path> && git …` (triggers permission prompts).
 
 ## Permission Modes

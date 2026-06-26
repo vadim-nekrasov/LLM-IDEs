@@ -12,9 +12,7 @@ paths:
 
 # ECMAScript Code Style (ES2025)
 
-> **Working with linters in legacy codebases.** When editing a file you may see existing warnings from older code — **ignore them**, do not refactor them. Be responsible only for your own fresh diff: don't introduce new violations.
->
-> **Never run mass autofix** (`eslint --fix .` or `eslint --fix src/`) — it can rewrite hundreds of files in one go and introduce regressions. Editor per-file autofix on the file you are currently editing is fine.
+> **Linters:** see [`../_shared/linter-policy.md`](../_shared/linter-policy.md) — fresh-diff scope, never mass-autofix, fix in code not config.
 
 Use modern language features where it improves readability and reduces boilerplate.
 
@@ -245,11 +243,9 @@ export const compute = (input, { onCompute } = {}) =>
 
 ## Debugging
 
-When in doubt about a bug, add a working `console.log`. Inline values into the message — never pass a raw object/array/variable as a separate argument to `console.log` / `info` / `warn` / `debug`: DevTools' "Copy" action emits `msg {…}` instead of the values, so the copied diagnostic is useless for sharing.
-
-- Bad: `console.log('payload:', payload)` or `console.log('user', { id, role })`
-- Good: `` console.log(`payload: ${JSON.stringify(payload, null, 2)}`) `` or `` console.log(`id=${id} role=${role}`) ``
-
-Exception: `console.error('ctx:', errorInstance)` — DevTools serialises `Error` with full stack and the copy preserves it.
-
-Log key inputs and intermediate states. Logs can be removed later, but at the diagnostic moment they must be **working**, not commented out.
+Add a working `console.log` when unsure; inline values into the message — never pass a raw
+object/array as a separate `console.*` arg (DevTools "Copy" emits `msg {…}`, losing the
+values); `edit-guard.ts` hard-blocks the object-literal form and warns on a raw-object
+variable. Use `` `id=${id}` `` or `JSON.stringify(x, null, 2)`. Exception:
+`console.error('ctx:', err)` — `Error` serialises with full stack. Logs must be **working**,
+not commented out. See `../debugging/patterns/logging.md` for label/trace standards.

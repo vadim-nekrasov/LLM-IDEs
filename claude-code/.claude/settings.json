@@ -41,6 +41,10 @@
       "Bash(pnpm dlx eslint:*)",
       "Bash(yarn dlx eslint:*)",
       "Bash(eslint:*)"
+    ],
+    "ask": [
+      "Edit(/CLAUDE.md)",
+      "Edit(/.agents/**)"
     ]
   },
   "attribution": {

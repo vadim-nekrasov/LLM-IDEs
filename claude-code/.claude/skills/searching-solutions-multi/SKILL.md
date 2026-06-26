@@ -107,7 +107,23 @@ text (e.g. `"phase 2 → 18, rest ok"`). Parse intent, not strict syntax.
    and name in Confidence the single fact that would most change the
    choice (the handoff signal).
 
-4. **Lock & feed forward.** After each call, fix the chosen solution in
+3.5. **Independent verification (gated — the primary reliability mechanism).** The
+   fork can only self-assess (same context ⇒ correlated blind spots; a self-rewriting
+   critique degrades accuracy), so a fresh-context critic — which only this
+   orchestrator, not the fork, can spawn — is the stronger check. Gate a phase in iff
+   any of: foundational (many downstream locks), high-coupling (constrains a later
+   phase per the dependency matrix), or the search returned **Confidence: low**; else
+   skip to Step 4. For a gated phase, make a SEPARATE read-only `/searching-solutions`
+   call as a *verifier*, fed GLOBAL + LOCKED + the winner paragraph + its pivotal
+   unknown but NOT the producer's tree (context independence is the active ingredient).
+   Have it grade the winner across the Three Lenses (`../_shared/three-lenses.md`) plus
+   the greedy≠global coupling lens of Step 5, returning `confirm` / `adopt-runner-up` /
+   `re-run-phase`. An overturn MUST cite a concrete defect (constraint violation,
+   dominated trade-off, broken coupling) — a bare "I'd choose differently" is not
+   grounds (guards the critic's own overcorrection). Act on the verdict (swap in the
+   runner-up; or re-issue Step 3 with the defect noted), and record it before locking.
+
+4. **Lock & feed forward.** After each call (and any Step 3.5 verdict), fix the chosen solution in
    one paragraph and embed it verbatim into the next phase's LOCKED block.
    Independent phases may run in parallel; dependent phases strictly in
    order.

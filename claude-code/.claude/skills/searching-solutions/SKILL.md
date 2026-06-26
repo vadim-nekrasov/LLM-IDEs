@@ -161,6 +161,7 @@ Record the gate verdict in `Search Stats` (see Output Format) as
 - Review successful leaf nodes
 - Select the **single best solution** by pairwise comparison among surviving leaves (not absolute score).
 - Justify the winner with the strongest **counter-evidence** against it and a **calibrated confidence** (low/med/high) naming the single fact that would most change it — and if that fact is **externally verifiable** (library behaviour, API contract, perf number), run ONE pass of the `../researching/SKILL.md` gate to resolve it before settling for low confidence (surviving leaves only, never per-node); flag speculative claims per the Mindset rule (by reference, do not restate it).
+- **Self-consistency calibration (confidence-only).** Re-rank the top-2 surviving leaves once under a *second distinct lens* (swap the lead criterion, e.g. Simplicity-first if you picked Architecture-first). Winner holds ⇒ raise confidence one notch; flips ⇒ lower it and record the divergence — never re-select. A same-context agent that rewrites its own pick degrades accuracy (overcorrection); calibrating confidence is paradox-safe, overturning is the orchestrator's job (`../searching-solutions-multi/SKILL.md`).
 - Validate: Three Lenses check, docs compliance
 
 ---
@@ -197,5 +198,6 @@ per `../_shared/solid-audit.md`. All five blocks required. All `pass: true`.]
 - Total Successful Candidates Found: [Y]
 - SOLID Gate: passed=[N], failed=[M], principles_failed: [srp×K, ocp×L, lsp×P, isp×Q, dip×R]
 - Late-Breaking Triggered: [yes — generated +N extra variants because top-K positions {a, b, c} were in last third / no — top-K spread observed: {fractions}]
+- Self-Consistency: [held under <second lens> — confidence +1 / flipped under <second lens> — confidence −1, divergence: <one line>]
 - Pivotal-Unknown Research: [none — deciding unknown was internal / resolved "<fact>" via <Context7|docs|Perplexity|WebSearch> → <effect on pick or confidence> / attempted, unresolved "<fact>" — <why>]
 ```

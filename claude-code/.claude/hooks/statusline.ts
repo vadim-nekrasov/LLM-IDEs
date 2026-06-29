@@ -15,6 +15,7 @@ interface StatusInput {
     five_hour?: { used_percentage?: number | null };
     seven_day?: { used_percentage?: number | null };
   };
+  cost?: { total_cost_usd?: number | null; total_duration_ms?: number | null };
 }
 
 const input: StatusInput = await Bun.stdin
@@ -77,6 +78,21 @@ if (fiveH !== null || sevenD !== null) {
   if (fiveH !== null) limits.push(`5h ${fiveH}%`);
   if (sevenD !== null) limits.push(`7d ${sevenD}%`);
   line2Parts.push(`📊 ${limits.join(" · ")}`);
+}
+
+// Session $ is an API-equivalent estimate (vanity on a flat subscription).
+const costUsd =
+  typeof input.cost?.total_cost_usd === "number"
+    ? input.cost.total_cost_usd
+    : null;
+if (costUsd !== null) {
+  const durMs =
+    typeof input.cost?.total_duration_ms === "number"
+      ? input.cost.total_duration_ms
+      : 0;
+  const hours = durMs / 3_600_000;
+  const burn = hours > 0 ? ` · $${(costUsd / hours).toFixed(2)}/h` : "";
+  line2Parts.push(`💰 ~$${costUsd.toFixed(2)}${burn}`);
 }
 
 console.log(line1);

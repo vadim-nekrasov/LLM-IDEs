@@ -5,7 +5,6 @@ import {
   type ByModel,
   type UsageScope,
 } from "./usage-parser";
-import { computeCost } from "./usage-prices";
 import { homedir } from "node:os";
 
 const C = {
@@ -14,7 +13,7 @@ const C = {
   dim: "\x1b[2m",
   cyan: "\x1b[36m",
 };
-const SEPARATOR = "━".repeat(64);
+const SEPARATOR = "━".repeat(56);
 
 const SCOPES: UsageScope[] = [
   "today",
@@ -34,7 +33,7 @@ const TITLES: Record<UsageScope, string> = {
 
 const raw = (process.argv[2] ?? "--today").replace(/^--/, "");
 if (raw === "help" || raw === "h") {
-  console.log(`usage.ts — local Claude Code token analytics (estimate)\n`);
+  console.log(`usage.ts — local Claude Code token analytics\n`);
   console.log(`  bun usage.ts [${SCOPES.map((s) => `--${s}`).join(" | ")}]`);
   process.exit(0);
 }
@@ -53,38 +52,22 @@ function human(n: number): string {
   return String(n);
 }
 
-function rowCost(byModel: ByModel): { usd: number; unknown: boolean } {
-  let usd = 0;
-  let unknown = false;
-  for (const [model, t] of Object.entries(byModel)) {
-    const c = computeCost(t, model);
-    usd += c.usd;
-    if (!c.known) unknown = true;
-  }
-  return { usd, unknown };
-}
-
 interface Metrics {
   label: string;
   input: number;
   output: number;
   cacheW: number;
   cacheR: number;
-  usd: number;
-  unknown: boolean;
 }
 
 function metricsOf(label: string, byModel: ByModel): Metrics {
   const t = sumByModel(byModel);
-  const { usd, unknown } = rowCost(byModel);
   return {
     label,
     input: t.input,
     output: t.output,
     cacheW: t.cacheWrite5m + t.cacheWrite1h,
     cacheR: t.cacheRead,
-    usd,
-    unknown,
   };
 }
 
@@ -95,7 +78,6 @@ function cells(m: Metrics): string[] {
     human(m.output),
     human(m.cacheW),
     human(m.cacheR),
-    `~$${m.usd.toFixed(2)}${m.unknown ? "*" : ""}`,
   ];
 }
 
@@ -110,7 +92,7 @@ if (view.rows.length === 0) {
   process.exit(0);
 }
 
-const headers = ["", "Input", "Output", "CacheW", "CacheR", "~$ est"];
+const headers = ["", "Input", "Output", "CacheW", "CacheR"];
 const rows = view.rows.map((r) => metricsOf(homeify(r.label), r.byModel));
 const total = rows.reduce<Metrics>(
   (acc, m) => ({
@@ -119,18 +101,8 @@ const total = rows.reduce<Metrics>(
     output: acc.output + m.output,
     cacheW: acc.cacheW + m.cacheW,
     cacheR: acc.cacheR + m.cacheR,
-    usd: acc.usd + m.usd,
-    unknown: acc.unknown || m.unknown,
   }),
-  {
-    label: "TOTAL",
-    input: 0,
-    output: 0,
-    cacheW: 0,
-    cacheR: 0,
-    usd: 0,
-    unknown: false,
-  },
+  { label: "TOTAL", input: 0, output: 0, cacheW: 0, cacheR: 0 },
 );
 
 const body = rows.map(cells);
@@ -151,9 +123,4 @@ console.log(
   `${C.dim}${"─".repeat(widths.reduce((a, w) => a + w + 2, -2))}${C.reset}`,
 );
 console.log(`${C.bold}${fmtRow(totalCells)}${C.reset}`);
-
-const notes: string[] = [];
-if (total.unknown) notes.push("* unpriced model — excluded from $");
-notes.push("$ = API-equivalent estimate, not a subscription bill");
-console.log(`${C.dim}${notes.join("  ·  ")}${C.reset}`);
 console.log(`${C.dim}${SEPARATOR}${C.reset}`);

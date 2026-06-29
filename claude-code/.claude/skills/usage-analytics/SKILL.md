@@ -1,6 +1,6 @@
 ---
 name: usage-analytics
-description: Local, dependency-free Claude Code token-usage analytics (a self-hosted ccusage). Use when the user asks about token consumption, burn rate, cost estimate, or usage broken down by day, model, project, or session.
+description: Local, dependency-free Claude Code token-usage analytics. Use when the user asks about token consumption or usage broken down by day, model, project, or session.
 ---
 
 # Usage Analytics
@@ -16,7 +16,7 @@ Invoke the CLI via the Bash tool (bun is the runtime):
 bun "$CLAUDE_PROJECT_DIR"/.claude/hooks/usage.ts [--today | --7d | --session | --by-model | --by-project]
 ```
 
-- `--today` (default) — today's tokens and cost estimate
+- `--today` (default) — today's tokens
 - `--7d` — per-day breakdown for the last 7 days
 - `--by-model` — totals grouped by model
 - `--by-project` — totals grouped by project (cwd)
@@ -24,13 +24,8 @@ bun "$CLAUDE_PROJECT_DIR"/.claude/hooks/usage.ts [--today | --7d | --session | -
 
 ## Reading the numbers
 
-- Records are deduplicated by `message.id:requestId` — raw assistant snapshots inflate
-  counts ~3x, so never sum the JSONL yourself; always use this tool.
-- The `~$` column is an **API-equivalent estimate** from a local price table, not a
-  subscription bill. On Max/Pro the real budget signal is the `rate_limits` in the
-  statusline, not dollars.
-- A `*` marks rows with an unpriced model (e.g. `<synthetic>`), excluded from `$`.
-
-## Maintenance
-
-- Prices live in `.claude/hooks/usage-prices.ts` — add a model as one data row.
+- Columns are Input / Output / CacheW (cache writes) / CacheR (cache reads).
+- Records are deduplicated by `message.id:requestId` — raw assistant snapshots inflate counts
+  ~3x, so never sum the JSONL yourself; always use this tool.
+- On a subscription the real budget signal is the native `rate_limits` (5h/7d) in the statusline
+  and `/usage`, not raw token totals.
